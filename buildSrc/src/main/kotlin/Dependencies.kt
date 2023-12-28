@@ -46,6 +46,8 @@ fun DependencyHandler.compose() {
     implementation(Dependencies.composeMaterial)
     implementation(Dependencies.activityCompose)
     debugImplementation(Dependencies.composeUiToolingPreview)
+    androidTestImplementation(Dependencies.Testing.composeUiTestJunit4)
+    androidTestImplementation(Dependencies.Testing.composeUiTestManifest)
 }
 
 fun DependencyHandler.junit4(){
