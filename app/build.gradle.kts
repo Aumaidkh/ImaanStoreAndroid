@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.dokka")
 }
 
 android {
@@ -46,9 +47,21 @@ android {
     }
 }
 
+// Documentation
+tasks.dokkaHtml.configure {
+    outputDirectory.set(file("../documentation/html"))
+}
+
 dependencies {
 
     implementation(Dependencies.coreKtx)
     lifecycle()
     compose()
+    navigation()
+
+    // Testing
+    junit4()
+    truth()
+    esspresso()
+
 }
