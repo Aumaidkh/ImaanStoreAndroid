@@ -64,4 +64,6 @@ dependencies {
     truth()
     esspresso()
 
+    implementation(project(":sharedTest"))
+
 }
