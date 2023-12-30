@@ -55,6 +55,7 @@ tasks.dokkaHtml.configure {
 dependencies {
 
     implementation(Dependencies.coreKtx)
+    androidTestImplementation(project(mapOf("path" to ":sharedTest")))
     lifecycle()
     compose()
     navigation()

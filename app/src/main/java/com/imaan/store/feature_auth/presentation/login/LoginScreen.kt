@@ -14,20 +14,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.tooling.preview.Preview
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.dontHaveAccount
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.loginButton
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.loginGreeting
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.phoneNumberField
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.signUpText
-import com.imaan.sharedtest.utils.test_tags.login.TestTags.subtitle
 import com.imaan.store.R
+import com.imaan.store.feature_auth.presentation.utils.TestTags.dontHaveAccount
+import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
+import com.imaan.store.feature_auth.presentation.utils.TestTags.loginGreeting
+import com.imaan.store.feature_auth.presentation.utils.TestTags.phoneNumberField
+import com.imaan.store.feature_auth.presentation.utils.TestTags.signUpText
+import com.imaan.store.feature_auth.presentation.utils.TestTags.subtitle
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,7 +5,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.imaan.sharedtest.utils.test_tags.login.TestTags
+import com.imaan.store.feature_auth.presentation.utils.TestTags
+import com.imaan.store.feature_auth.presentation.utils.TestTags.signUpPage
 import org.junit.Rule
 import org.junit.Test
 
@@ -75,7 +76,7 @@ class LoginScreenKtTest{
             onNodeWithTag(TestTags.loginButton)
                 .performClick()
 
-            onNodeWithTag(com.imaan.sharedtest.utils.test_tags.signup.TestTags.signUpPage)
+            onNodeWithTag(signUpPage)
                 .assertIsDisplayed()
         }
     }
@@ -104,7 +105,7 @@ class LoginScreenKtTest{
             onNodeWithTag(TestTags.signUpText)
                 .performClick()
 
-            onNodeWithTag(com.imaan.sharedtest.utils.test_tags.signup.TestTags.signUpPage)
+            onNodeWithTag(signUpPage)
                 .assertIsDisplayed()
         }
     }
