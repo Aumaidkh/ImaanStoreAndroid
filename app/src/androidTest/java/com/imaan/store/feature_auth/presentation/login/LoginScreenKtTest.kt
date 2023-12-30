@@ -7,12 +7,18 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.imaan.store.feature_auth.presentation.utils.TestTags
 import com.imaan.store.feature_auth.presentation.utils.TestTags.signUpPage
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class LoginScreenKtTest{
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createComposeRule()
     @Test
     fun greeting_isVisible(){
