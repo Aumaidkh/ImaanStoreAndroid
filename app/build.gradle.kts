@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.dokka")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -16,7 +18,7 @@ android {
         versionCode = ProjectConfig.versionCode
         versionName = ProjectConfig.versionName
 
-        testInstrumentationRunner = ProjectConfig.instrumentedTestRunner
+        testInstrumentationRunner = "com.imaan.store.HiltTestRunner"//ProjectConfig.instrumentedTestRunner
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -56,7 +58,6 @@ tasks.dokkaHtml.configure {
 dependencies {
 
     implementation(Dependencies.coreKtx)
-    androidTestImplementation(project(mapOf("path" to ":sharedTest")))
     lifecycle()
     compose()
     navigation()
@@ -66,7 +67,4 @@ dependencies {
     junit4()
     truth()
     esspresso()
-
-    implementation(project(":sharedTest"))
-
 }
