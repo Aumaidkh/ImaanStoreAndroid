@@ -1,16 +1,24 @@
 package com.imaan.store.feature_auth.presentation.login
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.imaan.store.TestActivity
+import com.imaan.store.feature_auth.domain.repository.FakeAuthRepository
+import com.imaan.store.feature_auth.domain.repository.IAuthRepository
 import com.imaan.store.feature_auth.presentation.utils.TestTags
 import com.imaan.store.feature_auth.presentation.utils.TestTags.signUpPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
 @HiltAndroidTest
 class LoginScreenKtTest{
@@ -19,7 +27,15 @@ class LoginScreenKtTest{
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<TestActivity>()
+
+    @Inject
+    lateinit var fakeRepository: IAuthRepository
+
+    @Before
+    fun setup(){
+        hiltRule.inject()
+    }
     @Test
     fun greeting_isVisible(){
        composeTestRule.setContent {
@@ -74,10 +90,10 @@ class LoginScreenKtTest{
     }
 
     @Test
-    fun loginClick_loginSuccess_takesUserToHomeScreen() {
+    fun loginClick_loginSuccess_takesUserToOtpScreen() {
         composeTestRule.apply {
             setContent {
-                LoginScreen()
+
             }
             onNodeWithTag(TestTags.loginButton)
                 .performClick()
@@ -92,11 +108,18 @@ class LoginScreenKtTest{
         val loginError = "Error Logging in"
         composeTestRule.apply {
             setContent {
+                val repository = fakeRepository as? FakeAuthRepository
+                repository?.error = Exception(loginError)
+                val viewModel = hiltViewModel<LoginViewModel>()
+                viewModel.onPhoneNumberChange("12341232")
+                val state = viewModel.state.collectAsState()
                 LoginScreen(
-                    errorMessage = loginError
+                    state = state.value,
+                    onLogin = viewModel::login,
                 )
             }
-
+            onNodeWithTag(TestTags.loginButton)
+                .performClick()
             onNodeWithText(loginError)
                 .assertIsDisplayed()
         }

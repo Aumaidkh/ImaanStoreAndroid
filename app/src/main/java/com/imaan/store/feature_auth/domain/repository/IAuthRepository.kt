@@ -1,5 +1,7 @@
 package com.imaan.store.feature_auth.domain.repository
 
+import com.imaan.store.feature_auth.domain.model.OtpModel
+
 interface IAuthRepository {
-    fun requestOtpOn(phone: String)
+    suspend fun requestOtpOn(phone: String): OtpModel
 }

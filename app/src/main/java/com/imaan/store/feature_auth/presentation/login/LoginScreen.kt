@@ -31,19 +31,21 @@ import com.imaan.store.feature_auth.presentation.utils.TestTags.subtitle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    state: LoginUiState = LoginUiState.Initial(),
     phoneNumber: String = "",
     phoneError: String? = null,
     onPhoneNumberChange: (String) -> Unit = {},
-    errorMessage: String? = null,
+    onLogin: () -> Unit = {}
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
-    LaunchedEffect(key1 = errorMessage){
-        errorMessage?.let {
+
+    LaunchedEffect(key1 = state.error){
+        state.error?.let {
             snackbarHostState.showSnackbar(
-                message = it
+                message = it.message.toString()
             )
         }
     }
@@ -90,7 +92,7 @@ fun LoginScreen(
                     .semantics {
                         testTag = loginButton
                     },
-                onClick = { }
+                onClick = { onLogin() }
             ) {
                 Text(
                     text = stringResource(id = R.string.login)
