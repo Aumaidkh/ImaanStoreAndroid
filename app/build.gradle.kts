@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.dokka")
+    id("kotlin-kapt")
 }
 
 android {
@@ -59,6 +60,7 @@ dependencies {
     lifecycle()
     compose()
     navigation()
+    hilt()
 
     // Testing
     junit4()

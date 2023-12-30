@@ -21,6 +21,10 @@ fun DependencyHandler.kapt(dependency: String){
     add("kapt",dependency)
 }
 
+fun DependencyHandler.kaptAndroidTest(dependency: String){
+    add("kaptAndroidTest",dependency)
+}
+
 fun DependencyHandler.project(dependency: Dependency){
     add("implementation",dependency)
 }

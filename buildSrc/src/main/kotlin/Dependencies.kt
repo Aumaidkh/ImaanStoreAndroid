@@ -21,6 +21,7 @@ object Dependencies {
     }
 
     object Testing {
+        const val hilt = "com.google.dagger:hilt-android-testing:${Versions.hilt}"
         const val navigation = "androidx.navigation:navigation-testing:${Versions.navigationVersion}"
         const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
         const val junit4 = "junit:junit:${Versions.junit4}"
@@ -74,4 +75,6 @@ fun DependencyHandler.navigation(){
 fun DependencyHandler.hilt(){
     implementation(Dependencies.hiltAndroid)
     kapt(Dependencies.hiltCompiler)
+    androidTestImplementation(Dependencies.Testing.hilt)
+    kaptAndroidTest(Dependencies.hiltCompiler)
 }
