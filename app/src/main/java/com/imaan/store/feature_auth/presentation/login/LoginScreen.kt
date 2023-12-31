@@ -1,12 +1,16 @@
 package com.imaan.store.feature_auth.presentation.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import com.imaan.store.R
+import com.imaan.store.feature_auth.domain.model.OTP
 import com.imaan.store.feature_auth.presentation.utils.TestTags.dontHaveAccount
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginGreeting
@@ -32,21 +39,33 @@ import com.imaan.store.feature_auth.presentation.utils.TestTags.subtitle
 @Composable
 fun LoginScreen(
     state: LoginUiState = LoginUiState.Initial(),
-    phoneNumber: String = "",
-    phoneError: String? = null,
+    phone: String = "",
     onPhoneNumberChange: (String) -> Unit = {},
-    onLogin: () -> Unit = {}
+    onRequestOtp: () -> Unit = {},
+    onSignUpClick: () -> Unit = {},
+    onOtpSent: (OTP) -> Unit = {}
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
-
-    LaunchedEffect(key1 = state.error){
+    LaunchedEffect(key1 = state.error) {
+        if (state is LoginUiState.PhoneError) {
+            return@LaunchedEffect
+        }
         state.error?.let {
             snackbarHostState.showSnackbar(
                 message = it.message.toString()
             )
+        }
+    }
+    when(state){
+        is LoginUiState.Loading -> {}
+        is LoginUiState.OtpSent -> {
+            onOtpSent(state.otp)
+        }
+        else -> {
+
         }
     }
     Scaffold(
@@ -60,7 +79,7 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 modifier = Modifier
@@ -80,19 +99,29 @@ fun LoginScreen(
 
             BasicTextField(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
                     .semantics {
                         testTag = phoneNumberField
                     },
-                value = "",
-                onValueChange = {}
+                value = phone,
+                onValueChange = onPhoneNumberChange
             )
+            if (state is LoginUiState.PhoneError) {
+                Text(
+                    text = state.errorMessage,
+                    style = TextStyle(
+                        color = MaterialTheme.colorScheme.error
+                    )
+                )
+            }
 
             Button(
                 modifier = Modifier
                     .semantics {
                         testTag = loginButton
                     },
-                onClick = { onLogin() }
+                onClick = { onRequestOtp() }
             ) {
                 Text(
                     text = stringResource(id = R.string.login)
@@ -112,6 +141,9 @@ fun LoginScreen(
                 modifier = Modifier
                     .semantics {
                         testTag = signUpText
+                    }
+                    .clickable {
+                        onSignUpClick()
                     },
                 text = stringResource(R.string.login_signup),
             )
@@ -119,4 +151,6 @@ fun LoginScreen(
     }
 
 }
+
+
 

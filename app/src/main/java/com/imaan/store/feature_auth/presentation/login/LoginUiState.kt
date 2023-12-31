@@ -1,5 +1,7 @@
 package com.imaan.store.feature_auth.presentation.login
 
+import com.imaan.store.feature_auth.domain.model.OTP
+
 sealed interface LoginUiState{
     val loading: Boolean
     val error: Throwable?
@@ -24,6 +26,17 @@ sealed interface LoginUiState{
     data class OtpSent(
         override val loading: Boolean = false,
         override val error: Throwable? = null,
-        val message: String
+        val message: String,
+        val otp: OTP
     ): LoginUiState
+
+
+    data class PhoneError(
+        override val loading: Boolean = false,
+        override val error: Throwable?
+    ): LoginUiState {
+        val errorMessage: String get() = error?.message.toString()
+    }
+
 }
+

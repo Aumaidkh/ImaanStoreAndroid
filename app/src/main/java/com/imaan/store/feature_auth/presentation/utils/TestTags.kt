@@ -8,5 +8,7 @@ object TestTags {
     const val signUpText = "signUpBtn"
     const val dontHaveAccount = "dontHaveAccount"
 
-    const val signUpPage = "signUpPage"
+    const val registerScreen = "registerScreen"
+
+    const val verifyOtpScreen = "verifyOtpScreen"
 }
