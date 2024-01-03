@@ -17,7 +17,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -30,12 +32,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imaan.store.R
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.design_system.composables.BigHeading
 import com.imaan.store.design_system.composables.ImaanInputField
 import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.design_system.composables.SmallHeading
 import com.imaan.store.feature_auth.domain.model.OTP
-import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.composables.AuthIllustration
 import com.imaan.store.feature_auth.presentation.utils.TestTags.dontHaveAccount
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
@@ -55,9 +57,9 @@ fun LoginScreen(
     onSignUpClick: () -> Unit = {},
     onOtpSent: (OTP) -> Unit = {},
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    paddingValues: PaddingValues = PaddingValues()
+    paddingValues: PaddingValues = PaddingValues(),
+    focusManager: FocusManager = LocalFocusManager.current
 ) {
-
     LaunchedEffect(key1 = event){
         when(event){
             is UiEvent.Error -> {
@@ -111,7 +113,9 @@ fun LoginScreen(
             error = state.phone.error,
             iconResId = R.drawable.ic_phone,
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
+            focusManager = focusManager,
+            label = stringResource(id = R.string.phone)
         )
 
         LoadingButton(

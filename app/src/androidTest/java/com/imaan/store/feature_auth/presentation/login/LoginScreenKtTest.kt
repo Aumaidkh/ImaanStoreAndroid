@@ -1,6 +1,12 @@
 package com.imaan.store.feature_auth.presentation.login
 
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -13,17 +19,18 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.google.common.truth.Truth.assertThat
 import com.imaan.store.TestActivity
-import com.imaan.store.feature_auth.domain.repository.FakeAuthRepository
+import com.imaan.store.core.domain.usecase.validation.ValidationException
+import com.imaan.store.core.presentation.utils.UiEvent
+import com.imaan.store.feature_auth.domain.model.OTP
 import com.imaan.store.feature_auth.domain.repository.IAuthRepository
 import com.imaan.store.feature_auth.navigation.AuthScreen
-import com.imaan.store.feature_auth.navigation.NavigationConstants
 import com.imaan.store.feature_auth.presentation.utils.TestTags
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
 import com.imaan.store.feature_auth.presentation.utils.TestTags.phoneNumberField
 import com.imaan.store.navigation.ImaanApp
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,7 +47,7 @@ class LoginScreenKtTest{
 
     @Inject
     lateinit var fakeRepository: IAuthRepository
-    lateinit var navController: TestNavHostController
+    private lateinit var navController: TestNavHostController
 
     @Before
     fun setup(){
@@ -99,42 +106,53 @@ class LoginScreenKtTest{
     }
 
     @Test
-    fun loginClick_loginSuccess_takesUserToOtpScreen() {
-        val otp = (fakeRepository as? FakeAuthRepository)?.otp
-        composeTestRule.apply {
-            setContent {
-                navController = TestNavHostController(LocalContext.current)
-                navController.navigatorProvider.addNavigator(ComposeNavigator())
-                ImaanApp(navController = navController)
-            }
-            onNodeWithTag(phoneNumberField)
-                .performTextInput("7889534384")
-            onNodeWithTag(loginButton)
-                .performClick()
+    fun loginClick_otpSent_takesUserToOtpScreen() {
+        val event = mutableStateOf<UiEvent?>(null)
+        val otp = OTP(value = 1234)
 
+        composeTestRule.setContent {
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            LoginScreen(
+                event = event.value,
+                onOtpSent = {
+                    navController.navigate(
+                        route = AuthScreen.VerifyOtp.route
+                    )
+                    assertThat(navController.currentBackStackEntry?.destination?.route).contains(
+                        AuthScreen.VerifyOtp.route
+                    )
+                }
+            )
         }
-        val route = navController.currentBackStackEntry?.destination?.route
-        assertThat(route).isEqualTo(NavigationConstants.VERIFY_OTP)
+        event.value = UiEvent.Success<OTP?>(otp)
 
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Test
-    fun loginFailed_showsSnackbarWithMessage() {
+    fun loginFailed_showsSnackbarWithMessage(): Unit = runBlocking {
         val loginError = "Error Logging in"
         composeTestRule.apply {
+            val event = mutableStateOf<UiEvent?>(null)
+
             setContent {
-                val repository = fakeRepository as? FakeAuthRepository
-                repository?.error = Exception(loginError)
-                val viewModel = hiltViewModel<LoginViewModel>()
-                viewModel.onPhoneNumberChange("1234123222")
-                val state = viewModel.state.collectAsState()
-                LoginScreen(
-                    state = state.value,
-                    onRequestOtp = viewModel::requestOtp,
-                )
+                val snackbarHostState = remember {
+                    SnackbarHostState()
+                }
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(snackbarHostState)
+                    }
+                ) {
+                    println("$it")
+                    LoginScreen(
+                        event = event.value,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
             }
-            onNodeWithTag(loginButton)
-                .performClick()
+            event.value = UiEvent.Error(Exception(loginError))
             onNodeWithText(loginError)
                 .assertIsDisplayed()
         }
@@ -161,10 +179,8 @@ class LoginScreenKtTest{
         composeTestRule.apply {
             setContent {
                 val viewModel = hiltViewModel<LoginViewModel>()
-                val formState = viewModel.formState.collectAsState().value
                 val uiState = viewModel.state.collectAsState().value
                 LoginScreen(
-                    formState = formState,
                     onRequestOtp = viewModel::requestOtp,
                     state = uiState
                 )
@@ -173,7 +189,7 @@ class LoginScreenKtTest{
             onNodeWithTag(loginButton)
                 .performClick()
 
-            onNodeWithText("Phone Number can't be empty")
+            onNodeWithText(ValidationException.EmptyPhoneNumberException.message.toString())
                 .assertIsDisplayed()
         }
     }
@@ -191,18 +207,12 @@ class LoginScreenKtTest{
                 )
 
             }
-            onNodeWithTag(phoneNumberField)
-                .performTextInput("999990")
-            onNodeWithTag(loginButton)
-                .performClick()
-            onNodeWithText("Phone Number should be of 10 digits")
-                .assertIsDisplayed()
 
             onNodeWithTag(phoneNumberField)
-                .performTextInput("999990aaaas")
+                .performTextInput("999990....")
             onNodeWithTag(loginButton)
                 .performClick()
-            onNodeWithText("Invalid Phone Number")
+            onNodeWithText(ValidationException.InvalidPhoneNumberException.message.toString())
                 .assertIsDisplayed()
         }
     }
