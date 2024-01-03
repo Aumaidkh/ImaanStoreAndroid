@@ -69,7 +69,7 @@ class VerifyOtpScreenViewModelTest {
             viewModel.state.test {
                 dispatchers.testDispatcher.scheduler.advanceUntilIdle()
                 awaitItem() // Skipping first emission as this is emitted when declaring the state
-                for(i in 5 downTo 0){
+                for(i in 59 downTo 0){
                     dispatchers.testDispatcher.scheduler.advanceTimeBy(1000)
                     val emission = awaitItem()
                     val result = i==0

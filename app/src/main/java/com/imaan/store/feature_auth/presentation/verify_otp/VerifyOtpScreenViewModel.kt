@@ -22,7 +22,7 @@ class VerifyOtpScreenViewModel @Inject constructor(
     private val repository: IAuthRepository,
     private val dispatchers: DispatcherProvider
 ): ViewModel(){
-    private val MAX_RESEND_TIME_IN_SECONDS = 5
+    private val MAX_RESEND_TIME_IN_SECONDS = 59
 
     private val _state = MutableStateFlow(VerifyOtpUiState())
     val state = _state.asStateFlow()
