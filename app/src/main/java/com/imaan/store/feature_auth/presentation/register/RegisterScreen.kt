@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -83,7 +84,7 @@ fun RegisterScreen(
         ) {
             BigHeading(
                 text = stringResource(id = R.string.register),
-                tag = TestTags.loginGreeting
+                tag = TestTags.registerGreeting
             )
             SmallHeading(
                 text = stringResource(id = R.string.create_your_account),
@@ -104,7 +105,7 @@ fun RegisterScreen(
 }
 
 @Composable
-fun RegisterForm(
+private fun RegisterForm(
     modifier: Modifier = Modifier,
     state: RegisterScreenUiState = RegisterScreenUiState(),
     onFullNameChange: (String) -> Unit = {},
@@ -119,6 +120,9 @@ fun RegisterForm(
         // Full Name field
         ImaanInputField(
             modifier = Modifier
+                .semantics {
+                    testTag = TestTags.fullNameField
+                }
                 .fillMaxWidth()
                 .padding(bottom = 12.dp, start = 24.dp, end = 24.dp),
             value = state.fullName.value,
@@ -127,11 +131,14 @@ fun RegisterForm(
             iconResId = R.drawable.ic_person,
             label = stringResource(id = R.string.full_name),
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
 
         ImaanInputField(
             modifier = Modifier
+                .semantics {
+                    testTag = TestTags.phoneNumberField
+                }
                 .fillMaxWidth()
                 .padding(bottom = 40.dp, start = 24.dp, end = 24.dp),
             value = state.phoneNumber.value,
@@ -143,11 +150,12 @@ fun RegisterForm(
             imeAction = ImeAction.Done,
             maxLength = 10
         )
-
+        println("Button State: ${state.fullName.value} ${state.phoneNumber.value} ${state.buttonEnabled}")
         LoadingButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 24.dp, end = 24.dp),
+                .padding(start = 24.dp, end = 24.dp)
+                .testTag(TestTags.registerButton),
             text = stringResource(id = R.string.register),
             onClick = onRegister,
             loading = state.loading,
@@ -156,6 +164,9 @@ fun RegisterForm(
 
         Text(
             modifier = Modifier
+                .semantics {
+                    testTag = TestTags.termsOfUse
+                }
                 .padding(32.dp)
                 .fillMaxWidth(0.80f),
             text = buildAnnotatedString {
@@ -203,7 +214,7 @@ fun RegisterForm(
             modifier = Modifier
                 .padding(24.dp)
                 .semantics {
-                    testTag = TestTags.signUpText
+                    testTag = TestTags.loginButton
                 }
                 .clickable {
                     onLoginClick()

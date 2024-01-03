@@ -1,6 +1,7 @@
 package com.imaan.store.feature_auth.presentation.utils
 
 object TestTags {
+    const val loginScreen = "loginScreen"
     const val subtitle = "subtitle"
     const val loginGreeting = "loginGreeting"
     const val phoneNumberField = "phoneNumberField"
@@ -14,6 +15,7 @@ object TestTags {
     const val registerButton = "registerBtn"
     const val registerSubtitle = "registerSubtitle"
     const val alreadyHaveAccount = "alreadyHaveAnAccount"
+    const val termsOfUse = "termsOfUse"
 
     const val verifyOtpScreen = "verifyOtpScreen"
 }

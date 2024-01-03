@@ -1,5 +1,6 @@
 package com.imaan.store.feature_auth.presentation.register
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.store.core.domain.DispatcherProvider
@@ -40,7 +41,7 @@ class ScreenViewModel @Inject constructor(
                 ),
                 buttonEnabled = isButtonEnabled(
                     phone = it.phoneNumber.value,
-                    name = it.fullName.value
+                    name = value
                 )
             )
         }
@@ -50,11 +51,11 @@ class ScreenViewModel @Inject constructor(
         _state.update {
             it.copy(
                 phoneNumber = it.phoneNumber.copy(
-                    value = value.removeSuffix(" "),
+                    value = value,
                     error = null
                 ),
                 buttonEnabled = isButtonEnabled(
-                    phone = it.phoneNumber.value,
+                    phone = value,
                     name = it.fullName.value
                 )
             )

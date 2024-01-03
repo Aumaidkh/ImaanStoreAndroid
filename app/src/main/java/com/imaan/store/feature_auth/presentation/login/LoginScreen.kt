@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -39,6 +40,7 @@ import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.design_system.composables.SmallHeading
 import com.imaan.store.feature_auth.domain.model.OTP
 import com.imaan.store.feature_auth.presentation.composables.AuthIllustration
+import com.imaan.store.feature_auth.presentation.utils.TestTags
 import com.imaan.store.feature_auth.presentation.utils.TestTags.dontHaveAccount
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginGreeting
@@ -76,6 +78,7 @@ fun LoginScreen(
     }
     Column(
         modifier = Modifier
+            .testTag(TestTags.loginScreen)
             .fillMaxSize()
             .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
