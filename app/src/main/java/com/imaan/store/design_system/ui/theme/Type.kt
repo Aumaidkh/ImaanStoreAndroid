@@ -1,11 +1,20 @@
-package com.imaan.store.ui.theme
+package com.imaan.store.design_system.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.imaan.store.R
 
+val poppinsFontFamily = FontFamily(
+    Font(R.font.poppins),
+    Font(R.font.poppins_light),
+    Font(R.font.poppins_bold),
+    Font(R.font.poppins_semibold),
+    Font(R.font.poppins_medium),
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

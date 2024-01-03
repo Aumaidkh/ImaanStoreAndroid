@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Imaan"
 include(":app")
- 
+include(":sharedTest")

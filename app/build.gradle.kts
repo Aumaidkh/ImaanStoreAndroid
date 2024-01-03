@@ -1,6 +1,11 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.dokka")
+    id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -14,7 +19,7 @@ android {
         versionCode = ProjectConfig.versionCode
         versionName = ProjectConfig.versionName
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.imaan.store.HiltTestRunner"//ProjectConfig.instrumentedTestRunner
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -27,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -46,9 +51,28 @@ android {
     }
 }
 
+// Documentation
+tasks.dokkaHtml.configure {
+    outputDirectory.set(file("../documentation/html"))
+}
+
 dependencies {
 
     implementation(Dependencies.coreKtx)
+    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.12")
     lifecycle()
     compose()
+    navigation()
+    hilt()
+    ktor()
+    coroutines()
+
+    // Testing
+    junit4()
+    truth()
+    esspresso()
+    turbine()
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }
