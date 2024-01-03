@@ -1,14 +1,12 @@
 package com.imaan.store.feature_auth.presentation.login
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.store.core.domain.DispatcherProvider
 import com.imaan.store.core.domain.usecase.validation.PhoneNumberValidator
 import com.imaan.store.feature_auth.domain.model.Message
-import com.imaan.store.feature_auth.domain.model.OTP
 import com.imaan.store.feature_auth.domain.repository.IAuthRepository
-import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.core.presentation.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

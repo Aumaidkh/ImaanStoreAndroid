@@ -1,8 +1,8 @@
-package com.imaan.store.feature_auth.presentation
+package com.imaan.store.core.presentation.utils
 
 sealed interface UiEvent {
 
-    data class Error(val throwable: Throwable): UiEvent{
+    data class Error(val throwable: Throwable): UiEvent {
         val errorMessage get() = throwable.message.toString()
     }
 

@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.imaan.store.core.utils.TestDispatchers
 import com.imaan.store.feature_auth.domain.model.OTP
 import com.imaan.store.feature_auth.domain.repository.FakeAuthRepository
-import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.register.PhoneNumber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch

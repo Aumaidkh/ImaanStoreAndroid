@@ -6,7 +6,7 @@ import com.imaan.store.core.domain.usecase.validation.PhoneNumberValidator
 import com.imaan.store.core.domain.usecase.validation.ValidationException
 import com.imaan.store.core.utils.TestDispatchers
 import com.imaan.store.feature_auth.domain.repository.FakeAuthRepository
-import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.register.PhoneNumber
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

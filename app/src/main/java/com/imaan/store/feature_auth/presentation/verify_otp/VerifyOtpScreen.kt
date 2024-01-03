@@ -2,7 +2,6 @@ package com.imaan.store.feature_auth.presentation.verify_otp
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imaan.store.R
 import com.imaan.store.design_system.composables.LoadingButton
-import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.login.OtpField
 import com.imaan.store.feature_auth.presentation.utils.TestTags.verifyOtpScreen
 

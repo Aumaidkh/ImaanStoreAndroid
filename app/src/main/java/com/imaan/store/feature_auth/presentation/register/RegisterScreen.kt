@@ -29,14 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imaan.store.R
-import com.imaan.store.core.presentation.utils.Event
 import com.imaan.store.design_system.composables.BigHeading
 import com.imaan.store.design_system.composables.ImaanInputField
 import com.imaan.store.design_system.composables.LoadingButton
-import com.imaan.store.design_system.composables.LoginBanner
 import com.imaan.store.design_system.composables.SmallHeading
-import com.imaan.store.feature_auth.domain.model.OTP
-import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.composables.AuthIllustration
 import com.imaan.store.feature_auth.presentation.login.deviceDensity
 import com.imaan.store.feature_auth.presentation.utils.TestTags
