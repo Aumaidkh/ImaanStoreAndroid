@@ -6,6 +6,10 @@ object Versions {
     const val activityCompose = "1.8.2"
     const val navigationVersion = "2.7.6"
 
+    // Networking
+    const val ktor = "1.6.3"
+    const val kotlinXSerialization = "1.3.0"
+
     const val lifecycle = "2.6.2"
     const val coreKtx = "1.9.0"
 

@@ -3,30 +3,40 @@ package com.imaan.store.feature_auth.presentation.login
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.imaan.store.R
+import com.imaan.store.design_system.composables.BigHeading
+import com.imaan.store.design_system.composables.ImaanInputField
+import com.imaan.store.design_system.composables.LoadingButton
+import com.imaan.store.design_system.composables.SmallHeading
 import com.imaan.store.feature_auth.domain.model.OTP
+import com.imaan.store.feature_auth.presentation.UiEvent
+import com.imaan.store.feature_auth.presentation.composables.AuthIllustration
 import com.imaan.store.feature_auth.presentation.utils.TestTags.dontHaveAccount
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginGreeting
@@ -34,122 +44,139 @@ import com.imaan.store.feature_auth.presentation.utils.TestTags.phoneNumberField
 import com.imaan.store.feature_auth.presentation.utils.TestTags.signUpText
 import com.imaan.store.feature_auth.presentation.utils.TestTags.subtitle
 
+private const val TAG = "LoginScreen"
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    state: LoginUiState = LoginUiState.Initial(),
-    phone: String = "",
+    state: LoginScreenUiState = LoginScreenUiState(),
+    event: UiEvent? = null,
     onPhoneNumberChange: (String) -> Unit = {},
     onRequestOtp: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
-    onOtpSent: (OTP) -> Unit = {}
+    onOtpSent: (OTP) -> Unit = {},
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    paddingValues: PaddingValues = PaddingValues()
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
 
-    LaunchedEffect(key1 = state.error) {
-        if (state is LoginUiState.PhoneError) {
-            return@LaunchedEffect
-        }
-        state.error?.let {
-            snackbarHostState.showSnackbar(
-                message = it.message.toString()
-            )
-        }
-    }
-    when(state){
-        is LoginUiState.Loading -> {}
-        is LoginUiState.OtpSent -> {
-            onOtpSent(state.otp)
-        }
-        else -> {
-
+    LaunchedEffect(key1 = event){
+        when(event){
+            is UiEvent.Error -> {
+                snackbarHostState.showSnackbar(
+                    message = event.errorMessage
+                )
+            }
+            is UiEvent.Success<*> -> {
+                val otp = event.data as? OTP
+                otp?.let { onOtpSent(it) }
+            }
+            null -> {}
         }
     }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        Column(
+        AuthIllustration(
+            density = deviceDensity(),
+            imageResId = R.drawable.masjid
+        )
+
+        BigHeading(
+            text = stringResource(id = R.string.login_greeting),
+            tag = loginGreeting
+        )
+
+        SmallHeading(
+            text = stringResource(id = R.string.login_page_subtitle),
+            tag = subtitle
+        )
+
+        ImaanInputField(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                modifier = Modifier
-                    .semantics {
-                        testTag = loginGreeting
-                    },
-                text = stringResource(R.string.login_greeting),
-            )
-
-            Text(
-                modifier = Modifier
-                    .semantics {
-                        testTag = subtitle
-                    },
-                text = stringResource(R.string.login_page_subtitle),
-            )
-
-            BasicTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp)
-                    .semantics {
-                        testTag = phoneNumberField
-                    },
-                value = phone,
-                onValueChange = onPhoneNumberChange
-            )
-            if (state is LoginUiState.PhoneError) {
-                Text(
-                    text = state.errorMessage,
-                    style = TextStyle(
-                        color = MaterialTheme.colorScheme.error
-                    )
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth()
+                .clip(
+                    shape = RoundedCornerShape(size = 8.dp)
                 )
-            }
+                .padding(horizontal = 24.dp, vertical = 16.dp)
+                .semantics {
+                    testTag = phoneNumberField
+                },
+            value = state.phone.value,
+            onValueChange = onPhoneNumberChange,
+            maxLength = 10,
+            error = state.phone.error,
+            iconResId = R.drawable.ic_phone,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done
+        )
 
-            Button(
-                modifier = Modifier
-                    .semantics {
-                        testTag = loginButton
-                    },
-                onClick = { onRequestOtp() }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.login)
-                )
-            }
+        LoadingButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(24.dp)
+                .padding(
+                    bottom = if (deviceDensity() == Density.HighDensity) 70.dp else 10.dp)
+                .fillMaxWidth()
+                .height(50.dp)
+                .semantics {
+                    testTag = loginButton
+                },
+            onClick = { onRequestOtp() },
+            loading = state.loading,
+            text = stringResource(id = R.string.request_otp)
+        )
 
-            Text(
-                modifier = Modifier
-                    .semantics {
-                        testTag = dontHaveAccount
-                    },
-                text = stringResource(R.string.login_page_dont_have_account),
+        Text(
+            modifier = Modifier
+                .semantics {
+                    testTag = dontHaveAccount
+                },
+            text = stringResource(R.string.login_page_dont_have_account),
+        )
+
+
+        Text(
+            modifier = Modifier
+                .padding(24.dp)
+                .semantics {
+                    testTag = signUpText
+                }
+                .clickable {
+                    onSignUpClick()
+                },
+            text = stringResource(R.string.login_signup),
+            style = TextStyle(
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Medium
             )
-
-
-            Text(
-                modifier = Modifier
-                    .semantics {
-                        testTag = signUpText
-                    }
-                    .clickable {
-                        onSignUpClick()
-                    },
-                text = stringResource(R.string.login_signup),
-            )
-        }
+        )
     }
 
+}
+
+enum class Density{
+    LowDensity,
+    HighDensity
+}
+
+@Composable
+fun deviceDensity(): Density{
+    val density = LocalDensity.current.density
+    if (density.dp <= 2.4.dp){
+        return Density.HighDensity
+    }
+    return Density.LowDensity
+}
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen()
 }
 
 

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.dokka")
     id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.dagger.hilt.android")
 
 }
@@ -58,13 +59,20 @@ tasks.dokkaHtml.configure {
 dependencies {
 
     implementation(Dependencies.coreKtx)
+    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.12")
     lifecycle()
     compose()
     navigation()
     hilt()
+    ktor()
+    coroutines()
 
     // Testing
     junit4()
     truth()
     esspresso()
+    turbine()
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }

@@ -10,9 +10,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.ComposeNavigator
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.testing.TestNavHostController
 import com.google.common.truth.Truth.assertThat
 import com.imaan.store.TestActivity
@@ -23,12 +20,10 @@ import com.imaan.store.feature_auth.navigation.NavigationConstants
 import com.imaan.store.feature_auth.presentation.utils.TestTags
 import com.imaan.store.feature_auth.presentation.utils.TestTags.loginButton
 import com.imaan.store.feature_auth.presentation.utils.TestTags.phoneNumberField
-import com.imaan.store.feature_auth.presentation.utils.TestTags.registerScreen
-import com.imaan.store.feature_auth.presentation.utils.TestTags.verifyOtpScreen
-import com.imaan.store.feature_auth.presentation.verify_otp.VerifyOtpScreen
 import com.imaan.store.navigation.ImaanApp
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -89,7 +84,6 @@ class LoginScreenKtTest{
             setContent {
                 LoginScreen()
             }
-
             onNodeWithTag(TestTags.signUpText).assertIsDisplayed()
         }
     }
@@ -119,7 +113,6 @@ class LoginScreenKtTest{
                 .performClick()
 
         }
-
         val route = navController.currentBackStackEntry?.destination?.route
         assertThat(route).isEqualTo(NavigationConstants.VERIFY_OTP)
 
@@ -137,7 +130,7 @@ class LoginScreenKtTest{
                 val state = viewModel.state.collectAsState()
                 LoginScreen(
                     state = state.value,
-                    onRequestOtp = viewModel::login,
+                    onRequestOtp = viewModel::requestOtp,
                 )
             }
             onNodeWithTag(loginButton)
@@ -168,11 +161,11 @@ class LoginScreenKtTest{
         composeTestRule.apply {
             setContent {
                 val viewModel = hiltViewModel<LoginViewModel>()
-                val phone = viewModel.phone.collectAsState().value
+                val formState = viewModel.formState.collectAsState().value
                 val uiState = viewModel.state.collectAsState().value
                 LoginScreen(
-                    phone = phone,
-                    onRequestOtp = viewModel::login,
+                    formState = formState,
+                    onRequestOtp = viewModel::requestOtp,
                     state = uiState
                 )
 
@@ -193,7 +186,7 @@ class LoginScreenKtTest{
                 val uiState = viewModel.state.collectAsState().value
                 LoginScreen(
                     state = uiState,
-                    onRequestOtp = viewModel::login,
+                    onRequestOtp = viewModel::requestOtp,
                     onPhoneNumberChange = viewModel::onPhoneNumberChange
                 )
 

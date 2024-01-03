@@ -1,4 +1,4 @@
-package com.imaan.store.core.domain
+package com.imaan.store.core.domain.utils
 
 data class ValidationResult(
     val isValid: Boolean,

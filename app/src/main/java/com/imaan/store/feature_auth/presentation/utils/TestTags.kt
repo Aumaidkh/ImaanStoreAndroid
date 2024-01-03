@@ -9,6 +9,11 @@ object TestTags {
     const val dontHaveAccount = "dontHaveAccount"
 
     const val registerScreen = "registerScreen"
+    const val registerGreeting = "registerGreeting"
+    const val fullNameField = "fullNameField"
+    const val registerButton = "registerBtn"
+    const val registerSubtitle = "registerSubtitle"
+    const val alreadyHaveAccount = "alreadyHaveAnAccount"
 
     const val verifyOtpScreen = "verifyOtpScreen"
 }

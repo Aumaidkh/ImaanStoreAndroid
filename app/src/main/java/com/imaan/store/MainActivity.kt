@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.imaan.store.navigation.ImaanApp
-import com.imaan.store.ui.theme.ImaanTheme
+import com.imaan.store.design_system.ui.theme.ImaanTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

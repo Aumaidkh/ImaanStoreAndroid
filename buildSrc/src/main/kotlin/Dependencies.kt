@@ -15,6 +15,13 @@ object Dependencies {
 
     const val lifecycleRuntimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
 
+    const val ktorCore = "io.ktor:ktor-client-core:${Versions.ktor}"
+    const val ktorCioEngine = "io.ktor:ktor-client-cio:${Versions.ktor}"
+    const val ktorAndroidEngine = "io.ktor:ktor-client-android:${Versions.ktor}"
+    const val ktorContentNegotiation = "io.ktor:ktor-client-content-negotiation:${Versions.ktor}"
+    const val ktorSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+    const val serialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
+
     object Navigation {
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.navigationVersion}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigation}"
@@ -35,8 +42,19 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.coroutines(){
+    testImplementation(Dependencies.Testing.coroutineTest)
+}
+
 fun DependencyHandler.lifecycle(){
     implementation(Dependencies.lifecycleRuntimeKtx)
+}
+
+fun DependencyHandler.ktor(){
+    implementation(Dependencies.ktorAndroidEngine)
+    implementation(Dependencies.ktorCore)
+    implementation(Dependencies.serialization)
+    implementation(Dependencies.ktorSerialization)
 }
 
 fun DependencyHandler.compose() {
@@ -77,4 +95,8 @@ fun DependencyHandler.hilt(){
     kapt(Dependencies.hiltCompiler)
     androidTestImplementation(Dependencies.Testing.hilt)
     kaptAndroidTest(Dependencies.hiltCompiler)
+}
+
+fun DependencyHandler.turbine(){
+    testImplementation(Dependencies.Testing.turbine)
 }

@@ -1,4 +1,4 @@
-package com.imaan.store.ui.theme
+package com.imaan.store.design_system.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF266C2B)
