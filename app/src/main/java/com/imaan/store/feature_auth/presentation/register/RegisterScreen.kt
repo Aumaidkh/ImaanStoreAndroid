@@ -2,13 +2,18 @@ package com.imaan.store.feature_auth.presentation.register
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -48,7 +53,8 @@ fun RegisterScreen(
     onRegister: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    onNavigateToVerifyOtpScreen: () -> Unit = {}
+    onNavigateToVerifyOtpScreen: () -> Unit = {},
+    paddingValues: PaddingValues = PaddingValues()
 ) {
 
     LaunchedEffect(key1 = event){
@@ -71,15 +77,18 @@ fun RegisterScreen(
                 testTag = TestTags.registerScreen
             }
             .fillMaxSize()
+            .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
         AuthIllustration(
-            density = deviceDensity(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
             imageResId = R.drawable.masjid
         )
 
         Column(
             modifier = Modifier
-                .padding(24.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             BigHeading(
@@ -131,7 +140,7 @@ private fun RegisterForm(
             iconResId = R.drawable.ic_person,
             label = stringResource(id = R.string.full_name),
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         )
 
         ImaanInputField(
@@ -150,7 +159,7 @@ private fun RegisterForm(
             imeAction = ImeAction.Done,
             maxLength = 10
         )
-        println("Button State: ${state.fullName.value} ${state.phoneNumber.value} ${state.buttonEnabled}")
+
         LoadingButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -199,7 +208,7 @@ private fun RegisterForm(
         )
         Spacer(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.7f)
         )
         Text(
             modifier = Modifier
@@ -210,23 +219,25 @@ private fun RegisterForm(
         )
 
 
-        Text(
+        TextButton(
             modifier = Modifier
-                .padding(24.dp)
                 .semantics {
-                    testTag = TestTags.loginButton
+                    testTag = TestTags.loginText
                 }
-                .clickable {
-                    onLoginClick()
-                },
-            text = stringResource(R.string.login),
-            style = TextStyle(
-                fontSize = 15.sp,
-                color = MaterialTheme.colorScheme.primary,
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Medium
+                .windowInsetsBottomHeight(WindowInsets.systemBars),
+            onClick = {
+                onLoginClick()
+            },
+        ) {
+            Text(
+                text = stringResource(id = R.string.login),
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontSize = 17.sp
+                )
             )
-        )
+        }
+        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
+
 
     }
 }

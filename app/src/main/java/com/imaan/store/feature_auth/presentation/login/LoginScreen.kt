@@ -1,34 +1,38 @@
 package com.imaan.store.feature_auth.presentation.login
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +54,7 @@ import com.imaan.store.feature_auth.presentation.utils.TestTags.subtitle
 
 private const val TAG = "LoginScreen"
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LoginScreen(
     state: LoginScreenUiState = LoginScreenUiState(),
@@ -80,12 +85,14 @@ fun LoginScreen(
         modifier = Modifier
             .testTag(TestTags.loginScreen)
             .fillMaxSize()
-            .padding(paddingValues),
+            .padding(bottom = paddingValues.calculateBottomPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         AuthIllustration(
-            density = deviceDensity(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 18.dp),
             imageResId = R.drawable.masjid
         )
 
@@ -125,8 +132,6 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .padding(24.dp)
-                .padding(
-                    bottom = if (deviceDensity() == Density.HighDensity) 70.dp else 10.dp)
                 .fillMaxWidth()
                 .height(50.dp)
                 .semantics {
@@ -137,6 +142,10 @@ fun LoginScreen(
             text = stringResource(id = R.string.request_otp)
         )
 
+        Spacer(modifier = Modifier
+            .weight(0.8f)
+            .background(color = Color.Red))
+
         Text(
             modifier = Modifier
                 .semantics {
@@ -146,23 +155,24 @@ fun LoginScreen(
         )
 
 
-        Text(
+        TextButton(
             modifier = Modifier
-                .padding(24.dp)
                 .semantics {
                     testTag = signUpText
                 }
-                .clickable {
-                    onSignUpClick()
-                },
-            text = stringResource(R.string.login_signup),
-            style = TextStyle(
-                fontSize = 15.sp,
-                color = MaterialTheme.colorScheme.primary,
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Medium
+                .windowInsetsBottomHeight(WindowInsets.systemBars),
+            onClick = {
+                onSignUpClick()
+            },
+        ) {
+            Text(
+                text = stringResource(id = R.string.login_signup),
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontSize = 17.sp
+                )
             )
-        )
+        }
+        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
     }
 
 }

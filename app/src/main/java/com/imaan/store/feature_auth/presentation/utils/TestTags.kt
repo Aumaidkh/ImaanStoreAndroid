@@ -16,6 +16,7 @@ object TestTags {
     const val registerSubtitle = "registerSubtitle"
     const val alreadyHaveAccount = "alreadyHaveAnAccount"
     const val termsOfUse = "termsOfUse"
+    const val loginText = "loginBtn"
 
     const val verifyOtpScreen = "verifyOtpScreen"
 }

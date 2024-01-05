@@ -12,14 +12,11 @@ import com.imaan.store.feature_auth.presentation.login.Density
 
 @Composable
 fun AuthIllustration(
-    density: Density,
+    modifier: Modifier = Modifier,
     imageResId: Int
 ) {
     Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                bottom = if (density == Density.HighDensity) 82.dp else 10.dp),
+        modifier = modifier,
         painter = painterResource(id = imageResId),
         contentDescription = "Login Logo",
         contentScale = ContentScale.FillWidth
