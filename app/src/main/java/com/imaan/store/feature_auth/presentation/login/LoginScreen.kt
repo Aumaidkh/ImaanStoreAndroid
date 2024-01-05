@@ -142,9 +142,7 @@ fun LoginScreen(
             text = stringResource(id = R.string.request_otp)
         )
 
-        Spacer(modifier = Modifier
-            .weight(0.8f)
-            .background(color = Color.Red))
+        Spacer(modifier = Modifier.weight(0.8f))
 
         Text(
             modifier = Modifier
@@ -159,8 +157,7 @@ fun LoginScreen(
             modifier = Modifier
                 .semantics {
                     testTag = signUpText
-                }
-                .windowInsetsBottomHeight(WindowInsets.systemBars),
+                },
             onClick = {
                 onSignUpClick()
             },

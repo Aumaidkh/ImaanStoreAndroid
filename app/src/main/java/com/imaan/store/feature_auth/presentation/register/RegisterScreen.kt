@@ -170,6 +170,8 @@ private fun RegisterForm(
             loading = state.loading,
             enabled = state.buttonEnabled
         )
+        
+        Spacer(modifier = Modifier.weight(1f))
 
         Text(
             modifier = Modifier
@@ -208,7 +210,7 @@ private fun RegisterForm(
         )
         Spacer(
             modifier = Modifier
-                .weight(0.7f)
+                .weight(0.05f)
         )
         Text(
             modifier = Modifier
@@ -218,13 +220,15 @@ private fun RegisterForm(
             text = stringResource(R.string.already_have_account),
         )
 
-
+        Spacer(
+            modifier = Modifier
+                .weight(0.05f)
+        )
         TextButton(
             modifier = Modifier
                 .semantics {
                     testTag = TestTags.loginText
-                }
-                .windowInsetsBottomHeight(WindowInsets.systemBars),
+                },
             onClick = {
                 onLoginClick()
             },
@@ -236,7 +240,10 @@ private fun RegisterForm(
                 )
             )
         }
-        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
+        Spacer(Modifier
+            .windowInsetsBottomHeight(WindowInsets.systemBars)
+            .padding(24.dp)
+        )
 
 
     }
