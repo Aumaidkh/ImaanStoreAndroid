@@ -161,10 +161,8 @@ class LoginScreenKtTest{
         composeTestRule.apply {
             setContent {
                 val viewModel = hiltViewModel<LoginViewModel>()
-                val formState = viewModel.formState.collectAsState().value
                 val uiState = viewModel.state.collectAsState().value
                 LoginScreen(
-                    formState = formState,
                     onRequestOtp = viewModel::requestOtp,
                     state = uiState
                 )
