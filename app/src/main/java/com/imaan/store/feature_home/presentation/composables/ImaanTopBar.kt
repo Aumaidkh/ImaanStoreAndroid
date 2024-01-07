@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.imaan.store.R
 import com.imaan.store.design_system.composables.CircularIcon
 import com.imaan.store.design_system.ui.theme.ImaanTheme
 
@@ -24,7 +25,7 @@ import com.imaan.store.design_system.ui.theme.ImaanTheme
 fun ImaanTopAppBar(
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
-    onCartClick: () -> Unit = {}
+    onCartClick: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier
@@ -50,15 +51,9 @@ fun ImaanTopAppBar(
 
             CircularIcon(
                 onClick = onCartClick,
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = "Cart"
-                )
-            }
+                containerColor = MaterialTheme.colorScheme.primary,
+                iconResId = R.drawable.ic_cart
+            )
         }
     }
 }

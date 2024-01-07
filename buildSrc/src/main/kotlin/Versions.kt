@@ -1,10 +1,12 @@
 object Versions {
     const val hilt = "2.46"
     const val hiltNavigation = "1.1.0"
-    const val composeMaterial3 = "1.0.1"
+    const val composeMaterial3 = "1.1.2"
     const val compose = "1.4.0"
     const val activityCompose = "1.8.2"
     const val navigationVersion = "2.7.6"
+
+    const val coil = "2.5.0"
 
     // Networking
     const val ktor = "1.6.3"

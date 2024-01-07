@@ -9,13 +9,6 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +23,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.imaan.store.design_system.composables.CircularIcon
@@ -71,164 +65,32 @@ fun NavDrawer(
                             .padding(horizontal = 50.dp, vertical = 32.dp)
                     )
                     Spacer(modifier = Modifier.height(50.dp))
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
+                    navDrawerItems.forEach { item ->
+                        NavigationDrawerItem(
+                            modifier = Modifier
+                                .padding(NavigationDrawerItemDefaults.ItemPadding),
+                            label = {
+                                Text(
+                                    text = item.label,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            },
+                            selected = false,
+                            onClick = { },
+                            colors = NavigationDrawerItemDefaults.colors(
+                                unselectedContainerColor = Color.Transparent,
+                                selectedContainerColor = Color.Transparent,
+                                selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onPrimary
                             ),
-                        label = {
-                            Text(
-                                text = "Home",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Home,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
-                            ),
-                        label = {
-                            Text(
-                                text = "Track Order",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.LocationOn,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
-                            ),
-                        label = {
-                            Text(
-                                text = "Wishlist",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
-                            ),
-                        label = {
-                            Text(
-                                text = "Invite a friend",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Send,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
-
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
-                            ),
-                        label = {
-                            Text(
-                                text = "Privacy Policy",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Warning,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
-
-                    NavigationDrawerItem(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 28.dp
-                            ),
-                        label = {
-                            Text(
-                                text = "About Us",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        selected = false,
-                        onClick = { },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            unselectedContainerColor = Color.Transparent,
-                            selectedContainerColor = Color.Transparent,
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Info,
-                                contentDescription = "Home Icon"
-                            )
-                        }
-                    )
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = item.iconResId),
+                                    contentDescription = "Home Icon"
+                                )
+                            }
+                        )
+                    }
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -263,6 +125,7 @@ fun NavDrawer(
 
 
         },
+        gesturesEnabled = false,
         content = content
     )
 }
