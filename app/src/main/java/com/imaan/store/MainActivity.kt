@@ -2,12 +2,13 @@ package com.imaan.store
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.imaan.store.navigation.ImaanApp
 import com.imaan.store.design_system.ui.theme.ImaanTheme
+import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_FEATURE
+import com.imaan.store.feature_home.navigation.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImaanTheme {
                 val navController = rememberNavController()
-                ImaanApp(navController = navController)
+                ImaanApp(navController,HOME_FEATURE)
             }
         }
     }

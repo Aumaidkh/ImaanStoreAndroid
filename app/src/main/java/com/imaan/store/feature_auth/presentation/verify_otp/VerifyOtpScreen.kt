@@ -2,11 +2,11 @@ package com.imaan.store.feature_auth.presentation.verify_otp
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -26,9 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.imaan.store.R
-import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.core.presentation.utils.UiEvent
+import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.feature_auth.presentation.login.OtpField
 import com.imaan.store.feature_auth.presentation.utils.TestTags.verifyOtpScreen
 
@@ -40,7 +42,8 @@ fun VerifyOtpScreen(
     onOtpChange: (String) -> Unit = {},
     onNavigateToHomeScreen: () -> Unit = {},
     onVerify: () -> Unit = {},
-    onResendOtp: () -> Unit = {}
+    onResendOtp: () -> Unit = {},
+    paddingValues: PaddingValues = PaddingValues()
 ) {
     LaunchedEffect(key1 = event){
         when(event){
@@ -70,8 +73,12 @@ fun VerifyOtpScreen(
             .fillMaxHeight(0.35f),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.illustration_verify_otp),
+            val model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(R.drawable.illustration_verify_otp)
+                .build()
+            AsyncImage(
+                model = model,
                 contentDescription = "verifyOtp"
             )
         }

@@ -164,7 +164,7 @@ class LoginScreenKtTest{
             setContent {
                 navController = TestNavHostController(LocalContext.current)
                 navController.navigatorProvider.addNavigator(ComposeNavigator())
-                ImaanApp(navController = navController)
+                ImaanApp(navController)
             }
             onNodeWithTag(TestTags.signUpText)
                 .performClick()

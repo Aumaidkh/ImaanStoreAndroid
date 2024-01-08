@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.imaan.store.feature_cart.navigation.CartScreen
 import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_FEATURE
 import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_ROUTE
 import com.imaan.store.feature_home.presentation.home.HomeScreen
@@ -44,7 +45,12 @@ import kotlinx.coroutines.launch
                                 drawerState.open()
                             }
                         },
-                        paddingValues = paddingValues
+                        paddingValues = paddingValues,
+                        onCartClick = {
+                            navController.navigate(
+                                route = CartScreen
+                            )
+                        }
                     )
                 }
             )
