@@ -3,6 +3,7 @@ package com.imaan.store.core.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.imaan.store.R
@@ -43,14 +45,17 @@ fun EmptyScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyLarge.copy(
+            style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Medium
             )
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         Text(
+            modifier = Modifier
+                .fillMaxWidth(0.7f),
             text = message,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -58,5 +63,23 @@ fun EmptyScreen(
 @Preview
 @Composable
 fun EmptyScreenPreview(){
+    EmptyScreen()
+}
+
+
+@Composable
+fun NoAddresses(
+    modifier: Modifier = Modifier
+) {
+    EmptyScreen(
+        modifier = modifier,
+        resId = R.drawable.ic_location,
+        title = "Add Your First Address!",
+        message = "Unlock the convenience of delivery by adding an address."
+    )
+}
+
+@Composable
+fun EmptyCart() {
     EmptyScreen()
 }

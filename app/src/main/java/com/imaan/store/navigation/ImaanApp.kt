@@ -14,6 +14,8 @@ import com.imaan.store.feature_auth.navigation.NavigationConstants
 import com.imaan.store.feature_auth.navigation.authNavigation
 import com.imaan.store.feature_cart.navigation.cartNavigation
 import com.imaan.store.feature_home.navigation.homeNavigation
+import com.imaan.store.feature_manage_addresses.navigation.manageAddressesNavigation
+import com.imaan.store.feature_payment.navigation.paymentNavigation
 
 private const val TAG = "ImaanApp"
 @Composable
@@ -50,6 +52,18 @@ fun ImaanApp(
                 navController = navController,
                 paddingValues = it,
                 snackbarHostState = snackbarHostState
+            )
+
+            manageAddressesNavigation(
+                navController = navController,
+                snackbarHostState = snackbarHostState,
+                paddingValues = it
+            )
+
+            paymentNavigation(
+                navController = navController,
+                snackbarHostState = snackbarHostState,
+                paddingValues = it
             )
         }
     }

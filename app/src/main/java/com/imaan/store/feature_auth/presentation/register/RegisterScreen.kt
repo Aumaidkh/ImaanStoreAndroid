@@ -1,6 +1,5 @@
 package com.imaan.store.feature_auth.presentation.register
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,25 +22,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imaan.store.R
 import com.imaan.store.design_system.composables.BigHeading
-import com.imaan.store.design_system.composables.ImaanInputField
+import com.imaan.store.design_system.composables.ImaanInputFieldWithIcon
 import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.design_system.composables.SmallHeading
 import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_auth.presentation.composables.AuthIllustration
-import com.imaan.store.feature_auth.presentation.login.deviceDensity
 import com.imaan.store.feature_auth.presentation.utils.TestTags
 
 @Composable
@@ -127,7 +123,7 @@ private fun RegisterForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Full Name field
-        ImaanInputField(
+        ImaanInputFieldWithIcon(
             modifier = Modifier
                 .semantics {
                     testTag = TestTags.fullNameField
@@ -138,12 +134,12 @@ private fun RegisterForm(
             error = state.fullName.error,
             onValueChange = onFullNameChange,
             iconResId = R.drawable.ic_person,
-            label = stringResource(id = R.string.full_name),
+            placeHolder = stringResource(id = R.string.full_name),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         )
 
-        ImaanInputField(
+        ImaanInputFieldWithIcon(
             modifier = Modifier
                 .semantics {
                     testTag = TestTags.phoneNumberField
@@ -154,7 +150,7 @@ private fun RegisterForm(
             error = state.phoneNumber.error,
             onValueChange = onPhoneChange,
             iconResId = R.drawable.ic_phone,
-            label = stringResource(id = R.string.phone),
+            placeHolder = stringResource(id = R.string.phone),
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
             maxLength = 10

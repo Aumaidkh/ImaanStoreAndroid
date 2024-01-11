@@ -1,6 +1,5 @@
 package com.imaan.store.feature_auth.presentation.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -24,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -39,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.imaan.store.R
 import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.design_system.composables.BigHeading
-import com.imaan.store.design_system.composables.ImaanInputField
+import com.imaan.store.design_system.composables.ImaanInputFieldWithIcon
 import com.imaan.store.design_system.composables.LoadingButton
 import com.imaan.store.design_system.composables.SmallHeading
 import com.imaan.store.feature_auth.domain.model.OTP
@@ -106,7 +104,7 @@ fun LoginScreen(
             tag = subtitle
         )
 
-        ImaanInputField(
+        ImaanInputFieldWithIcon(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
@@ -125,7 +123,7 @@ fun LoginScreen(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done,
             focusManager = focusManager,
-            label = stringResource(id = R.string.phone)
+            placeHolder = stringResource(id = R.string.phone)
         )
 
         LoadingButton(

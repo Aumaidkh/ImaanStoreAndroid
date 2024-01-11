@@ -3,7 +3,7 @@ package com.imaan.store.feature_cart.domain.model
 data class TotalModel(
     val type: TotalType = TotalType.SUB_TOTAL,
     val label: String,
-    private val amount: Double
+    val amount: Double
 ){
     val amountString get() =
         "$${amount}"

@@ -10,18 +10,17 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.imaan.store.feature_cart.domain.model.TotalModel
-import com.imaan.store.feature_cart.domain.model.TotalType
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_cart.presentation.CartScreen
 import com.imaan.store.feature_cart.presentation.CartViewModel
-import com.imaan.store.feature_cart.presentation.composable.CartItemModel
+import com.imaan.store.feature_manage_addresses.navigation.ManageAddresses
+import com.imaan.store.feature_payment.navigation.PaymentRoute
 
 fun NavGraphBuilder.cartNavigation(
     navController: NavHostController,
@@ -37,6 +36,25 @@ fun NavGraphBuilder.cartNavigation(
     ) {
         val viewModel = hiltViewModel<CartViewModel>()
         val state = viewModel.state.collectAsState()
+        val event = viewModel.eventFlow.collectAsState(null).value
+
+        LaunchedEffect(key1 = event){
+            when(event){
+                is UiEvent.Success<*> -> {
+                    navController.navigate(
+                        route = ManageAddresses
+                    )
+                }
+                is UiEvent.Error -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.errorMessage
+                    )
+                }
+
+                else -> {}
+            }
+        }
+
         CartScreen(
             paddingValues = paddingValues,
             onBackPressed = {
@@ -45,7 +63,8 @@ fun NavGraphBuilder.cartNavigation(
             totals = state.value.totals,
             cartItemModels = state.value.items,
             onQuantityDecrease = viewModel::decreaseQuantity,
-            onQuantityIncrease = viewModel::increaseQuantity
+            onQuantityIncrease = viewModel::increaseQuantity,
+            onProceedToCheckOut = viewModel::proceedToCheckOut
         )
     }
 }

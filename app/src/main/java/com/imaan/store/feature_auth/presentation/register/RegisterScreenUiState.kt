@@ -1,5 +1,7 @@
 package com.imaan.store.feature_auth.presentation.register
 
+import kotlinx.serialization.Serializable
+
 data class RegisterScreenUiState(
     val loading: Boolean = false,
     val buttonEnabled: Boolean = false,
@@ -20,10 +22,17 @@ data class FullName(
     }
 }
 
+@Serializable
 data class PhoneNumber(
     val value: String = "",
     val error: String? = null
 ) {
+
+    companion object{
+        val Empty = PhoneNumber(
+            ""
+        )
+    }
     fun copyWith(
         value: String = this.value,
         error: String? = this.error
