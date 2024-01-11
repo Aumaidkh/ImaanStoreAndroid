@@ -1,10 +1,22 @@
 package com.imaan.store.feature_manage_addresses.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -26,7 +38,19 @@ fun NavGraphBuilder.manageAddressesNavigation(
         route = ManageAddresses
     ){
         composable(
-            route = AddressesRoute.PickAddress.route
+            route = AddressesRoute.PickAddress.route,
+            enterTransition = {
+                slideRightEnterTransition()
+            },
+            exitTransition = {
+                slideLeftExitTransition()
+            },
+            popEnterTransition = {
+                slideRightEnterTransition()
+            },
+            popExitTransition = {
+                slideLeftExitTransition()
+            }
         ){
             val viewModel = hiltViewModel<ViewAddressesViewModel>()
             val state = viewModel.state.collectAsState().value
@@ -73,7 +97,19 @@ fun NavGraphBuilder.manageAddressesNavigation(
         }
 
         composable(
-            route = AddressesRoute.AddNewAddress.route
+            route = AddressesRoute.AddNewAddress.route,
+            enterTransition = {
+                slideRightEnterTransition()
+            },
+            exitTransition = {
+                slideLeftExitTransition()
+            },
+            popEnterTransition = {
+                slideRightEnterTransition()
+            },
+            popExitTransition = {
+                slideLeftExitTransition()
+            }
         ){
             val viewModel = hiltViewModel<UpsertAddressViewModel>()
             val state = viewModel.state.collectAsState().value
@@ -96,4 +132,26 @@ fun NavGraphBuilder.manageAddressesNavigation(
             )
         }
     }
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.slideRightEnterTransition(): EnterTransition {
+    return fadeIn(
+        animationSpec = tween(
+            300, easing = LinearEasing
+        )
+    ) + slideIntoContainer(
+        animationSpec = tween(300, easing = EaseIn),
+        towards = AnimatedContentTransitionScope.SlideDirection.Start
+    )
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.slideLeftExitTransition(): ExitTransition {
+    return fadeOut(
+        animationSpec = tween(
+            300, easing = LinearEasing
+        )
+    ) + slideOutOfContainer(
+        animationSpec = tween(300, easing = EaseOut),
+        towards = AnimatedContentTransitionScope.SlideDirection.End
+    )
 }

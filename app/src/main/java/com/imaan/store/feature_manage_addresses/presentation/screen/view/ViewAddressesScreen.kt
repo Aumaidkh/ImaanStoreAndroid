@@ -54,7 +54,8 @@ fun ViewAddressesScreen(
         } else {
             AddressesFeed(
                 modifier = Modifier
-                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
+                    .padding(horizontal = 8.dp)
+                    .padding(top = it.calculateTopPadding()+12.dp, bottom = it.calculateBottomPadding())
                     .fillMaxWidth(),
                 state = state,
                 onAddressSelected = onAddressSelected,
