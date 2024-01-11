@@ -35,7 +35,7 @@ fun AddressItem(
         onClick = {
             onAddressSelected(address)
         },
-        shadowElevation = 0.4.dp
+        shadowElevation = 0.7.dp
     ) {
         Row(
             modifier = Modifier
@@ -79,7 +79,7 @@ fun AddressItem(
                 Spacer(modifier = Modifier.padding(2.dp))
                 Text(
                     text = address.phoneNumber.value,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(modifier = Modifier.padding(2.dp))
                 Text(

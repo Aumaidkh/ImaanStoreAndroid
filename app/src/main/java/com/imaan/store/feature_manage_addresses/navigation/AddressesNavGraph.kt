@@ -65,6 +65,9 @@ fun NavGraphBuilder.manageAddressesNavigation(
                     navController.navigate(
                         route = AddressesRoute.AddNewAddress.route
                     )
+                },
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }

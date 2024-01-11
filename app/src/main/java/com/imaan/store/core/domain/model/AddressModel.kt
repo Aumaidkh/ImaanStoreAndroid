@@ -1,5 +1,7 @@
 package com.imaan.store.core.domain.model
 
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import com.imaan.store.feature_auth.presentation.register.PhoneNumber
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -24,10 +26,31 @@ data class Address(
     val fullAddress: FullAddress
 ){
     val readableAddress
-        get() = "Near ${landMark?.value}, ${city.value}, ${district.value}, ${state.value}, ${country.value}, ${pinCode.value}"
+        get() = buildAddress()
 
     fun toJson(): String {
         return Json.encodeToString(this)
+    }
+
+    private fun buildAddress(separator: Char = ','): String {
+        return buildAnnotatedString {
+            appendWithSeparator(fullAddress.value,separator)
+            landMark?.let {
+                appendWithSeparator("Near ${it.value}",separator)
+            }
+            appendWithSeparator(city.value,separator)
+            appendWithSeparator(district.value,separator)
+            appendWithSeparator(state.value,separator)
+            appendWithSeparator(country.value,separator)
+            appendWithSeparator(pinCode.value,separator)
+        }.text
+    }
+
+    private fun AnnotatedString.Builder.appendWithSeparator(value: String,separator: Char){
+        if (value.isEmpty()){
+            return
+        }
+        append("$value$separator ")
     }
     companion object {
         fun String.decodeFromString(): Address? {

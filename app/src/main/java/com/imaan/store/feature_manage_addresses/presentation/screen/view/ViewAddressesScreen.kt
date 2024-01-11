@@ -26,12 +26,14 @@ fun ViewAddressesScreen(
     onAddressSelected: (Address) -> Unit = {},
     onDeliverToAddress: (Address) -> Unit = {},
     onEditAddressClick: (Address) -> Unit = {},
-    onAddNewAddressClick: () -> Unit = {}
+    onAddNewAddressClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             CustomToolBar(
-                title = "Manage Addresses"
+                title = "Manage Addresses",
+                onBackPressed = onBackClick
             )
         },
         floatingActionButton = {
