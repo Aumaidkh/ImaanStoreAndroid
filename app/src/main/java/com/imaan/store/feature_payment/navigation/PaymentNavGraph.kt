@@ -1,6 +1,5 @@
 package com.imaan.store.feature_payment.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
@@ -30,7 +29,10 @@ fun NavGraphBuilder.paymentNavigation(
             onCardExpiryChange = viewModel::onExpiryChange,
             onCvvChange = viewModel::onCvvChange,
             onPaymentTypeClick = viewModel::onPaymentModeClick,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            onBackClick = {
+                navController.popBackStack()
+            }
         )
     }
 }

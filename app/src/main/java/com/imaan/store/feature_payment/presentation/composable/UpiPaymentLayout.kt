@@ -32,9 +32,9 @@ fun UpiPaymentLayout(
 
         ImaanInputField(
             modifier = Modifier
-                .padding(vertical = 12.dp)
+                .padding(vertical = 24.dp)
                 .fillMaxWidth(),
-            title = "Name",
+            title = "UPI ID",
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next,
             value = upiId,

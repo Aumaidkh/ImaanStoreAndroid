@@ -31,7 +31,8 @@ fun PaymentScreen(
     onCardExpiryChange: (String) -> Unit,
     onCvvChange: (String) -> Unit,
     onPaymentTypeClick: (PaymentMode) -> Unit,
-    paddingValues: PaddingValues
+    onBackClick: () -> Unit,
+    paddingValues: PaddingValues = PaddingValues(),
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
@@ -39,7 +40,8 @@ fun PaymentScreen(
             .systemBarsPadding(),
         topBar = {
             CustomToolBar(
-                title = "Payment"
+                title = "Payment",
+                onBackPressed = onBackClick
             )
         }
     ) {
@@ -87,6 +89,7 @@ fun PaymentScreenContent(
         AnimatedVisibility(visible = state.paymentMode is UPI) {
             UpiPaymentLayout(
                 modifier = Modifier
+                    .padding(horizontal = 12.dp)
                     .fillMaxWidth(),
             )
         }
