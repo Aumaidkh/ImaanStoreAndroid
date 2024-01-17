@@ -36,8 +36,7 @@ fun PaymentScreen(
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
-        modifier = Modifier
-            .systemBarsPadding(),
+
         topBar = {
             CustomToolBar(
                 title = "Payment",

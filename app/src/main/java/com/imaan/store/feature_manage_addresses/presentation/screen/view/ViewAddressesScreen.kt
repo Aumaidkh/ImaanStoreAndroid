@@ -11,7 +11,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +46,7 @@ fun ViewAddressesScreen(
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
     ) {
         if (state.addresses.isEmpty()) {
             NoAddresses(
@@ -54,8 +56,7 @@ fun ViewAddressesScreen(
         } else {
             AddressesFeed(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .padding(top = it.calculateTopPadding()+12.dp, bottom = it.calculateBottomPadding())
+                    .padding(top = it.calculateTopPadding() + 12.dp, bottom = it.calculateBottomPadding())
                     .fillMaxWidth(),
                 state = state,
                 onAddressSelected = onAddressSelected,
@@ -75,14 +76,15 @@ fun AddressesFeed(
     onEditClick: (Address) -> Unit = {},
 ) {
     LazyColumn(modifier = modifier) {
+
         items(
             items = state.addresses,
             key = { it.id?.value ?: "" }
         ) {
-            AddressItem(
+            NewAddressItem(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp),
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
                 address = it,
                 isSelected = state.selectedAddress == it,
                 onAddressSelected = onAddressSelected,

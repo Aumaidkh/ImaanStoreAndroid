@@ -59,7 +59,7 @@ fun AddressInputField(
                 .border(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = 0.5f
+                        alpha = 0.4f
                     ),
                     shape = MaterialTheme.shapes.extraSmall
                 ),

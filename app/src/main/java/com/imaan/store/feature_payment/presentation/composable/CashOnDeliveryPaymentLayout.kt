@@ -31,7 +31,7 @@ fun CashOnDeliveryPaymentLayout(
     ) {
         Text(
             text = "Order now",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleMedium
         )
 
         Surface(

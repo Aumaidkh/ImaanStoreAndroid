@@ -1,135 +1,177 @@
 package com.imaan.store.feature_cart.presentation.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.imaan.store.R
-import com.imaan.store.design_system.composables.CircularIcon
+import com.imaan.store.core.domain.model.Amount
+import com.imaan.store.core.domain.model.ProductModel
+import com.imaan.store.core.domain.model.getDummyProducts
+import com.imaan.store.feature_home.presentation.composables.CircularIconButton
 import java.util.UUID
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartItem(
+fun CartItemComponent(
     modifier: Modifier = Modifier,
     cartItemModel: CartItemModel = CartItemModel(),
     onItemClick: () -> Unit = {},
     onQuantityIncrease: (CartItemModel) -> Unit = {},
     onQuantityDecrease: (CartItemModel) -> Unit = {},
+    onRemove: (CartItemModel) -> Unit = {}
 ) {
     val context = LocalContext.current
-
-    Surface(
-        tonalElevation = 0.01.dp,
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium
-    ) {
+    Card(onClick = { onItemClick() }, modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
             val model = ImageRequest.Builder(context)
-                .data(R.drawable.dummy_pic)
+                .data(cartItemModel.productModel.imageUrl)
                 .build()
             AsyncImage(
                 modifier = Modifier
                     .clip(
                         shape = MaterialTheme.shapes.small
                     )
-                    .size(120.dp),
+                    .fillMaxHeight()
+                    .size(140.dp),
                 model = model,
                 contentDescription = "item_image",
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth(1f)
+                    .padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.Top
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = cartItemModel.name,
-                        style = MaterialTheme.typography.titleMedium
+                        modifier = Modifier.fillMaxWidth(0.9f),
+                        text = cartItemModel.productModel.name,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            lineHeight = 19.sp,
+                            fontSize = 16.sp
+                        ),
+                        maxLines = 2
                     )
-                    CircularIcon(
-                        onClick = onItemClick
-                    ) {
+                    IconButton(onClick = { onRemove(cartItemModel) }) {
                         Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "")
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onBackground.copy(
+                                alpha = 0.5f
+                            )
+                        )
                     }
                 }
-
                 Text(
-                    text = cartItemModel.description,
-                    style = MaterialTheme.typography.bodySmall
+                    modifier = Modifier
+                        .padding(top = 8.dp),
+                    text = cartItemModel.productModel.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2
                 )
-
                 Row(
                     modifier = Modifier
+                        .padding(top = 8.dp)
                         .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    QuantityChanger(
-                        quantity = cartItemModel.itemQuantity,
-                        onDecreaseClick = { onQuantityDecrease(cartItemModel) },
-                        onIncreaseClick = { onQuantityIncrease(cartItemModel) }
-                    )
-
                     Text(
-                        text = cartItemModel.price,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.primary
+                        text = cartItemModel.totalPrice.inRupees,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 18.sp
                         )
                     )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedIconButton(
+                            onClick = {
+                                onQuantityDecrease(cartItemModel)
+                            },
+                            shape = MaterialTheme.shapes.medium,
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.onBackground.copy(
+                                    alpha = 0.5f
+                                )
+                            )
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.ic_minus), contentDescription = "")
+                        }
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp),
+                            text = cartItemModel.itemQuantity.toString()
+                        )
+                        OutlinedIconButton(
+                            onClick = {
+                                onQuantityIncrease(cartItemModel)
+                            },
+                            shape = MaterialTheme.shapes.medium,
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.ic_plus), contentDescription = "")
+                        }
+                    }
                 }
             }
         }
     }
+}
 
-
+@Preview
+@Composable
+fun NewCartItemPreview() {
+    CartItemComponent()
 }
 
 data class CartItemModel(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String = "Flowers",
-    val image: String = "",
-    val description: String = "It's spines don't grow",
-    private val basePrice: Int = 10,
+    val productModel: ProductModel = getDummyProducts(1).first(),
     var quantity: Int = 1
 ) {
-    val price
-        get() =
-            "$${quantity * basePrice}"
-
     val itemQuantity get() = quantity
 
-    val totalPrice get() =
-        quantity * basePrice
+    val totalPrice: Amount get() =
+        productModel.price multiply quantity
 
 }

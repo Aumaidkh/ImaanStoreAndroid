@@ -60,11 +60,12 @@ fun NavGraphBuilder.cartNavigation(
             onBackPressed = {
                 navController.popBackStack()
             },
-            totals = state.value.totals,
+            totals = state.value.totalModel,
             cartItemModels = state.value.items,
             onQuantityDecrease = viewModel::decreaseQuantity,
             onQuantityIncrease = viewModel::increaseQuantity,
-            onProceedToCheckOut = viewModel::proceedToCheckOut
+            onProceedToCheckOut = viewModel::proceedToCheckOut,
+            onRemoveItemFromCart = viewModel::removeItemFromCart
         )
     }
 }

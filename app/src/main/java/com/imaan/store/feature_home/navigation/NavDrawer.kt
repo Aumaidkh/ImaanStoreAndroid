@@ -31,13 +31,13 @@ import com.imaan.store.design_system.ui.theme.ImaanTheme
 import com.imaan.store.feature_home.presentation.composables.ProfileComponent
 import com.imaan.store.feature_home.presentation.home.HomeScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavDrawer(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Open),
     onCloseIconClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {

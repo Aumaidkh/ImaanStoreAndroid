@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.imaan.store.core.domain.OrderRepository
 import com.imaan.store.core.domain.model.Amount
 import com.imaan.store.core.domain.model.OrderModel
+import com.imaan.store.core.domain.model.plus
+import com.imaan.store.core.domain.model.sumOfAmounts
 import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_cart.domain.model.TotalModel
 import com.imaan.store.feature_cart.presentation.composable.CartItemModel
@@ -14,6 +16,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +32,7 @@ class CartViewModel @Inject constructor(
     val eventFlow get() = _event.receiveAsFlow()
     fun increaseQuantity(item: CartItemModel){
         val updatedItems = _state.value.items.toMutableList()
-        val index = updatedItems.indexOfFirst { it.id == item.id }
+        val index = updatedItems.indexOfFirst { it.productModel.id == item.productModel.id }
         if (index != -1) {
             updatedItems[index] = item.copy(quantity = item.quantity + 1)
             updateTotals(updatedItems)
@@ -38,7 +41,7 @@ class CartViewModel @Inject constructor(
     
     fun decreaseQuantity(item: CartItemModel){
         val updatedItems = _state.value.items.toMutableList()
-        val index = updatedItems.indexOfFirst { it.id == item.id }
+        val index = updatedItems.indexOfFirst { it.productModel.id == item.productModel.id }
         if (index != -1) {
             if (item.quantity > 1){
                 updatedItems[index] = item.copy(quantity = item.quantity - 1)
@@ -51,15 +54,26 @@ class CartViewModel @Inject constructor(
     }
 
     private fun updateTotals(updatedItems: List<CartItemModel>) {
-        val deliveryCharge = 40.0
-        val subTotal = updatedItems.sumOf { it.totalPrice.toDouble() }
-        val grandTotal = deliveryCharge + subTotal
-        val updatedTotals = listOf(
-            TotalModel(label = "Delivery", amount = deliveryCharge),
-            TotalModel(label = "Subtotal", amount = subTotal),
-            TotalModel(label = "Grand Total", amount = grandTotal)
-        )
-        _state.value = _state.value.copy(items = updatedItems, totals = updatedTotals)
+        val subTotal = updatedItems.sumOfAmounts { it.totalPrice }
+        val grandTotal = _state.value.totalModel.deliveryCharges plus subTotal
+        _state.value = _state.value.copy(items = updatedItems)
+        _state.update {
+            it.copy(
+                items = updatedItems,
+                totalModel = _state.value.totalModel.copy(
+                    subtotal = subTotal,
+                    grandTotal = grandTotal
+                )
+            )
+        }
+    }
+
+    fun removeItemFromCart(item: CartItemModel){
+        _state.update {
+            it.copy(
+                items = _state.value.items - item
+            )
+        }
     }
 
     fun proceedToCheckOut(){
@@ -76,27 +90,23 @@ class CartViewModel @Inject constructor(
         orderRepository.updateOrder(
             orderModel = OrderModel(
                 cartItems = _state.value.items,
-                deliveryCharges = Amount(
-                    _state.value.totals.first().amount
-                ),
-                subtotalAmount = Amount(
-                    _state.value.totals[1].amount
-                ),
-                totalAmount = Amount(
-                    _state.value.totals[2].amount
-                )
+                deliveryCharges = _state.value.totalModel.deliveryCharges,
+                subtotalAmount = _state.value.totalModel.subtotal,
+                discount = _state.value.totalModel.subtotal,
+                totalAmount = _state.value.totalModel.grandTotal
             )
         )
     }
-    
+
 }
 
 
 data class CartScreenState(
-    val items: List<CartItemModel> = getDummyCartItems(2),
-    val totals: List<TotalModel> = listOf(
-        TotalModel(label = "Delivery",amount = 40.0),
-        TotalModel(label = "Subtotal", amount = items.sumOf { it.totalPrice.toDouble() }),
-        TotalModel(label = "Grand Total", amount = (40.0 + items.sumOf { it.totalPrice.toDouble() }))
+    val items: List<CartItemModel> = dummyCart,
+    val totalModel: TotalModel = TotalModel(
+        deliveryCharges = Amount(40.0),
+        subtotal = items.sumOfAmounts { it.totalPrice },
+        discount = Amount(40.00),
+        grandTotal = ((40.0 - 20.0) plus items.sumOfAmounts { it.totalPrice })
     )
 )

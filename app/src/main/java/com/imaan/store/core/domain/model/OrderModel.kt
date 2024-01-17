@@ -26,6 +26,7 @@ data class OrderModel(
     val cartItems: List<CartItemModel> = emptyList(),
     val userId: UserId = UserId.getUserId(),
     val deliveryCharges: Amount = Amount.ZERO,
+    val discount: Amount = Amount.ZERO,
     val subtotalAmount: Amount = Amount.ZERO,
     val totalAmount: Amount = Amount.ZERO,
     val status: OrderStatus = OrderStatus.StatusPending,

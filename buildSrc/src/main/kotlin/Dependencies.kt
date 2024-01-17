@@ -9,6 +9,7 @@ object Dependencies {
     const val composeUiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
     const val composeUiToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
     const val composeRuntime = "androidx.compose.runtime:runtime:${Versions.compose}"
+    const val composeUtil = "androidx.compose.ui:ui-util:${Versions.compose}"
     const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
     const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hilt}"
     const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hilt}"
@@ -66,6 +67,7 @@ fun DependencyHandler.coil(){
 fun DependencyHandler.compose() {
    // implementation(Dependencies.materialIcons)
     implementation(Dependencies.composeUi)
+    implementation(Dependencies.composeUtil)
     implementation(Dependencies.composeRuntime)
     implementation(Dependencies.composeUiGraphics)
     implementation(Dependencies.composeUiTooling)

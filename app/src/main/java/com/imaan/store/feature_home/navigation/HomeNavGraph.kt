@@ -1,26 +1,28 @@
 package com.imaan.store.feature_home.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.imaan.store.core.presentation.utils.UiEvent
 import com.imaan.store.feature_cart.navigation.CartScreen
 import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_FEATURE
 import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_ROUTE
-import com.imaan.store.feature_home.presentation.home.HomeScreen
-import kotlinx.coroutines.launch
+import com.imaan.store.feature_home.presentation.categories.CategoriesScreen
+import com.imaan.store.feature_home.presentation.home.HomeScreenViewModel
 
-@OptIn(ExperimentalMaterial3Api::class) fun NavGraphBuilder.homeNavigation(
+
+fun NavGraphBuilder.homeNavigation(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     paddingValues: PaddingValues
 ) {
+
 
     navigation(
         route = HOME_FEATURE,
@@ -29,29 +31,45 @@ import kotlinx.coroutines.launch
         composable(
             route = HOME_ROUTE
         ) {
-            val scope = rememberCoroutineScope()
-            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-            NavDrawer(
-                drawerState = drawerState,
-                onCloseIconClick = {
-                    scope.launch {
-                        drawerState.close()
+
+            val viewModel = hiltViewModel<HomeScreenViewModel>()
+            val state = viewModel.state.collectAsState().value
+            val event = viewModel.event.collectAsState(null).value
+            when (event) {
+                is UiEvent.Success<*> -> {
+                    LaunchedEffect(Unit){
+                        snackbarHostState.showSnackbar(
+                            event.data as String
+                        )
                     }
-                },
-                content = {
-                    HomeScreen(
-                        onMenuClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        },
-                        paddingValues = paddingValues,
-                        onCartClick = {
-                            navController.navigate(
-                                route = CartScreen
-                            )
-                        }
+                }
+
+                else -> {}
+            }
+            HomeScreenDrawer(
+                state = state,
+                paddingValues = paddingValues,
+                onCartClick = {
+                    navController.navigate(
+                        route = CartScreen
                     )
+                },
+                onSeeAllCategoriesClick = {
+                    navController.navigate(
+                        route = Routes.Categories.route
+                    )
+                },
+                onAddToCart = viewModel::onAddToCart,
+                onCategoryClicked = viewModel::onSelectCategory
+            )
+        }
+
+        composable(
+            route = Routes.Categories.route
+        ) {
+            CategoriesScreen(
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }

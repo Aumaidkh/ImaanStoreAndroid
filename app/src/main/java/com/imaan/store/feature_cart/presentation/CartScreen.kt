@@ -4,112 +4,55 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.imaan.store.R
+import com.imaan.store.core.domain.model.Amount
+import com.imaan.store.core.domain.model.ProductModel
 import com.imaan.store.core.presentation.EmptyScreen
+import com.imaan.store.design_system.composables.CustomToolBar
+import com.imaan.store.design_system.composables.LoadingButton
+import com.imaan.store.design_system.ui.theme.poppinsFontFamily
 import com.imaan.store.feature_cart.domain.model.TotalModel
-import com.imaan.store.feature_cart.domain.model.TotalType
-import com.imaan.store.feature_cart.domain.model.dummyTotals
-import com.imaan.store.feature_cart.presentation.composable.CartItem
+import com.imaan.store.feature_cart.presentation.composable.CartItemComponent
 import com.imaan.store.feature_cart.presentation.composable.CartItemModel
-import com.imaan.store.feature_cart.presentation.composable.CartToolBar
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
     paddingValues: PaddingValues = PaddingValues(),
     onBackPressed: () -> Unit = {},
-    totals: List<TotalModel> = dummyTotals,
+    totals: TotalModel,
     onProceedToCheckOut: () -> Unit = {},
     cartItemModels: List<CartItemModel> = getDummyCartItems(),
     onQuantityIncrease: (CartItemModel) -> Unit = {},
     onQuantityDecrease: (CartItemModel) -> Unit = {},
+    onRemoveItemFromCart: (CartItemModel) -> Unit = {},
 ) {
     // Calculate subtotal based on cart item quantities and prices
-    val sheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = SheetState(
-            initialValue = if (cartItemModels.isEmpty()) SheetValue.Hidden else SheetValue.Expanded,
-            skipPartiallyExpanded = false
-        )
-    )
-    val scope = rememberCoroutineScope()
-    var sheetHeight by remember {
-        mutableStateOf(320.dp)
-    }
-    BottomSheetScaffold(
-        scaffoldState = sheetState,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .graphicsLayer {
-                        sheetHeight = size.height.toDp() + 50.dp
-                    }
-                    .padding(horizontal = 24.dp)
-                    .systemBarsPadding()
-            ) {
-                totals.forEach {
-                    TotalItemComponent(modifier = Modifier.padding(vertical = 4.dp), total = it)
-                }
-                Spacer(modifier = Modifier.height(62.dp))
-                Divider()
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    onClick = { onProceedToCheckOut() }
-                ) {
-                    Text(
-                        text = "Proceed to checkout"
-                    )
-                }
-            }
-        },
+
+    Scaffold(
         topBar = {
-            CartToolBar(
-                onBackPressed = onBackPressed,
-                onMorePressed = {
-                    scope.launch {
-                        sheetState.bottomSheetState.expand()
-                    }
-                }
+            CustomToolBar(
+                title = "Cart",
+                onBackPressed = onBackPressed
             )
         },
-        sheetShadowElevation = 120.dp,
         containerColor = MaterialTheme.colorScheme.surface,
-        sheetSwipeEnabled = false,
     ) {
         if (cartItemModels.isEmpty()) {
             EmptyScreen(
@@ -124,11 +67,11 @@ fun CartScreen(
         else {
             Column(
                 modifier = Modifier
-                    .padding(bottom = sheetHeight)
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 8.dp)
                     .padding(
-                        top = it.calculateTopPadding()
+                        top = it.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
                     )
             ) {
                 Column(
@@ -139,9 +82,12 @@ fun CartScreen(
                         modifier = Modifier.fillMaxWidth(),
                         items = cartItemModels,
                         onQuantityIncrease = onQuantityIncrease,
-                        onQuantityDecrease = onQuantityDecrease
+                        onQuantityDecrease = onQuantityDecrease,
+                        totals = totals,
+                        paddingValues = paddingValues,
+                        onRemoveItem = onRemoveItemFromCart,
+                        onProceedToCheckOut = onProceedToCheckOut
                     )
-                    Spacer(modifier = Modifier.height(sheetHeight))
                 }
             }
         }
@@ -151,7 +97,8 @@ fun CartScreen(
 @Composable
 private fun TotalItemComponent(
     modifier: Modifier = Modifier,
-    total: TotalModel
+    total: Amount,
+    label: String
 ) {
     Row(
         modifier = modifier
@@ -160,17 +107,46 @@ private fun TotalItemComponent(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = total.label
+            text = label,
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontFamily = poppinsFontFamily,
+                color = MaterialTheme.colorScheme.onBackground.copy(
+                    alpha = 0.6f
+                )
+            ),
         )
         Text(
-            text = total.amountString,
-            style = TextStyle(
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
-            )
+            text = total.inRupees,
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }
+
+val dummyCart = mutableListOf<CartItemModel>()
+
+fun addDuumyToCart(item: ProductModel): Boolean {
+    val cartItem =
+        dummyCart.find { it.productModel == item }
+
+    if (cartItem == null){
+        dummyCart.add(
+            CartItemModel(
+                productModel = item,
+                quantity = 1
+            )
+        )
+        return true
+    }
+    val itemIndex = dummyCart.indexOf(cartItem)
+    if (itemIndex != -1){
+        dummyCart[itemIndex] = cartItem.copy(
+            quantity = cartItem.quantity ++
+        )
+        return true
+    }
+    return false
+}
+
 
 fun getDummyCartItems(number: Int = 5): List<CartItemModel> {
     val cartItemModels = mutableListOf<CartItemModel>()
@@ -187,29 +163,107 @@ fun CartContent(
     items: List<CartItemModel>,
     modifier: Modifier = Modifier,
     onQuantityDecrease: (CartItemModel) -> Unit,
-    onQuantityIncrease: (CartItemModel) -> Unit
+    onQuantityIncrease: (CartItemModel) -> Unit,
+    onRemoveItem: (CartItemModel) -> Unit,
+    onProceedToCheckOut: () -> Unit,
+    totals: TotalModel,
+    paddingValues: PaddingValues
 ) {
     LazyColumn(
         modifier = modifier
+            .imePadding(),
     ) {
         items(
             items = items,
-            key = { item -> item.id }
+            key = { item -> item.productModel.id }
         ) {
-            CartItem(
+            CartItemComponent(
                 modifier = Modifier
+                    .padding(horizontal = 24.dp)
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                    .padding(vertical = 12.dp),
                 cartItemModel = it,
                 onQuantityDecrease = onQuantityDecrease,
-                onQuantityIncrease = onQuantityIncrease
+                onQuantityIncrease = onQuantityIncrease,
+                onRemove = onRemoveItem
+            )
+            Divider(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                thickness = 0.6.dp,
+                color = MaterialTheme.colorScheme.onSecondary.copy(
+                    alpha = 0.3f
+                )
+            )
+        }
+
+        item {
+            TotalComponent(totals, paddingValues )
+        }
+
+        item {
+            LoadingButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 8.dp),
+                text = "Proceed to checkout",
+                onClick = onProceedToCheckOut
             )
         }
     }
 }
 
-@Preview
 @Composable
-fun CartScreenPreview() {
-    CartScreen()
+private fun TotalComponent(totals: TotalModel,
+                           paddingValues: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = paddingValues.calculateBottomPadding())
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        PromoComponent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+        )
+        TotalItemComponent(modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp), total = totals.subtotal, label = "Subtotal")
+        TotalItemComponent(modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp), total = totals.deliveryCharges, label = "Delivery charges")
+        TotalItemComponent(modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp), total = totals.discount, label = "Discount")
+        TotalItemComponent(modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp), total = totals.grandTotal, label = "Grand Total")
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 24.dp, horizontal = 24.dp)
+                .fillMaxWidth(),
+            thickness = 0.7.dp,
+            color = MaterialTheme.colorScheme.onBackground.copy(
+                alpha = 0.3f
+            )
+        )
+    }
+}
+
+@Composable
+fun PromoComponent(
+    modifier: Modifier = Modifier,
+    promoValid: Boolean = false
+) {
+    OutlinedTextField(
+        modifier = modifier,
+        value = "",
+        onValueChange = {},
+        trailingIcon = {
+
+        },
+        placeholder = {
+            Text(text = "APPLY PROMO")
+        },
+        shape = MaterialTheme.shapes.medium,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(
+                alpha = 0.4f
+            )
+        )
+    )
 }
