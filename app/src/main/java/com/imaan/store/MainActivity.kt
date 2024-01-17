@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImaanTheme {
                 val navController = rememberNavController()
-                ImaanApp(navController,HOME_FEATURE)
+                ImaanApp(navController,"home")
             }
         }
     }

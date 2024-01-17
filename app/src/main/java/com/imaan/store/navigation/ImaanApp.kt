@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.imaan.home.navigation.homeNavigationProvider
 import com.imaan.store.feature_auth.navigation.NavigationConstants
 import com.imaan.store.feature_auth.navigation.authNavigation
 import com.imaan.store.feature_cart.navigation.cartNavigation
@@ -43,10 +44,18 @@ fun ImaanApp(
                 paddingValues = it
             )
 
-            homeNavigation(
+//            homeNavigation(
+//                navController = navController,
+//                snackbarHostState = snackbarHostState,
+//                paddingValues = it
+//            )
+
+            homeNavigationProvider(
                 navController = navController,
                 snackbarHostState = snackbarHostState,
-                paddingValues = it
+                paddingValues = it,
+                onNavigateToCart = {},
+                onNavigateToCategories = {}
             )
 
             cartNavigation(

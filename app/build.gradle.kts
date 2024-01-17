@@ -58,7 +58,7 @@ tasks.dokkaHtml.configure {
 }
 
 dependencies {
-
+    implementation(project(":feature:home"))
     implementation(Dependencies.coreKtx)
     testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")
