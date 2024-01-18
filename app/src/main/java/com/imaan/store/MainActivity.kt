@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
+import com.imaan.home.navigation.HomeRoute
 import com.imaan.store.navigation.ImaanApp
 import com.imaan.store.design_system.ui.theme.ImaanTheme
 import com.imaan.store.feature_home.navigation.NavigationConstants.HOME_FEATURE
@@ -19,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImaanTheme {
                 val navController = rememberNavController()
-                ImaanApp(navController,"home")
+                ImaanApp(navController,HomeRoute.route, rememberCoroutineScope())
             }
         }
     }

@@ -33,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
@@ -58,7 +58,9 @@ tasks.dokkaHtml.configure {
 }
 
 dependencies {
+    implementation(project(":core:util"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:cart"))
     implementation(Dependencies.coreKtx)
     testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")

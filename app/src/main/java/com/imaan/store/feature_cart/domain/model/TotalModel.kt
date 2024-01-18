@@ -7,5 +7,4 @@ data class TotalModel(
     val subtotal: Amount,
     val discount: Amount,
     val grandTotal: Amount
-){
-}
+)

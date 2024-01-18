@@ -14,7 +14,6 @@ import com.imaan.home.ui.components.HomeScreenDrawer
 
 
 fun NavGraphBuilder.homeNavigationProvider(
-    navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     onNavigateToCart: () -> Unit,
     onNavigateToCategories: () -> Unit,

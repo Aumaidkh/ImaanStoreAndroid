@@ -45,6 +45,10 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.coreKtx(){
+    implementation(Dependencies.coreKtx)
+}
+
 fun DependencyHandler.coroutines(){
     testImplementation(Dependencies.Testing.coroutineTest)
 }

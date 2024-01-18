@@ -27,12 +27,15 @@
             <option value="$PROJECT_DIR$/core/resources" />
             <option value="$PROJECT_DIR$/core/util" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/data/addresses" />
+            <option value="$PROJECT_DIR$/data/address" />
             <option value="$PROJECT_DIR$/data/cart" />
             <option value="$PROJECT_DIR$/data/categories" />
             <option value="$PROJECT_DIR$/data/common" />
             <option value="$PROJECT_DIR$/data/offers" />
+            <option value="$PROJECT_DIR$/data/order" />
+            <option value="$PROJECT_DIR$/data/payment" />
             <option value="$PROJECT_DIR$/data/products" />
+            <option value="$PROJECT_DIR$/data/total" />
             <option value="$PROJECT_DIR$/data/user" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/addresses" />

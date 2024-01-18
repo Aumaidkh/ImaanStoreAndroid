@@ -11,19 +11,27 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.imaan.home.navigation.homeNavigationProvider
+import com.imaan.navigation.CartRoute
+import com.imaan.navigation.cartNavigationProvider
 import com.imaan.store.feature_auth.navigation.NavigationConstants
 import com.imaan.store.feature_auth.navigation.authNavigation
 import com.imaan.store.feature_cart.navigation.cartNavigation
 import com.imaan.store.feature_home.navigation.homeNavigation
+import com.imaan.store.feature_manage_addresses.navigation.AddressesRoute
+import com.imaan.store.feature_manage_addresses.navigation.ManageAddresses
 import com.imaan.store.feature_manage_addresses.navigation.manageAddressesNavigation
+import com.imaan.store.feature_manage_addresses.presentation.screen.add.ADDRESS_KEY
 import com.imaan.store.feature_payment.navigation.paymentNavigation
 import com.imaan.store.feature_profile.navigation.profileNavGraph
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 private const val TAG = "ImaanApp"
 @Composable
 fun ImaanApp(
     navController: NavHostController,
-    startDestination: String =  NavigationConstants.AUTH_FEATURE
+    startDestination: String = NavigationConstants.AUTH_FEATURE,
+    scope: CoroutineScope
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -44,24 +52,35 @@ fun ImaanApp(
                 paddingValues = it
             )
 
-//            homeNavigation(
-//                navController = navController,
-//                snackbarHostState = snackbarHostState,
-//                paddingValues = it
-//            )
 
             homeNavigationProvider(
-                navController = navController,
                 snackbarHostState = snackbarHostState,
                 paddingValues = it,
-                onNavigateToCart = {},
+                onNavigateToCart = {
+                    navController.navigate(
+                        route = CartRoute.route
+                    )
+                },
                 onNavigateToCategories = {}
             )
 
-            cartNavigation(
-                navController = navController,
+            cartNavigationProvider(
                 paddingValues = it,
-                snackbarHostState = snackbarHostState
+                onNavigateToAddresses = {
+                    navController.navigate(
+                        route = ManageAddresses
+                    )
+                },
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onError = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = it.message.toString()
+                        )
+                    }
+                }
             )
 
             manageAddressesNavigation(

@@ -13,6 +13,8 @@ dependencyResolutionManagement {
     }
 }
 
+
+
 rootProject.name = "Imaan"
 include(":app")
 include(":sharedTest")
@@ -27,9 +29,12 @@ include(":core:util")
 include(":data:offers")
 include(":data:common")
 include(":data:cart")
-include(":data:addresses")
+include(":data:address")
 include(":data:products")
 include(":data:categories")
 include(":data:user")
 include(":core:components")
 include(":core:resources")
+include(":data:order")
+include(":data:payment")
+include(":data:total")

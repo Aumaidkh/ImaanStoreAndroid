@@ -15,9 +15,9 @@ fun CircularIcon(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     containerColor: Color = Color.Transparent,
-    icon: @Composable () -> Unit = {},
     iconResId: Int?,
-    tint: Color = MaterialTheme.colorScheme.primary
+    tint: Color = MaterialTheme.colorScheme.primary,
+    icon: @Composable () -> Unit = {}
 ) {
     iconResId?.let {
         CircularIconWithIconResId(

@@ -21,6 +21,7 @@ import com.imaan.categories.CategoryModel
 import com.imaan.components.ImaanTopAppBar
 import com.imaan.components.ProductCard
 import com.imaan.components.ProductCardSize
+import com.imaan.components.Type
 import com.imaan.home.ui.components.CategoriesSection
 import com.imaan.home.ui.components.ImaanCarousel
 import com.imaan.home.ui.components.ImaanSearchBar
@@ -45,10 +46,11 @@ fun HomeScreen(
                 user = state.user,
                 modifier = Modifier
                     .fillMaxWidth(),
-                onMenuClick = onMenuClick,
-                onCartClick = onCartClick,
+                onNavigationClick = onMenuClick,
+                onActionClick = onCartClick,
                 cartItemsCount = if (state.cartItemCount == 0) null else state.cartItemCount,
-                actionIconResId = com.imaan.resources.R.drawable.ic_cart
+                actionIconResId = com.imaan.resources.R.drawable.ic_cart,
+                type = Type.WithProfilePic
             )
         }
     ) {
