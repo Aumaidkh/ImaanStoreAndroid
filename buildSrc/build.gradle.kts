@@ -9,6 +9,8 @@ repositories{
     mavenCentral()
 }
 
+
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
     implementation("com.android.tools.build:gradle:8.2.0")
@@ -20,4 +22,19 @@ dependencies {
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
     jvmTarget = "17"
+}
+
+gradlePlugin {
+    plugins {
+
+        register("compose-plugin") {
+            id = "imaan.compose.plugin"
+            implementationClass = "ComposePlugin"
+        }
+
+        register("hilt-plugin") {
+            id = "imaan.hilt.plugin"
+            implementationClass = "HiltPlugin"
+        }
+    }
 }

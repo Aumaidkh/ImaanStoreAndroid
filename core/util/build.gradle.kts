@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("imaan.hilt.plugin")
 }
 
 android {
@@ -38,6 +39,5 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.1")
     compose()
 }

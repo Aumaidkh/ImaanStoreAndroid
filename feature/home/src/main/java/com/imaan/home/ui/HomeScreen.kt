@@ -1,8 +1,10 @@
 package com.imaan.home.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,16 +14,17 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.imaan.categories.CategoryModel
-import com.imaan.components.ImaanTopAppBar
 import com.imaan.components.ProductCard
 import com.imaan.components.ProductCardSize
-import com.imaan.components.Type
+import com.imaan.design_system.components.top_bars.ImaanAppTopBar
+import com.imaan.design_system.components.top_bars.Type
 import com.imaan.home.ui.components.CategoriesSection
 import com.imaan.home.ui.components.ImaanCarousel
 import com.imaan.home.ui.components.ImaanSearchBar
@@ -38,29 +41,28 @@ fun HomeScreen(
     onAddToCart: (ProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
 ) {
-
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            ImaanTopAppBar(
-                user = state.user,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onNavigationClick = onMenuClick,
-                onActionClick = onCartClick,
-                cartItemsCount = if (state.cartItemCount == 0) null else state.cartItemCount,
-                actionIconResId = com.imaan.resources.R.drawable.ic_cart,
-                type = Type.WithProfilePic
+    Column(
+        modifier
+            .background(MaterialTheme.colorScheme.background)
+            .padding(
+                bottom = paddingValues.calculateBottomPadding()
             )
-        }
     ) {
+        ImaanAppTopBar(
+            user = state.user,
+            modifier = Modifier
+                .fillMaxWidth(),
+            onNavigationClick = {
+                onMenuClick()
+            },
+            onActionClick = onCartClick,
+            cartItemsCount = if (state.cartItemCount == 0) null else state.cartItemCount,
+            actionIconResId = com.imaan.resources.R.drawable.ic_cart,
+            type = Type.WithProfilePic
+        )
         HomeFeed(
             state = state,
-            modifier = Modifier
-                .padding(
-                    top = it.calculateTopPadding(),
-                    bottom = it.calculateBottomPadding()
-                ),
+            modifier = Modifier,
             onSeeAllCategoriesClick = onSeeAllCategoriesClick,
             onAddToCart = onAddToCart,
             onCategoryClick = onCategoryClicked

@@ -41,7 +41,8 @@ fun CategoriesSection(
             Text(
                 text = "Categories",
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 19.sp
+                    fontSize = 19.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
             TextButton(onClick = { onSeeAllCategoriesClick() }) {

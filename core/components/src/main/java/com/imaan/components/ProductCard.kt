@@ -75,7 +75,10 @@ private fun ProductCardSmall(
         modifier = modifier,
         onClick = { onClick(product) },
         colors = CardDefaults.cardColors(
-
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.1.dp
         )
     ) {
         Box(modifier = Modifier

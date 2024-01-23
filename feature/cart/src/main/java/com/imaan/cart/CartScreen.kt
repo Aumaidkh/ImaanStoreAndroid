@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.imaan.cart.components.CartItemComponent
 import com.imaan.cart.components.EmptyCartView
 import com.imaan.cart.components.TotalComponent
+import com.imaan.components.ImaanAppButton
 import com.imaan.components.ImaanTopAppBar
-import com.imaan.components.LoadingButton
 import com.imaan.total.TotalModel
 
 
@@ -99,7 +99,7 @@ private fun CartContent(
     ) {
         items(
             items = items,
-            key = { item -> item.productModel.id }
+            key = { item -> item.productModel.id.value }
         ) {
             CartItemComponent(
                 modifier = Modifier
@@ -126,7 +126,7 @@ private fun CartContent(
         }
 
         item {
-            LoadingButton(
+            ImaanAppButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 8.dp),

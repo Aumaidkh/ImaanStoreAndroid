@@ -64,12 +64,7 @@ fun CircularImage(
             .clip(shape = CircleShape)
             .clickable {
                 onClick()
-            }
-            .border(
-                width = 1.5.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = CircleShape
-            ),
+            },
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(

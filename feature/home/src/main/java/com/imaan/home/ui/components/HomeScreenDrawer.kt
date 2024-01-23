@@ -1,6 +1,7 @@
 package com.imaan.home.ui.components
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,6 +23,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,16 +40,11 @@ import com.imaan.categories.CategoryModel
 import com.imaan.components.CircularIcon
 import com.imaan.home.ui.HomeScreen
 import com.imaan.home.ui.HomeScreenUiState
+import com.imaan.home.ui.model.DrawerState
 import com.imaan.home.ui.model.navDrawerItems
 import com.imaan.products.ProductModel
-import com.imaan.user.UserModel
 import kotlinx.coroutines.launch
 
-
-enum class DrawerState {
-    OPEN,
-    CLOSE
-}
 
 private val DrawerWidth = 300.dp
 
@@ -59,7 +56,8 @@ fun HomeScreenDrawer(
     onSeeAllCategoriesClick: () -> Unit = {},
     onAddToCart: (ProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
-    onNavigateToProfileScreen: () -> Unit
+    onNavigateToProfileScreen: () -> Unit,
+    onSignOutClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -67,7 +65,7 @@ fun HomeScreenDrawer(
         color = MaterialTheme.colorScheme.primary
     ) {
         var drawerState by remember {
-            mutableStateOf(DrawerState.CLOSE)
+            mutableStateOf(DrawerState.CLOSED)
         }
 
         val translationX = remember {
@@ -97,7 +95,7 @@ fun HomeScreenDrawer(
                 }
 
                 drawerState = if (drawerState == DrawerState.OPEN) {
-                    DrawerState.CLOSE
+                    DrawerState.CLOSED
                 } else {
                     DrawerState.OPEN
                 }
@@ -105,27 +103,41 @@ fun HomeScreenDrawer(
         }
 
         HomeNavDrawerContents(
+            modifier = Modifier
+                .padding(
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
             state = state,
             onCloseClick = {
                 toggleDrawerState()
-            }
+            },
+            onProfilePhotoClick = onNavigateToProfileScreen,
+            onSignOutClick = onSignOutClick
         )
 
         HomeScreen(
             modifier = Modifier
                 .graphicsLayer {
                     this.translationX = translationX.value
-                    val scale = lerp(1f, 0.7f, translationX.value / drawerWidth)
+                    val scale = lerp(
+                        1f,
+                        0.7f,
+                        translationX.value / drawerWidth
+                    )
                     this.scaleX = scale
                     this.scaleY = scale
-                    val roundedCorners = lerp(0f, 32.dp.toPx(), translationX.value / drawerWidth)
+                    val roundedCorners = lerp(
+                        0f,
+                        32.dp.toPx(),
+                        translationX.value / drawerWidth
+                    )
                     this.shape = RoundedCornerShape(roundedCorners)
                     this.clip = true
                     this.shadowElevation = 50f
                     this.rotationZ = lerp(
                         start = 0f,
                         stop = -10f,
-                        fraction = translationX.value/drawerWidth
+                        fraction = translationX.value / drawerWidth
                     )
                 },
             state = state,
@@ -137,7 +149,6 @@ fun HomeScreenDrawer(
             onSeeAllCategoriesClick = onSeeAllCategoriesClick,
             onAddToCart = onAddToCart,
             onCategoryClicked = onCategoryClicked
-
         )
     }
 }
@@ -146,7 +157,9 @@ fun HomeScreenDrawer(
 fun HomeNavDrawerContents(
     modifier: Modifier = Modifier,
     state: HomeScreenUiState,
-    onCloseClick: () -> Unit = {}
+    onCloseClick: () -> Unit = {},
+    onProfilePhotoClick: () -> Unit = {},
+    onSignOutClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -176,9 +189,7 @@ fun HomeNavDrawerContents(
             modifier = Modifier
                 .padding(horizontal = 50.dp, vertical = 32.dp),
             user = state.user,
-            onPhotoClick = {
-
-            }
+            onPhotoClick = onProfilePhotoClick
         )
         Spacer(modifier = Modifier.height(50.dp))
         navDrawerItems.forEach { item ->
@@ -222,7 +233,7 @@ fun HomeNavDrawerContents(
                 )
             },
             selected = false,
-            onClick = { },
+            onClick = { onSignOutClick() },
             colors = NavigationDrawerItemDefaults.colors(
                 unselectedContainerColor = Color.Transparent,
                 selectedContainerColor = Color.Transparent,

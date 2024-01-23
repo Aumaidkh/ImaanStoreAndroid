@@ -1,10 +1,12 @@
 package com.imaan.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreVert
@@ -93,7 +95,12 @@ internal fun ImaanHomeTopAppBar(
         navigationIcon = {
             CircularImage(
                 modifier = Modifier
-                    .size(45.dp),
+                    .size(45.dp)
+                    .border(
+                        width = 1.5.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ),
                 imageURL = user?.profilePicUrl,
                 onClick = {
                     onMenuClick()

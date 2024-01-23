@@ -48,7 +48,7 @@ fun CartItemComponent(
                 .padding(12.dp)
         ) {
             val model = ImageRequest.Builder(context)
-                .data(cartItemModel.productModel.imageUrl)
+                .data(cartItemModel.productModel.imageUrl.toString())
                 .build()
             AsyncImage(
                 modifier = Modifier

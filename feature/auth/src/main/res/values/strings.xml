@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name" translatable="false">Imaan</string>
+
+    <!--Login Screen-->
+    <string name="request_otp">Request OTP</string>
+    <string name="login" translatable="false">Login</string>
+    <string name="login_greeting">Welcome Back</string>
+    <string name="login_page_subtitle" translatable="false">Log in to your account</string>
+    <string name="login_page_dont_have_account" translatable="false">Don\'t have an account</string>
+    <string name="login_signup">SignUp</string>
+
+    <!--Register Screen-->
+    <string name="register">Register</string>
+    <string name="create_your_account">Create your new account</string>
+    <string name="by_registering">By registering you agree to our</string>
+    <string name="terms_of_use"> Terms of use</string>
+    <string name="privacy_notice"> Privacy notice</string>
+    <string name="and"> and</string>
+    <string name="already_have_account">Already have an account</string>
+    <string name="phone">Phone</string>
+    <string name="full_name">Full Name</string>
+</resources>

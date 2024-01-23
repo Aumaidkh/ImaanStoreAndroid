@@ -58,9 +58,17 @@ tasks.dokkaHtml.configure {
 }
 
 dependencies {
+    implementation(project(":design-system"))
     implementation(project(":core:util"))
+    implementation(project(":data:common"))
+    implementation(project(":data:user"))
+    implementation(project(":data:address"))
+    implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
     implementation(project(":feature:cart"))
+    implementation(project(":feature:addresses"))
+    implementation(project(":feature:payments"))
+    implementation(project(":feature:profile"))
     implementation(Dependencies.coreKtx)
     testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")
