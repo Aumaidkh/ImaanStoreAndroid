@@ -1,4 +1,5 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.project
 
 object Dependencies {
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
@@ -23,7 +24,7 @@ object Dependencies {
     const val ktorAndroidEngine = "io.ktor:ktor-client-android:${Versions.ktor}"
     const val ktorContentNegotiation = "io.ktor:ktor-client-content-negotiation:${Versions.ktor}"
     const val ktorSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
-    const val serialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
+    const val kotlinXSerialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
 
     object Navigation {
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.navigationVersion}"
@@ -45,6 +46,10 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.coreKtx(){
+    implementation(Dependencies.coreKtx)
+}
+
 fun DependencyHandler.coroutines(){
     testImplementation(Dependencies.Testing.coroutineTest)
 }
@@ -56,8 +61,11 @@ fun DependencyHandler.lifecycle(){
 fun DependencyHandler.ktor(){
     implementation(Dependencies.ktorAndroidEngine)
     implementation(Dependencies.ktorCore)
-    implementation(Dependencies.serialization)
     implementation(Dependencies.ktorSerialization)
+}
+
+fun DependencyHandler.kotlinXSerialization(){
+    implementation(Dependencies.kotlinXSerialization)
 }
 
 fun DependencyHandler.coil(){
@@ -109,3 +117,4 @@ fun DependencyHandler.hilt(){
 fun DependencyHandler.turbine(){
     testImplementation(Dependencies.Testing.turbine)
 }
+
