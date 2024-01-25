@@ -45,6 +45,7 @@
             <option value="$PROJECT_DIR$/feature/auth" />
             <option value="$PROJECT_DIR$/feature/cart" />
             <option value="$PROJECT_DIR$/feature/home" />
+            <option value="$PROJECT_DIR$/feature/onboarding" />
             <option value="$PROJECT_DIR$/feature/orders" />
             <option value="$PROJECT_DIR$/feature/payments" />
             <option value="$PROJECT_DIR$/feature/profile" />
