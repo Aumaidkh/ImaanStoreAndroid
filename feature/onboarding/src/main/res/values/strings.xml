@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="easy_shopping">Easy Shopping</string>
+    <string name="secure_payments">Secure Payments</string>
+    <string name="quick_delivery">Quick Delivery</string>
+    <string name="easy_shopping_desc">Your Swift and Secure Shopping Hub! Shop effortlessly with our user-friendly app, offering a vast selection of quality products</string>
+    <string name="secure_payments_desc">Secure Payment at Your Fingertips! Enjoy worry-free transactions on our platform, ensuring the utmost privacy. Shop confidently with Easy Delivery, where your security is our top priority.</string>
+    <string name="quick_delivery_desc">Instant Happiness! Experience the speed of Easy Delivery—swift and efficient. Your purchases, delivered promptly for a seamless shopping experience.</string>
+</resources>

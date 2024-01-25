@@ -20,11 +20,13 @@ import com.imaan.navigation.AuthRoute
 import com.imaan.navigation.CartRoute
 import com.imaan.navigation.ManageAddresses
 import com.imaan.navigation.ManageAddressesFeature
+import com.imaan.navigation.OnboardingRoute
 import com.imaan.navigation.PaymentRoute
 import com.imaan.navigation.Profile
 import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
 import com.imaan.navigation.cartNavigationProvider
+import com.imaan.navigation.onBoardingNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
 import com.imaan.navigation.profileNavigationProvider
 import kotlinx.coroutines.CoroutineScope
@@ -63,6 +65,20 @@ fun ImaanApp(
             startDestination = startDestination,
             route = "root_graph"
         ) {
+            onBoardingNavigationProvider(
+                paddingValues = it,
+                onNavigateToLogin = {
+                    navController.navigate(
+                        route = AuthRoute.Feature
+                    ){
+                        popUpTo(
+                            route = OnboardingRoute.route
+                        ){
+                            inclusive = true
+                        }
+                    }
+                }
+            )
             authNavigationProvider(
                 snackbarHostState = snackbarHostState,
                 paddingValues = it,
