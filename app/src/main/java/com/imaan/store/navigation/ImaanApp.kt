@@ -21,7 +21,7 @@ import com.imaan.navigation.CartRoute
 import com.imaan.navigation.ManageAddresses
 import com.imaan.navigation.ManageAddressesFeature
 import com.imaan.navigation.OnboardingRoute
-import com.imaan.navigation.PaymentRoute
+import com.imaan.navigation.Payment
 import com.imaan.navigation.Profile
 import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
@@ -168,7 +168,7 @@ fun ImaanApp(
                 },
                 onNavigateToPayments = {
                     navController.navigate(
-                        route = PaymentRoute.route
+                        route = Payment.feature
                     )
                 },
                 onNavigateToViewAddress = {
@@ -178,7 +178,27 @@ fun ImaanApp(
 
             paymentNavigationProvider(
                 snackbarHostState = snackbarHostState,
-                paddingValues = it
+                paddingValues = it,
+                onNavigateToConfirmationPage = {
+                    navController.navigate(
+                        route = Payment.Confirmation.route
+                    )
+                },
+                onContinueShopping = {
+                    navController.popBackStack(
+                        route = HomeRoute.route,
+                        inclusive = false
+                    )
+                },
+                onTryAgain = {
+                    navController.popBackStack(
+                        route = ManageAddressesFeature,
+                        inclusive = false
+                    )
+                },
+                onShare = {
+
+                }
             )
 
             profileNavigationProvider(
@@ -231,7 +251,7 @@ private fun TopBar(
             )
         }
 
-        PaymentRoute.route -> {
+        Payment.SelectPaymentMethod.route -> {
             ImaanAppTopBar(
                 modifier = Modifier
                     .fillMaxWidth(),

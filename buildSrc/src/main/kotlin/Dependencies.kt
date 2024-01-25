@@ -26,6 +26,7 @@ object Dependencies {
     const val ktorSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
     const val kotlinXSerialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
 
+    const val lottieCompose = "com.airbnb.android:lottie-compose:${Versions.lottie}"
     object Navigation {
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.navigationVersion}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigation}"
@@ -46,6 +47,9 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.lottie(){
+    implementation(Dependencies.lottieCompose)
+}
 fun DependencyHandler.coreKtx(){
     implementation(Dependencies.coreKtx)
 }

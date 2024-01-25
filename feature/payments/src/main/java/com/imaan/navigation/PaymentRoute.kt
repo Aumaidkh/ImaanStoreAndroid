@@ -2,8 +2,21 @@ package com.imaan.navigation
 
 import com.imaan.util.NavigationRoute
 
-object PaymentRoute: NavigationRoute {
+sealed interface Payment: NavigationRoute {
 
-    override val route: String
-        get() = "payment"
+    object SelectPaymentMethod: Payment {
+        override val route: String
+            get() = "payment-method"
+    }
+
+    object Confirmation: Payment {
+        override val route: String
+            get() = "payment-confirmation"
+    }
+
+
+
+    companion object {
+        const val feature = "payment"
+    }
 }

@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,8 @@ fun ImaanAppButton(
     onClick: () -> Unit = {},
     height: Dp = 50.dp,
     enabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    foregroundColor: Color = MaterialTheme.colorScheme.onPrimary,
     type: ButtonType = ButtonType.Filled
 ) {
     when(type){
@@ -47,7 +50,9 @@ fun ImaanAppButton(
                 onClick = onClick,
                 loading = loading,
                 height = height,
-                enabled = enabled
+                enabled = enabled,
+                backgroundColor = backgroundColor,
+                foregroundColor = foregroundColor
             )
         }
         ButtonType.Filled -> {
@@ -57,7 +62,9 @@ fun ImaanAppButton(
                 onClick = onClick,
                 loading = loading,
                 height = height,
-                enabled = enabled
+                enabled = enabled,
+                backgroundColor = backgroundColor,
+                foregroundColor = foregroundColor
             )
         }
     }
@@ -70,8 +77,11 @@ internal fun ImaanOutlinedButton(
     loading: Boolean = false,
     onClick: () -> Unit = {},
     height: Dp = 50.dp,
-    enabled: Boolean = true
-) {
+    enabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    foregroundColor: Color = MaterialTheme.colorScheme.onPrimary,
+
+    ) {
     OutlinedButton(
         modifier = modifier
             .height(height),
@@ -79,7 +89,7 @@ internal fun ImaanOutlinedButton(
         enabled = !loading && enabled,
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.primary
+            contentColor = foregroundColor
         )
     ) {
         AnimatedVisibility(visible = loading) {
@@ -87,7 +97,7 @@ internal fun ImaanOutlinedButton(
                 modifier = Modifier
                     .padding(end = 32.dp)
                     .size(20.dp),
-                color = MaterialTheme.colorScheme.primary,
+                color = backgroundColor,
                 strokeWidth = 2.dp
             )
         }
@@ -95,7 +105,8 @@ internal fun ImaanOutlinedButton(
             text = text,
             style = TextStyle(
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = foregroundColor
             )
         )
     }
@@ -108,8 +119,10 @@ internal fun ImaanFilledButton(
     loading: Boolean = false,
     onClick: () -> Unit = {},
     height: Dp = 50.dp,
-    enabled: Boolean = true
-) {
+    enabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    foregroundColor: Color = MaterialTheme.colorScheme.primary,
+    ) {
     Button(
         modifier = modifier
             .height(height),
@@ -117,7 +130,7 @@ internal fun ImaanFilledButton(
         enabled = !loading && enabled,
         colors = ButtonDefaults.buttonColors(
             //disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = backgroundColor
         ),
         shape = MaterialTheme.shapes.medium
     ) {
@@ -126,7 +139,7 @@ internal fun ImaanFilledButton(
                 modifier = Modifier
                     .padding(end = 32.dp)
                     .size(20.dp),
-                color = MaterialTheme.colorScheme.primary,
+                color = backgroundColor,
                 strokeWidth = 2.dp
             )
         }
@@ -135,7 +148,7 @@ internal fun ImaanFilledButton(
             style = TextStyle(
                 fontWeight = FontWeight.Normal,
                 fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = foregroundColor
             )
         )
     }

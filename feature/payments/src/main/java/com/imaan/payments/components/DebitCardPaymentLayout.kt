@@ -33,6 +33,7 @@ fun DebitCardPaymentLayout(
     onCardNumberChange: (String) -> Unit,
     onCardExpiryChange: (String) -> Unit,
     onCvvChange: (String) -> Unit,
+    onPay: () -> Unit
 ) {
     var showCardBack by remember {
         mutableStateOf(false)
@@ -56,7 +57,8 @@ fun DebitCardPaymentLayout(
             onCvvChange = onCvvChange,
             onCardExpiryChange = onCardExpiryChange,
             onCardHolderNameChange = onCardHolderNameChange,
-            onCardNumberChange = onCardNumberChange
+            onCardNumberChange = onCardNumberChange,
+            onPay = onPay
         )
     }
 }
@@ -71,6 +73,7 @@ fun CardForm(
     onCardNumberChange: (String) -> Unit,
     onCardExpiryChange: (String) -> Unit,
     onCvvChange: (String) -> Unit,
+    onPay: () -> Unit
 ) {
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -141,7 +144,8 @@ fun CardForm(
             modifier = Modifier
                 .fillMaxWidth(),
             text = "Pay ${state.totalAmount.inRupees}",
-            loading = state.loading
+            loading = state.loading,
+            onClick = onPay
         )
     }
 }

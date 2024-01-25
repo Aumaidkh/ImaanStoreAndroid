@@ -29,6 +29,7 @@ fun PaymentScreen(
     onCvvChange: (String) -> Unit,
     onPaymentTypeClick: (PaymentMode) -> Unit,
     paddingValues: PaddingValues = PaddingValues(),
+    onPay: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     PaymentScreenContent(
@@ -45,7 +46,8 @@ fun PaymentScreen(
         onCardExpiryChange = onCardExpiryChange,
         onCardHolderNameChange = onCardHolderNameChange,
         onCardNumberChange = onCardNumberChange,
-        onPaymentTypeClick = onPaymentTypeClick
+        onPaymentTypeClick = onPaymentTypeClick,
+        onPay = onPay
     )
 
 }
@@ -58,7 +60,8 @@ fun PaymentScreenContent(
     onCardNumberChange: (String) -> Unit,
     onCardExpiryChange: (String) -> Unit,
     onCvvChange: (String) -> Unit,
-    onPaymentTypeClick: (PaymentMode) -> Unit
+    onPaymentTypeClick: (PaymentMode) -> Unit,
+    onPay: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -70,7 +73,8 @@ fun PaymentScreenContent(
                 onCardHolderNameChange = onCardHolderNameChange,
                 onCardNumberChange = onCardNumberChange,
                 onCardExpiryChange = onCardExpiryChange,
-                onCvvChange = onCvvChange
+                onCvvChange = onCvvChange,
+                onPay = onPay
             )
         }
 

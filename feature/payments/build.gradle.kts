@@ -36,6 +36,16 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
+    sourceSets {
+        getByName("main") {
+            res {
+                srcDirs(
+                    "src\\main\\res",
+                    "src\\main\\res"
+                )
+            }
+        }
+    }
 }
 
 dependencies {
@@ -50,4 +60,5 @@ dependencies {
     hilt()
     navigation()
     coil()
+    lottie()
 }
