@@ -2,6 +2,7 @@ package com.imaan.design_system.components.buttons
 
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -84,7 +85,12 @@ internal fun ImaanOutlinedButton(
     ) {
     OutlinedButton(
         modifier = modifier
-            .height(height),
+            .height(height)
+            .border(
+                width = 1.dp,
+                shape = MaterialTheme.shapes.medium,
+                color = backgroundColor
+            ),
         onClick = { onClick() },
         enabled = !loading && enabled,
         shape = MaterialTheme.shapes.medium,
