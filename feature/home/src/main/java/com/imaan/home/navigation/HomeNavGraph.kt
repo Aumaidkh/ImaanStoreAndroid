@@ -19,6 +19,7 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.imaan.categories.CategoryModel
 import com.imaan.design_system.components.dialogs.ImaanActionDialog
 import com.imaan.home.ui.HomeEvent
 import com.imaan.home.ui.HomeScreenViewModel
@@ -35,6 +36,7 @@ fun NavGraphBuilder.homeNavigationProvider(
     onNavigateToProfile: () -> Unit,
     onSignOut: () -> Unit,
     paddingValues: PaddingValues,
+    onNavigateToProductsScreen: (CategoryModel?) -> Unit
 ) {
 
     composable(
@@ -64,7 +66,10 @@ fun NavGraphBuilder.homeNavigationProvider(
             onCartClick = onNavigateToCart,
             onSeeAllCategoriesClick = onNavigateToCategories,
             onAddToCart = viewModel::onAddToCart,
-            onCategoryClicked = viewModel::onSelectCategory,
+            onCategoryClicked = {
+                onNavigateToProductsScreen(it)
+                viewModel.onSelectCategory(it)
+            },
             onNavigateToProfileScreen = onNavigateToProfile,
             onSignOutClick = {
                 showSignOutConfirmation = true
