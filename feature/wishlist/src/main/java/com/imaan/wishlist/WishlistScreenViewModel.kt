@@ -17,7 +17,7 @@ class WishlistScreenViewModel @Inject constructor() : ViewModel() {
 
     init {
         viewModelScope.launch {
-
+            populateState()
         }
     }
 
