@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(project(":data:common"))
+    implementation(project(":data:products"))
     implementation(project(":data:cart"))
     implementation(project(":data:payment"))
     implementation(project(":data:address"))

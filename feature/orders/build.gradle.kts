@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("imaan.compose.plugin")
+    id("imaan.hilt.plugin")
 }
 
 android {
@@ -27,9 +29,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.3"
+    }
 }
 
 dependencies {
+    implementation(project(":design-system"))
+    implementation(project(":core:util"))
 
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation(project(":data:common"))
+    implementation(project(":data:order"))
+    implementation(project(":data:cart"))
+    implementation(project(":data:products"))
+    implementation(project(":data:address"))
+    navigation()
+    hilt()
 }

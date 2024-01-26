@@ -23,6 +23,7 @@ import com.imaan.navigation.CartRoute
 import com.imaan.navigation.ManageAddresses
 import com.imaan.navigation.ManageAddressesFeature
 import com.imaan.navigation.OnboardingRoute
+import com.imaan.navigation.Orders
 import com.imaan.navigation.Payment
 import com.imaan.navigation.ProductsRoute
 import com.imaan.navigation.Profile
@@ -30,6 +31,7 @@ import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
 import com.imaan.navigation.cartNavigationProvider
 import com.imaan.navigation.onBoardingNavigationProvider
+import com.imaan.navigation.ordersNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
 import com.imaan.navigation.productsNavigationProvider
 import com.imaan.navigation.profileNavigationProvider
@@ -242,7 +244,17 @@ fun ImaanApp(
                 },
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onNavigateToOrders = {
+                    navController.navigate(
+                        route = Orders.Feature
+                    )
                 }
+            )
+
+            ordersNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState
             )
         }
     }
@@ -320,6 +332,18 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "Products",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        Orders.OrderHistory.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Shopping History",
                 onNavigationClick = {
                     navController.popBackStack()
                 }
