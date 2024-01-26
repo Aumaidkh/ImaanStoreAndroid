@@ -27,7 +27,7 @@ fun NavGraphBuilder.productsNavigationProvider(
                 snackbarHostState.showSnackbar(it).also { snackBarResult ->
                     when(snackBarResult){
                         SnackbarResult.Dismissed -> {
-                            viewModel.onInfoMessageHandled()git
+                            viewModel.onInfoMessageHandled()
                         }
                         else -> Unit
                     }
