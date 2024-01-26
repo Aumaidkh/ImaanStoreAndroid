@@ -1,5 +1,6 @@
 package com.imaan.order
 
+import com.imaan.common.wrappers.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,5 +18,11 @@ internal class OrderRepositoryImpl @Inject constructor(): IOrderRepository{
 
     override suspend fun updateOrder(orderModel: OrderModel) {
         _orderFlow.value = orderModel
+    }
+
+    override suspend fun fetchAllOrdersOfUser(userId: String): Result<Orders> {
+        return Result.Success(
+            data = getDummyOrders(7)
+        )
     }
 }

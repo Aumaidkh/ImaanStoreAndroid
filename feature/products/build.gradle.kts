@@ -1,12 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    id("imaan.compose.plugin")
+    id("imaan.hilt.plugin")
 }
 
 android {
-    namespace = "com.imaan.order"
+    namespace = "com.imaan.products"
     compileSdk = 34
 
     defaultConfig {
@@ -19,7 +17,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -29,14 +30,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.3"
+    }
 }
 
 dependencies {
+    implementation(project(":design-system"))
+
     implementation(project(":data:common"))
     implementation(project(":data:products"))
     implementation(project(":data:cart"))
-    implementation(project(":data:payment"))
-    implementation(project(":data:address"))
-    coreKtx()
+
+    implementation(project(":core:util"))
+    coil()
+    navigation()
     hilt()
 }

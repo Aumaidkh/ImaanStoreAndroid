@@ -29,6 +29,7 @@ import com.imaan.profile.edit_profile.EditProfileScreen
 fun NavGraphBuilder.profileNavigationProvider(
     onNavigateToAddresses: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
+    onNavigateToOrders: () -> Unit,
     paddingValues: PaddingValues,
     onBackClick: () -> Unit
 ) {
@@ -51,7 +52,7 @@ fun NavGraphBuilder.profileNavigationProvider(
                 onEditProfileClick = onNavigateToEditProfile,
                 onAddressesClick = onNavigateToAddresses,
                 onWishlistClick = { /*TODO*/ },
-                onOrderHistoryClick = { /*TODO*/ },
+                onOrderHistoryClick = onNavigateToOrders,
                 onDeleteAccountClick = {
                     dialogState = dialogState.copy(
                         showDeleteAccountDialog = true

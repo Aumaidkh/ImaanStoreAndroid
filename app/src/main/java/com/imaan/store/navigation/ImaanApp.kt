@@ -1,7 +1,9 @@
 package com.imaan.store.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -21,13 +23,17 @@ import com.imaan.navigation.CartRoute
 import com.imaan.navigation.ManageAddresses
 import com.imaan.navigation.ManageAddressesFeature
 import com.imaan.navigation.OnboardingRoute
+import com.imaan.navigation.Orders
 import com.imaan.navigation.Payment
+import com.imaan.navigation.ProductsRoute
 import com.imaan.navigation.Profile
 import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
 import com.imaan.navigation.cartNavigationProvider
 import com.imaan.navigation.onBoardingNavigationProvider
+import com.imaan.navigation.ordersNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
+import com.imaan.navigation.productsNavigationProvider
 import com.imaan.navigation.profileNavigationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -49,7 +55,9 @@ fun ImaanApp(
 
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
@@ -122,7 +130,20 @@ fun ImaanApp(
                         route = CartRoute.route
                     )
                 },
-                onNavigateToCategories = {},
+                onNavigateToProductsScreen = {
+                    navController.navigate(
+                        route = ProductsRoute.passQueryParam(
+                            param = it?.label?.value ?: "All Products"
+                        )
+                    )
+                },
+                onNavigateToCategories = {
+                    navController.navigate(
+                        route = ProductsRoute.passQueryParam(
+                            param = "All Products"
+                        )
+                    )
+                },
                 onNavigateToProfile = {
                     navController.navigate(
                         route = Profile.feature
@@ -131,11 +152,19 @@ fun ImaanApp(
                 onSignOut = {
                     navController.navigate(
                         route = AuthRoute.Feature
-                    ){
-                        popUpTo(HomeRoute.route){
+                    ) {
+                        popUpTo(HomeRoute.route) {
                             inclusive = true
                         }
                     }
+                }
+            )
+
+            productsNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState,
+                onNavigateToProductDetails = {
+                    // TODO(Show details for the product)
                 }
             )
 
@@ -215,7 +244,17 @@ fun ImaanApp(
                 },
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onNavigateToOrders = {
+                    navController.navigate(
+                        route = Orders.Feature
+                    )
                 }
+            )
+
+            ordersNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState
             )
         }
     }
@@ -281,6 +320,30 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "Add Address",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        ProductsRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Products",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        Orders.OrderHistory.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Shopping History",
                 onNavigationClick = {
                     navController.popBackStack()
                 }
