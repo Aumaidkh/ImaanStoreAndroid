@@ -27,6 +27,7 @@ import com.imaan.navigation.Orders
 import com.imaan.navigation.Payment
 import com.imaan.navigation.ProductsRoute
 import com.imaan.navigation.Profile
+import com.imaan.navigation.WishlistRoute
 import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
 import com.imaan.navigation.cartNavigationProvider
@@ -35,6 +36,7 @@ import com.imaan.navigation.ordersNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
 import com.imaan.navigation.productsNavigationProvider
 import com.imaan.navigation.profileNavigationProvider
+import com.imaan.navigation.wishlistNavigationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -130,7 +132,7 @@ fun ImaanApp(
                         route = CartRoute.route
                     )
                 },
-                onNavigateToProductsScreen = {
+                onCategoryClicked = {
                     navController.navigate(
                         route = ProductsRoute.passQueryParam(
                             param = it?.label?.value ?: "All Products"
@@ -147,6 +149,11 @@ fun ImaanApp(
                 onNavigateToProfile = {
                     navController.navigate(
                         route = Profile.feature
+                    )
+                },
+                onWishlistClicked = {
+                    navController.navigate(
+                        route = WishlistRoute.route
                     )
                 },
                 onSignOut = {
@@ -256,6 +263,14 @@ fun ImaanApp(
                 paddingValues = it,
                 snackbarHostState = snackbarHostState
             )
+
+            wishlistNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState,
+                onProductClick = {
+                    // TODO: (Take user to product details)
+                }
+            )
         }
     }
 }
@@ -344,6 +359,18 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "Shopping History",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        WishlistRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Wishlist",
                 onNavigationClick = {
                     navController.popBackStack()
                 }

@@ -1,7 +1,6 @@
 package com.imaan.home.ui.components
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,7 +22,6 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,8 +38,15 @@ import com.imaan.categories.CategoryModel
 import com.imaan.components.CircularIcon
 import com.imaan.home.ui.HomeScreen
 import com.imaan.home.ui.HomeScreenUiState
+import com.imaan.home.ui.model.DrawerItem
+import com.imaan.home.ui.model.DrawerItem.AboutUs
+import com.imaan.home.ui.model.DrawerItem.HelpAndSupport
+import com.imaan.home.ui.model.DrawerItem.Home
+import com.imaan.home.ui.model.DrawerItem.InviteFriend
+import com.imaan.home.ui.model.DrawerItem.PrivacyPolicy
+import com.imaan.home.ui.model.DrawerItem.TrackOrder
+import com.imaan.home.ui.model.DrawerItem.Wishlist
 import com.imaan.home.ui.model.DrawerState
-import com.imaan.home.ui.model.navDrawerItems
 import com.imaan.products.ProductModel
 import kotlinx.coroutines.launch
 
@@ -57,6 +62,12 @@ fun HomeScreenDrawer(
     onAddToCart: (ProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
     onNavigateToProfileScreen: () -> Unit,
+    onAboutUs: () -> Unit = {},
+    onPrivacyPolicy: () -> Unit = {},
+    onHelpAndSupport: () -> Unit = {},
+    onInviteFriend: () -> Unit = {},
+    onTrackOrder: () -> Unit = {},
+    onWishlistClick: () -> Unit,
     onSignOutClick: () -> Unit
 ) {
     Surface(
@@ -112,7 +123,8 @@ fun HomeScreenDrawer(
                 toggleDrawerState()
             },
             onProfilePhotoClick = onNavigateToProfileScreen,
-            onSignOutClick = onSignOutClick
+            onSignOutClick = onSignOutClick,
+            onWishlistClick = onWishlistClick
         )
 
         HomeScreen(
@@ -160,6 +172,12 @@ fun HomeNavDrawerContents(
     onCloseClick: () -> Unit = {},
     onProfilePhotoClick: () -> Unit = {},
     onSignOutClick: () -> Unit = {},
+    onWishlistClick: () -> Unit = {},
+    onAboutUs: () -> Unit = {},
+    onPrivacyPolicy: () -> Unit = {},
+    onHelpAndSupport: () -> Unit = {},
+    onInviteFriend: () -> Unit = {},
+    onTrackOrder: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -192,7 +210,7 @@ fun HomeNavDrawerContents(
             onPhotoClick = onProfilePhotoClick
         )
         Spacer(modifier = Modifier.height(50.dp))
-        navDrawerItems.forEach { item ->
+        DrawerItem.values().forEach { item ->
             NavigationDrawerItem(
                 modifier = Modifier
                     .padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -203,7 +221,29 @@ fun HomeNavDrawerContents(
                     )
                 },
                 selected = false,
-                onClick = { },
+                onClick = {
+                    when(item){
+                        Home -> Unit
+                        Wishlist -> {
+                            onWishlistClick()
+                        }
+                        TrackOrder -> {
+                            onTrackOrder()
+                        }
+                        InviteFriend -> {
+                            onInviteFriend()
+                        }
+                        PrivacyPolicy -> {
+                            onPrivacyPolicy()
+                        }
+                        AboutUs -> {
+                            onAboutUs()
+                        }
+                        HelpAndSupport -> {
+                            onHelpAndSupport()
+                        }
+                    }
+                },
                 colors = NavigationDrawerItemDefaults.colors(
                     unselectedContainerColor = Color.Transparent,
                     selectedContainerColor = Color.Transparent,
