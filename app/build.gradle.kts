@@ -74,6 +74,7 @@ dependencies {
     implementation(project(":feature:payments"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:orders"))
+    implementation(project(":feature:wishlist"))
 
     testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")

@@ -1,38 +1,36 @@
 package com.imaan.home.ui.model
 
 
-data class DrawerItem(
+enum class DrawerItem(
     val iconResId: Int,
     val label: String
-)
-
-val navDrawerItems = listOf(
-    DrawerItem(
+){
+    Home(
         iconResId = com.imaan.resources.R.drawable.home,
         label = "Home"
     ),
-    DrawerItem(
+    Wishlist(
         iconResId = com.imaan.resources.R.drawable.ic_favorite,
         label = "Wishlist"
     ),
-    DrawerItem(
+    TrackOrder(
         iconResId = com.imaan.resources.R.drawable.ic_location,
         label = "Track Order"
     ),
-    DrawerItem(
+    InviteFriend(
         iconResId = com.imaan.resources.R.drawable.ic_invite,
         label = "Invite a friend"
     ),
-    DrawerItem(
+    PrivacyPolicy(
         iconResId = com.imaan.resources.R.drawable.ic_privacy,
         label = "Privacy Policy"
     ),
-    DrawerItem(
+    AboutUs(
         iconResId = com.imaan.resources.R.drawable.ic_about,
         label = "About Us"
     ),
-    DrawerItem(
+    HelpAndSupport(
         iconResId = com.imaan.resources.R.drawable.ic_contact,
         label = "Help & Support"
     ),
-)
+}
