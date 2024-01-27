@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.imaan.cart.CartItemModel
 import com.imaan.design_system.components.views.RoundedAsyncImage
@@ -18,14 +19,15 @@ import com.imaan.design_system.components.views.RoundedAsyncImage
 @Composable
 internal fun OrderItem(
     modifier: Modifier,
-    cartItem: CartItemModel
+    cartItem: CartItemModel,
+    imageSize: Dp = 80.dp
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Top
     ) {
         RoundedAsyncImage(
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier.size(imageSize),
             imageURL = cartItem.productModel.imageUrl,
             shape = MaterialTheme.shapes.medium
         )

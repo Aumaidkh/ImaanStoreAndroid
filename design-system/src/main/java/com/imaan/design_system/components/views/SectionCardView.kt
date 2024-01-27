@@ -34,7 +34,7 @@ fun SectionCardView(
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 0.1.dp
-            )
+            ),
         ) {
             content()
         }

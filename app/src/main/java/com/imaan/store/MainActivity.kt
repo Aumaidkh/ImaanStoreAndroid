@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImaanTheme {
                 val navController = rememberNavController()
-                ImaanApp(navController,HomeRoute.route, rememberCoroutineScope())
+                ImaanApp(navController,Orders.Feature, rememberCoroutineScope())
             }
         }
     }
