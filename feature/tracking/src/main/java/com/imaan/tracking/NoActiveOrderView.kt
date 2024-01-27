@@ -13,7 +13,7 @@ fun NoActiveOrderView(
         modifier = modifier,
         title = "No Active Orders!",
         message = "Your Order Queue is Empty – Time to Add a Dash of Delight!",
-        resId = R.drawable.box,
+        resId = com.imaan.design_system.R.drawable.delivery_truck,
         iconTint = MaterialTheme.colorScheme.primary
     )
 }
