@@ -4,13 +4,10 @@ package com.imaan.addresses.view_addresses
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.addresses.Address
-import com.imaan.addresses.AddressesEvent
 import com.imaan.order.IOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +37,7 @@ class ViewAddressesViewModel @Inject constructor(
                     loading = true
                 )
             }
-            val orderModel = orderRepository.getOrderModel()
+            val orderModel = orderRepository.unplacedOrder()
             orderModel?.let { order ->
                 orderRepository.updateOrder(
                     orderModel = order.copy(

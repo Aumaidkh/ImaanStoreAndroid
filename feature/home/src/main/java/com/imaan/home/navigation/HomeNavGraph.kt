@@ -27,7 +27,8 @@ fun NavGraphBuilder.homeNavigationProvider(
     onSignOut: () -> Unit,
     paddingValues: PaddingValues,
     onCategoryClicked: (CategoryModel?) -> Unit,
-    onWishlistClicked: () -> Unit
+    onTrackOrder: () -> Unit,
+    onWishlistClicked: () -> Unit,
 ) {
 
     composable(
@@ -65,7 +66,8 @@ fun NavGraphBuilder.homeNavigationProvider(
             onSignOutClick = {
                 showSignOutConfirmation = true
             },
-            onWishlistClick = onWishlistClicked
+            onWishlistClick = onWishlistClicked,
+            onTrackOrder = onTrackOrder
         )
 
         AnimatedVisibility(visible = showSignOutConfirmation) {

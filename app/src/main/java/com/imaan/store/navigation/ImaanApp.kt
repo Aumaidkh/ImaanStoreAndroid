@@ -23,6 +23,7 @@ import com.imaan.navigation.CartRoute
 import com.imaan.navigation.ManageAddresses
 import com.imaan.navigation.ManageAddressesFeature
 import com.imaan.navigation.OnboardingRoute
+import com.imaan.navigation.OrderTrackingRoute
 import com.imaan.navigation.Orders
 import com.imaan.navigation.Payment
 import com.imaan.navigation.ProductsRoute
@@ -32,6 +33,7 @@ import com.imaan.navigation.addressesNavigationProvider
 import com.imaan.navigation.authNavigationProvider
 import com.imaan.navigation.cartNavigationProvider
 import com.imaan.navigation.onBoardingNavigationProvider
+import com.imaan.navigation.orderTrackingNavigationProvider
 import com.imaan.navigation.ordersNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
 import com.imaan.navigation.productsNavigationProvider
@@ -156,6 +158,11 @@ fun ImaanApp(
                         route = WishlistRoute.route
                     )
                 },
+                onTrackOrder = {
+                    navController.navigate(
+                        route = OrderTrackingRoute.route
+                    )
+                },
                 onSignOut = {
                     navController.navigate(
                         route = AuthRoute.Feature
@@ -271,6 +278,14 @@ fun ImaanApp(
                     // TODO: (Take user to product details)
                 }
             )
+
+            orderTrackingNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState,
+                onContactSeller = {
+                    // TODO: (Launch an intent with phone number opening) 
+                }
+            )
         }
     }
 }
@@ -371,6 +386,18 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "Wishlist",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        OrderTrackingRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Track Order",
                 onNavigationClick = {
                     navController.popBackStack()
                 }
