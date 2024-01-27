@@ -268,7 +268,15 @@ fun ImaanApp(
 
             ordersNavigationProvider(
                 paddingValues = it,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                onOrderClick = {
+                    it.orderId?.let { id ->
+                        navController.navigate(
+                            route = Orders.OrderDetails.passOrderId(id)
+                        )
+                    }
+
+                }
             )
 
             wishlistNavigationProvider(
@@ -380,6 +388,19 @@ private fun TopBar(
             )
         }
 
+
+        Orders.OrderDetails.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Order Details",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         WishlistRoute.route -> {
             ImaanAppTopBar(
                 modifier = Modifier
@@ -398,6 +419,18 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "Track Order",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        OrderTrackingRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Order Details",
                 onNavigationClick = {
                     navController.popBackStack()
                 }
