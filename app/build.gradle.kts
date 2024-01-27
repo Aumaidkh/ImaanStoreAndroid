@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":feature:profile"))
     implementation(project(":feature:orders"))
     implementation(project(":feature:wishlist"))
+    implementation(project(":feature:tracking"))
 
     testImplementation("junit:junit:4.12")
     testImplementation("junit:junit:4.12")

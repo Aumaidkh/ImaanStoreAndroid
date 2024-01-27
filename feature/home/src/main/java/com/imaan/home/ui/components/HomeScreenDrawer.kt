@@ -124,7 +124,11 @@ fun HomeScreenDrawer(
             },
             onProfilePhotoClick = onNavigateToProfileScreen,
             onSignOutClick = onSignOutClick,
-            onWishlistClick = onWishlistClick
+            onWishlistClick = onWishlistClick,
+            onTrackOrder = {
+                toggleDrawerState()
+                onTrackOrder()
+            }
         )
 
         HomeScreen(
