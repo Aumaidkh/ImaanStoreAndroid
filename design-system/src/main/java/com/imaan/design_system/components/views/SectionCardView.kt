@@ -1,4 +1,4 @@
-package com.imaan.tracking
+package com.imaan.design_system.components.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

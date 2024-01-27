@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
 import com.imaan.home.navigation.HomeRoute
+import com.imaan.navigation.Orders
 import com.imaan.store.design_system.ui.theme.ImaanTheme
 import com.imaan.store.navigation.ImaanApp
 import dagger.hilt.android.AndroidEntryPoint

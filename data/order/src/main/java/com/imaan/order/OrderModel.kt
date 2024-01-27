@@ -39,5 +39,7 @@ data class OrderModel(
     val timestamp: Timestamp = Timestamp(System.currentTimeMillis()),
     val expectedDelivery: Date = Date(),
     val deliveredOn: Date? = null
-)
+) {
+    val stringId get() = "#123131213131"
+}
 

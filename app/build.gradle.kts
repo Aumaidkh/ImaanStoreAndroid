@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":data:common"))
     implementation(project(":data:user"))
     implementation(project(":data:address"))
+    implementation(project(":data:order"))
     implementation(project(":data:categories"))
 
     implementation(project(":feature:onboarding"))

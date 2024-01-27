@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":data:cart"))
     implementation(project(":data:products"))
     implementation(project(":data:address"))
+    implementation(project(":data:user"))
     navigation()
-    hilt()
+    coil()
 }
