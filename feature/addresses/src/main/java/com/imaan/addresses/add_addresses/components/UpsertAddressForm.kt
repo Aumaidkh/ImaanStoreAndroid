@@ -46,7 +46,19 @@ fun UpsertAddressForm(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next,
             onValueChange = onFullNameChange,
-            title = "Full Name (Required)*"
+            title = "Full Name *"
+        )
+
+        AddressInputField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            hint = "House No., Building Name *",
+            value = state.fullAddress.value,
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Default,
+            maxLines = 3,
+            onValueChange = onFullAddressChange,
+            title = "Full Address *"
         )
 
         AddressInputField(
@@ -58,7 +70,7 @@ fun UpsertAddressForm(
             keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Next,
             onValueChange = onPhoneChange,
-            title = "Phone number (Required)*"
+            title = "Phone number *"
         )
 
         Row(
@@ -73,12 +85,11 @@ fun UpsertAddressForm(
                 AddressInputField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = state.pin.value,
-                    keyboardType = KeyboardType.Number,
+                    value = state.city.value,
+                    keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
-                    onValueChange = onPinCodeChange,
-                    title = "Pincode (Required)*",
-                    maxLength = 6
+                    onValueChange = onCityChange,
+                    title = "City *"
                 )
 
                 AddressInputField(
@@ -88,7 +99,7 @@ fun UpsertAddressForm(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     onValueChange = onStateChange,
-                    title = "State (Required)*"
+                    title = "State *"
                 )
             }
             Spacer(modifier = Modifier.weight(0.1f))
@@ -96,15 +107,6 @@ fun UpsertAddressForm(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                AddressInputField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = state.city.value,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    onValueChange = onCityChange,
-                    title = "City (Required)*"
-                )
 
                 AddressInputField(
                     modifier = Modifier
@@ -113,22 +115,21 @@ fun UpsertAddressForm(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     onValueChange = onDistrictChange,
-                    title = "District (Required)*",
+                    title = "District *",
+                )
+
+                AddressInputField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = state.pin.value,
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next,
+                    onValueChange = onPinCodeChange,
+                    title = "Pincode *",
+                    maxLength = 6
                 )
             }
         }
-
-        AddressInputField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            hint = "House No., Building Name (Required)*",
-            value = state.fullAddress.value,
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Default,
-            maxLines = 3,
-            onValueChange = onFullAddressChange,
-            title = "Full Address (Required)*"
-        )
 
         Row(
             modifier = Modifier
@@ -152,7 +153,7 @@ fun UpsertAddressForm(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done,
                 onValueChange = onCountryChange,
-                title = "Country (Required)*"
+                title = "Country *"
             )
 
         }

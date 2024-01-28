@@ -48,7 +48,7 @@ fun AddressInputField(
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.onBackground.copy(
-                    alpha = 0.85f
+                    alpha = 0.55f
                 ),
                 fontWeight = FontWeight.Medium
             )
