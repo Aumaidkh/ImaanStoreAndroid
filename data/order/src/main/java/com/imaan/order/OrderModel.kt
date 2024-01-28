@@ -31,8 +31,6 @@ data class OrderModel(
     val userId: ID = ID(""),
     val deliveryCharges: Amount = Amount.ZERO,
     val discount: Amount = Amount.ZERO,
-    val subtotalAmount: Amount = Amount.ZERO,
-    val totalAmount: Amount = Amount.ZERO,
     val status: OrderStatus = OrderStatus.StatusPending,
     val address: Address = BLANK_ADDRESS,
     val paymentMode: PaymentMode = Card,
@@ -41,5 +39,15 @@ data class OrderModel(
     val deliveredOn: Date? = null
 ) {
     val stringId get() = "#123131213131"
+
+    val orderSubtotal get() = run {
+        var totalSum = Amount.ZERO
+        cartItems.forEach {
+            totalSum = totalSum plus (it.totalAmount)
+        }
+        totalSum
+    }
+
+    val grandTotal get() = orderSubtotal plus deliveryCharges minus discount
 }
 

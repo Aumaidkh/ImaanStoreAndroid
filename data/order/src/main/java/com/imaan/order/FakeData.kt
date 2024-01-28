@@ -23,10 +23,8 @@ fun getDummyOrders(count: Int): List<OrderModel>{
                 )
             },
             userId = ID("User$it"),
-            deliveryCharges = Amount((it + 1) * 5.0),
-            discount = Amount((it + 1) * 2.5),
-            subtotalAmount = Amount((it + 1) * 50.0),
-            totalAmount = Amount((it + 1) * 52.5),
+            deliveryCharges = Amount(50.0),
+            discount = Amount(25.0),
             status = OrderStatus.StatusPlaced,
             address = dummyAddresses(1)[0],
             paymentMode = if (it % 2 == 0) Card else CashOnDelivery,
@@ -38,3 +36,4 @@ fun getDummyOrders(count: Int): List<OrderModel>{
     }
     return orders
 }
+

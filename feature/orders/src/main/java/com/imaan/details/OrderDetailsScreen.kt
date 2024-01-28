@@ -143,7 +143,7 @@ fun OrderDetailsScreen(
                 ) {
                     OrderTotalComponent(
                         label = "Subtotal",
-                        amount = "${uiState.order?.subtotalAmount?.inRupees}"
+                        amount = "${uiState.order?.orderSubtotal?.inRupees}"
                     )
                     OrderTotalComponent(
                         label = "Delivery Charges",
@@ -162,7 +162,7 @@ fun OrderDetailsScreen(
                     )
                     OrderTotalComponent(
                         label = "Grand Total",
-                        amount = "${uiState.order?.totalAmount?.inRupees}"
+                        amount = "${uiState.order?.grandTotal?.inRupees}"
                     )
                 }
             }
