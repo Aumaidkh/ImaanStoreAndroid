@@ -114,9 +114,7 @@ class CartViewModel @Inject constructor(
             orderModel = OrderModel(
                 cartItems = _state.value.items,
                 deliveryCharges = _state.value.totalModel.deliveryCharges,
-                subtotalAmount = _state.value.totalModel.subtotal,
-                discount = _state.value.totalModel.subtotal,
-                totalAmount = _state.value.totalModel.grandTotal
+                discount = _state.value.totalModel.subtotal
             )
         )
     }

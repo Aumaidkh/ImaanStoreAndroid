@@ -16,6 +16,10 @@ value class Amount(val value: Double){
     infix operator fun plus(amount: Amount): Amount {
         return fromDouble(this.value + amount.value)
     }
+
+    infix operator fun minus(amount: Amount): Amount {
+        return fromDouble(this.value - amount.value)
+    }
     inline fun <T> Iterable<T>.sumOf(selector: (T) -> Long): Long {
         var sum: Long = 0.toLong()
         for (element in this) {

@@ -28,8 +28,8 @@ class PaymentViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         deliveryCharges = Amount.fromDouble(orderModel.deliveryCharges.value),
-                        subtotal = Amount.fromDouble(orderModel.subtotalAmount.value),
-                        totalAmount = Amount.fromDouble(orderModel.totalAmount.value),
+                        subtotal = orderModel.orderSubtotal,
+                        totalAmount = orderModel.grandTotal,
                         address = orderModel.address,
                         cartItems = orderModel.cartItems
                     )
