@@ -26,7 +26,9 @@ fun ImaanEmptyView(
     resId: Int = com.imaan.resources.R.drawable.ic_person,
     title: String = "",
     message: String = "",
-    iconTint: Color = MaterialTheme.colorScheme.primary
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+    actionButtonText: String? = null,
+    onActionButtonClick: () -> Unit = {}
 ){
     Column(
         modifier = modifier,
