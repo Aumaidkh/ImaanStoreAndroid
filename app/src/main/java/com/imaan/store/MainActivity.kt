@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImaanTheme {
                 val navController = rememberNavController()
-                ImaanApp(navController,OnboardingRoute.route, rememberCoroutineScope())
+                ImaanApp(navController,HomeRoute.route, rememberCoroutineScope())
             }
         }
     }

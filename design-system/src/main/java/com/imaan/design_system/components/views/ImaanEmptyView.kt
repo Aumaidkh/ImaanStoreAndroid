@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.imaan.design_system.components.buttons.ImaanAppButton
 
 
 @Composable
@@ -58,5 +59,18 @@ fun ImaanEmptyView(
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
+        actionButtonText?.let {
+            Spacer(modifier = Modifier.height(48.dp))
+            ImaanAppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 8.dp
+                    ),
+                text = actionButtonText,
+                onClick = onActionButtonClick
+            )
+        }
     }
 }

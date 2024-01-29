@@ -22,7 +22,7 @@ import com.imaan.cart.CartViewModel
 fun NavGraphBuilder.cartNavigationProvider(
     paddingValues: PaddingValues,
     onNavigateToAddresses: () -> Unit,
-    onBackClick: () -> Unit,
+    onContinueShopping: () -> Unit,
     onError: (Throwable) -> Unit
 ) {
     composable(
@@ -51,13 +51,13 @@ fun NavGraphBuilder.cartNavigationProvider(
 
         CartScreen(
             paddingValues = paddingValues,
-            onBackPressed = onBackClick,
             totals = state.value.totalModel,
             cartItemModels = state.value.items,
             onQuantityDecrease = viewModel::decreaseQuantity,
             onQuantityIncrease = viewModel::increaseQuantity,
             onProceedToCheckOut = viewModel::proceedToCheckOut,
-            onRemoveItemFromCart = viewModel::removeItemFromCart
+            onRemoveItemFromCart = viewModel::removeItemFromCart,
+            onContinueShoppingClick = onContinueShopping
         )
     }
 }

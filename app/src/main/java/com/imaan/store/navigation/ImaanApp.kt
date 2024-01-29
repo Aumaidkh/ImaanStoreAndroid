@@ -189,7 +189,7 @@ fun ImaanApp(
                         route = ManageAddressesFeature
                     )
                 },
-                onBackClick = {
+                onContinueShopping = {
                     navController.popBackStack()
                 },
                 onError = {
@@ -304,6 +304,31 @@ private fun TopBar(
     navController: NavHostController
 ) {
     when (currentDestination) {
+
+        CartRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Cart",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        Profile.ViewProfileRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "View Profile",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         Profile.ViewProfileRoute.route -> {
             ImaanAppTopBar(
                 modifier = Modifier
