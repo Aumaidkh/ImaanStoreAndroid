@@ -10,6 +10,7 @@ import com.imaan.common.model.Landmark
 import com.imaan.common.model.PhoneNumber
 import com.imaan.common.model.PinCode
 import com.imaan.common.model.State
+import com.imaan.common.model.Title
 
 
 /**
@@ -17,6 +18,7 @@ import com.imaan.common.model.State
 
 data class Address(
     val id: ID? = null,
+    val title: Title = Title("Office"),
     val userId: ID,
     val fullName: FullName,
     val landMark: Landmark? = null,
@@ -27,7 +29,7 @@ data class Address(
     val pinCode: PinCode,
     val phoneNumber: PhoneNumber,
     val isDefault: Boolean,
-    val fullAddress: FullAddress
+    val fullAddress: FullAddress,
 ){
     val readableAddress
         get() = buildAddress()
