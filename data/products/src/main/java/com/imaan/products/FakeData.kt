@@ -17,7 +17,7 @@ val dummyProduct = ProductModel(
     description = Description("Captures and records visual images and videos. It is widely used for various purposes, including photography, videography, surveillance, broadcasting, and more. Cameras have evolved significantly over the years, with advancements in technology leading to improvements in image quality, portability, and functionality. "),
     price = Amount(100.0),
     stocks = Stocks(120),
-    discount = Discount(0.3f)
+    discount = Discount(0.3f),
 )
 
 fun getDummyProducts(count: Int = 1): List<ProductModel>{

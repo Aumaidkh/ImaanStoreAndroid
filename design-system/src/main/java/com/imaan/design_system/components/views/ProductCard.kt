@@ -5,17 +5,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +33,7 @@ import coil.request.ImageRequest
 import com.imaan.design_system.components.buttons.CircularIcon
 import com.imaan.products.ProductModel
 import com.imaan.products.dummyProduct
+import kotlin.random.Random
 
 
 enum class ProductCardSize {
@@ -91,15 +98,12 @@ private fun ProductCardSmall(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                AsyncImage(
+                ProductOnCircleView(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(
-                            shape = MaterialTheme.shapes.medium
-                        ),
-                    model = imageRequest,
-                    contentDescription = "",
-                    contentScale = ContentScale.FillBounds
+                        .padding(vertical = 12.dp)
+                        .fillMaxWidth(),
+                    imageUrl = product.imageUrl,
+                    color = generateRandomLightColor(Random.nextInt(10))
                 )
                 Text(
                     text = product.title.value,
@@ -138,10 +142,11 @@ private fun ProductCardSmall(
                 modifier = Modifier
                     .padding(12.dp),
                 iconResId = com.imaan.resources.R.drawable.ic_favorite,
-                containerColor = Color.Transparent,
+                containerColor = Color.White,
                 onClick = {
 
-                }
+                },
+                tint = Color.Red
             )
         }
 

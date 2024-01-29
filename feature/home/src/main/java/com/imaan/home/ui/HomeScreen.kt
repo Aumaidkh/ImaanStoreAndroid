@@ -20,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.imaan.categories.CategoryModel
-import com.imaan.components.ProductCard
-import com.imaan.components.ProductCardSize
 import com.imaan.design_system.components.top_bars.ImaanAppTopBar
 import com.imaan.design_system.components.top_bars.Type
+import com.imaan.design_system.components.views.ProductCard
+import com.imaan.design_system.components.views.ProductCardSize
 import com.imaan.home.ui.components.CategoriesSection
 import com.imaan.home.ui.components.ImaanCarousel
 import com.imaan.home.ui.components.ImaanSearchBar
