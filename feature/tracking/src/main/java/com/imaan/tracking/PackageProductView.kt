@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.imaan.design_system.components.views.CircularAsyncImage
+import com.imaan.design_system.components.views.ProductOnCircleView
 import com.imaan.order.OrderModel
 import com.imaan.order.getDummyOrders
 import com.imaan.products.ProductModel
@@ -70,11 +71,10 @@ fun PackageProductComponent(
         modifier = modifier
             .padding(8.dp)
     ) {
-        CircularAsyncImage(
+        ProductOnCircleView(
             modifier = Modifier
                 .size(60.dp),
-            imageURL = product.imageUrl,
-            onClick = {}
+            imageUrl = product.imageUrl,
         )
         Column(
             modifier = Modifier
