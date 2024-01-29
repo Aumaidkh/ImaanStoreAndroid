@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    id("imaan.compose.plugin")
+    id("imaan.hilt.plugin")
 }
 
 android {
@@ -38,9 +38,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":design-system"))
     implementation(project(":core:util"))
-    implementation(project(":core:components"))
-    implementation(project(":core:resources"))
+
     implementation(project(":data:common"))
     implementation(project(":data:cart"))
     implementation(project(":data:total"))
@@ -49,7 +49,6 @@ dependencies {
     implementation(project(":data:user"))
     implementation(project(":data:payment"))
     implementation(project(":data:products"))
-    compose()
     hilt()
     navigation()
     coil()
