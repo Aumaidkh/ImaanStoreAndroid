@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.imaan.cart.CartItemModel
+import com.imaan.design_system.components.views.ProductOnCircleView
 import com.imaan.design_system.components.views.RoundedAsyncImage
 
 
@@ -26,10 +27,9 @@ internal fun OrderItem(
         modifier = modifier,
         verticalAlignment = Alignment.Top
     ) {
-        RoundedAsyncImage(
+        ProductOnCircleView(
             modifier = Modifier.size(imageSize),
-            imageURL = cartItem.productModel.imageUrl,
-            shape = MaterialTheme.shapes.medium
+            imageUrl = cartItem.productModel.imageUrl,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {

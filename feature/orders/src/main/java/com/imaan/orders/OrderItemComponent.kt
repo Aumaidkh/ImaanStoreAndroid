@@ -86,7 +86,7 @@ fun OrderItemComponent(
                     OrderItem(
                         modifier = Modifier.fillMaxWidth(),
                         cartItem = it,
-                        imageSize = 50.dp
+                        imageSize = 80.dp
                     )
                 }
             }
