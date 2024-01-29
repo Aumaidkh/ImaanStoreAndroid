@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.imaan.addresses.add_addresses.UpsertAddressScreenUiState
-import com.imaan.components.ImaanAppButton
+import com.imaan.design_system.components.buttons.ImaanAppButton
 
 @Composable
 fun UpsertAddressForm(
