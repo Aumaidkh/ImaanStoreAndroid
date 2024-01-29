@@ -56,7 +56,6 @@ fun NavGraphBuilder.cartNavigationProvider(
             onQuantityDecrease = viewModel::decreaseQuantity,
             onQuantityIncrease = viewModel::increaseQuantity,
             onProceedToCheckOut = viewModel::proceedToCheckOut,
-            onRemoveItemFromCart = viewModel::removeItemFromCart,
             onContinueShoppingClick = onContinueShopping
         )
     }

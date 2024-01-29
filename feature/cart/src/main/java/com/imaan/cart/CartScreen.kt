@@ -28,7 +28,6 @@ internal fun CartScreen(
     cartItemModels: List<CartItemModel> = emptyList(),
     onQuantityIncrease: (CartItemModel) -> Unit = {},
     onQuantityDecrease: (CartItemModel) -> Unit = {},
-    onRemoveItemFromCart: (CartItemModel) -> Unit = {},
     onContinueShoppingClick: () -> Unit = {}
 ) {
     // Calculate subtotal based on cart item quantities and prices
@@ -62,7 +61,6 @@ internal fun CartScreen(
                     onQuantityDecrease = onQuantityDecrease,
                     totals = totals,
                     paddingValues = paddingValues,
-                    onRemoveItem = onRemoveItemFromCart,
                     onProceedToCheckOut = onProceedToCheckOut
                 )
             }
@@ -77,7 +75,6 @@ private fun CartContent(
     modifier: Modifier = Modifier,
     onQuantityDecrease: (CartItemModel) -> Unit,
     onQuantityIncrease: (CartItemModel) -> Unit,
-    onRemoveItem: (CartItemModel) -> Unit,
     onProceedToCheckOut: () -> Unit,
     totals: TotalModel,
     paddingValues: PaddingValues
@@ -98,7 +95,6 @@ private fun CartContent(
                 cartItemModel = it,
                 onQuantityDecrease = onQuantityDecrease,
                 onQuantityIncrease = onQuantityIncrease,
-                onRemove = onRemoveItem
             )
             Divider(
                 modifier = Modifier
