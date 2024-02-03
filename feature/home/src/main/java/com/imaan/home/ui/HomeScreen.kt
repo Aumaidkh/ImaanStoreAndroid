@@ -39,6 +39,7 @@ fun HomeScreen(
     onSeeAllCategoriesClick: () -> Unit = {},
     onAddToCart: (ProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
+    onProductClicked: (ProductModel) -> Unit = {},
 ) {
     Column(
         modifier
@@ -64,7 +65,8 @@ fun HomeScreen(
             modifier = Modifier,
             onSeeAllCategoriesClick = onSeeAllCategoriesClick,
             onAddToCart = onAddToCart,
-            onCategoryClick = onCategoryClicked
+            onCategoryClick = onCategoryClicked,
+            onProductClicked = onProductClicked
         )
     }
 
@@ -77,7 +79,8 @@ fun HomeFeed(
     state: HomeScreenUiState = HomeScreenUiState(),
     onSeeAllCategoriesClick: () -> Unit,
     onAddToCart: (ProductModel) -> Unit,
-    onCategoryClick: (CategoryModel) -> Unit
+    onCategoryClick: (CategoryModel) -> Unit,
+    onProductClicked: (ProductModel) -> Unit = {},
 ) {
     val pagerState = rememberPagerState {
         state.offers.size
@@ -119,9 +122,7 @@ fun HomeFeed(
                     modifier = Modifier
                         .padding(8.dp),
                     product = it,
-                    onClick = {
-                        // TODO: Navigate the user to the product description page
-                    },
+                    onClick = onProductClicked,
                     onAddToCart = onAddToCart,
                     size = ProductCardSize.Small
                 )

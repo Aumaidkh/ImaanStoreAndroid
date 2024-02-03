@@ -74,7 +74,7 @@ fun PackageProductComponent(
         ProductOnCircleView(
             modifier = Modifier
                 .size(60.dp),
-            imageUrl = product.imageUrl,
+            imageUrl = product.primaryImage?.thumbnail,
         )
         Column(
             modifier = Modifier

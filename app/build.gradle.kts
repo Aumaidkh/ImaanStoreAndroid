@@ -65,11 +65,13 @@ dependencies {
     implementation(project(":data:address"))
     implementation(project(":data:order"))
     implementation(project(":data:categories"))
+    implementation(project(":data:products"))
 
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
     implementation(project(":feature:products"))
+    implementation(project(":feature:product-details"))
     implementation(project(":feature:cart"))
     implementation(project(":feature:addresses"))
     implementation(project(":feature:payments"))

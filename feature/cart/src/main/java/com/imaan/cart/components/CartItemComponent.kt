@@ -53,7 +53,7 @@ fun CartItemComponent(
             ProductOnCircleView(
                 modifier = Modifier
                     .size(110.dp),
-                imageUrl = cartItemModel.productModel.imageUrl,
+                imageUrl = cartItemModel.productModel.primaryImage?.thumbnail,
                 color = generateRandomLightColor(2)
             )
             Column(

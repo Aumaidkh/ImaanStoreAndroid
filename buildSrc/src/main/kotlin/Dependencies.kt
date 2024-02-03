@@ -4,6 +4,7 @@ import org.gradle.kotlin.dsl.project
 object Dependencies {
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     const val composeMaterial = "androidx.compose.material3:material3:${Versions.composeMaterial3}"
+    const val composeMaterial2 = "com.google.android.material:material:${Versions.composeMaterial2}"
     const val materialIcons = "androidx.compose.material:material-icons-extended:${Versions.compose}"
     const val composeUi = "androidx.compose.ui:ui:${Versions.compose}"
     const val composeUiGraphics = "androidx.compose.ui:ui-graphics:${Versions.compose}"
@@ -46,7 +47,9 @@ object Dependencies {
         const val coroutineTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutineTest}"
     }
 }
-
+fun DependencyHandler.material(){
+    implementation(Dependencies.composeMaterial2)
+}
 fun DependencyHandler.lottie(){
     implementation(Dependencies.lottieCompose)
 }

@@ -1,6 +1,8 @@
 package com.imaan.design_system.components.views
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -9,6 +11,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -31,7 +34,8 @@ fun generateRandomLightColor(seed: Int): Color {
 fun ProductOnCircleView(
     modifier: Modifier = Modifier,
     imageUrl: URL? = null,
-    color: Color = Color.Cyan
+    color: Color = Color.Cyan,
+    imageSize: Dp = 150.dp
 ) {
     val imageRequest = ImageRequest
         .Builder(LocalContext.current)
@@ -39,6 +43,7 @@ fun ProductOnCircleView(
         .build()
     AsyncImage(
         modifier = modifier
+            .size(imageSize)
             .drawBehind {
                 val width = this.size.width * 0.4f
                 drawCircle(

@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.imaan.design_system.components.buttons.CircularIcon
 import com.imaan.design_system.components.views.CircularAsyncImage
@@ -42,7 +44,8 @@ fun ImaanAppTopBar(
     cartItemsCount: Int? = 4,
     loading: Boolean = false,
     actionIconResId: Int? = null,
-    type: Type = Type.WithoutProfilePic
+    type: Type = Type.WithoutProfilePic,
+    transparentBackground: Boolean = false
 ) {
     when(type){
         Type.WithProfilePic -> {
@@ -58,7 +61,9 @@ fun ImaanAppTopBar(
         Type.WithoutProfilePic -> {
             ImaanCustomTopAppBar(
                 title = title ?: "",
-                onBackPressed = onNavigationClick
+                onBackPressed = onNavigationClick,
+                transparentBackground = transparentBackground,
+                actionResId = actionIconResId
             )
         }
     }
@@ -73,7 +78,8 @@ internal fun ImaanHomeTopAppBar(
     onCartClick: () -> Unit = {},
     cartItemsCount: Int? = 4,
     loading: Boolean = false,
-    actionIconResId: Int?
+    actionIconResId: Int?,
+    transparentBackground: Boolean = false
 ) {
     TopAppBar(
         modifier = modifier
@@ -128,7 +134,7 @@ internal fun ImaanHomeTopAppBar(
         },
         colors = TopAppBarDefaults
             .topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
+                containerColor = if (!transparentBackground) MaterialTheme.colorScheme.background else Color.Transparent
             ),
     )
 }
@@ -139,13 +145,16 @@ internal fun ImaanCustomTopAppBar(
     onBackPressed: () -> Unit = {},
     onMorePressed: () -> Unit = {},
     title: String = "My Cart",
-    showActions: Boolean = false
+    transparentBackground: Boolean = false,
+    actionResId: Int? = null
 ){
     CenterAlignedTopAppBar(
         title = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
@@ -166,7 +175,7 @@ internal fun ImaanCustomTopAppBar(
             }
         },
         actions = {
-            if (showActions){
+            if (actionResId != null){
                 CircularIcon(
                     modifier = Modifier
                         .padding(24.dp),
@@ -177,12 +186,15 @@ internal fun ImaanCustomTopAppBar(
                     Icon(
                         modifier = Modifier
                             .padding(8.dp),
-                        imageVector = Icons.Default.MoreVert,
+                        painter = painterResource(id = actionResId),
                         contentDescription = "Back Button",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
-        }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = if (!transparentBackground) MaterialTheme.colorScheme.background else Color.Transparent
+        )
     )
 }

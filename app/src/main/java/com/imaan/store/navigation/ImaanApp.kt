@@ -26,6 +26,7 @@ import com.imaan.navigation.OnboardingRoute
 import com.imaan.navigation.OrderTrackingRoute
 import com.imaan.navigation.Orders
 import com.imaan.navigation.Payment
+import com.imaan.navigation.ProductDetailsRoute
 import com.imaan.navigation.ProductsRoute
 import com.imaan.navigation.Profile
 import com.imaan.navigation.WishlistRoute
@@ -36,9 +37,11 @@ import com.imaan.navigation.onBoardingNavigationProvider
 import com.imaan.navigation.orderTrackingNavigationProvider
 import com.imaan.navigation.ordersNavigationProvider
 import com.imaan.navigation.paymentNavigationProvider
+import com.imaan.navigation.productDetailsNavigationProvider
 import com.imaan.navigation.productsNavigationProvider
 import com.imaan.navigation.profileNavigationProvider
 import com.imaan.navigation.wishlistNavigationProvider
+import com.imaan.store.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -171,6 +174,11 @@ fun ImaanApp(
                             inclusive = true
                         }
                     }
+                },
+                onProductClicked = {
+                    navController.navigate(
+                        route = ProductDetailsRoute.passProductId(it.id)
+                    )
                 }
             )
 
@@ -178,7 +186,35 @@ fun ImaanApp(
                 paddingValues = it,
                 snackbarHostState = snackbarHostState,
                 onNavigateToProductDetails = {
-                    // TODO(Show details for the product)
+                    navController.navigate(
+                        route = ProductDetailsRoute.passProductId(it.id)
+                    ){
+                        launchSingleTop = true
+                    }
+                }
+            )
+
+            productDetailsNavigationProvider(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState,
+                onRecommendedItemClick = {
+                    navController.navigate(
+                        route = ProductDetailsRoute.passProductId(it.id)
+                    ){
+                        launchSingleTop = true
+                    }
+                },
+                onBuyNow = {
+                    navController.navigate(
+                        route = ManageAddressesFeature
+                    )
+                },
+                onCartClick = {
+                    navController.navigate(
+                        route = CartRoute.route
+                    ){
+                        launchSingleTop = true
+                    }
                 }
             )
 
@@ -316,6 +352,7 @@ private fun TopBar(
                 }
             )
         }
+
 
         Profile.ViewProfileRoute.route -> {
             ImaanAppTopBar(

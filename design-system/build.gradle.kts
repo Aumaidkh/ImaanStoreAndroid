@@ -47,4 +47,5 @@ dependencies {
     implementation(project(":data:categories"))
     compose()
     coil()
+    material()
 }

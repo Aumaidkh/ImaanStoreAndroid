@@ -62,6 +62,7 @@ fun HomeScreenDrawer(
     onAddToCart: (ProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
     onNavigateToProfileScreen: () -> Unit,
+    onProductClicked: (ProductModel) -> Unit = {},
     onAboutUs: () -> Unit = {},
     onPrivacyPolicy: () -> Unit = {},
     onHelpAndSupport: () -> Unit = {},
@@ -164,7 +165,8 @@ fun HomeScreenDrawer(
             onCartClick = onCartClick,
             onSeeAllCategoriesClick = onSeeAllCategoriesClick,
             onAddToCart = onAddToCart,
-            onCategoryClicked = onCategoryClicked
+            onCategoryClicked = onCategoryClicked,
+            onProductClicked = onProductClicked
         )
     }
 }
