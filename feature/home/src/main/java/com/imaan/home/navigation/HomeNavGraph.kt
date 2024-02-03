@@ -17,6 +17,7 @@ import com.imaan.design_system.components.dialogs.ImaanActionDialog
 import com.imaan.home.ui.HomeEvent
 import com.imaan.home.ui.HomeScreenViewModel
 import com.imaan.home.ui.components.HomeScreenDrawer
+import com.imaan.products.ProductModel
 
 
 fun NavGraphBuilder.homeNavigationProvider(
@@ -29,6 +30,7 @@ fun NavGraphBuilder.homeNavigationProvider(
     onCategoryClicked: (CategoryModel?) -> Unit,
     onTrackOrder: () -> Unit,
     onWishlistClicked: () -> Unit,
+    onProductClicked: (ProductModel) -> Unit
 ) {
 
     composable(
@@ -67,7 +69,8 @@ fun NavGraphBuilder.homeNavigationProvider(
                 showSignOutConfirmation = true
             },
             onWishlistClick = onWishlistClicked,
-            onTrackOrder = onTrackOrder
+            onTrackOrder = onTrackOrder,
+            onProductClicked = onProductClicked
         )
 
         AnimatedVisibility(visible = showSignOutConfirmation) {

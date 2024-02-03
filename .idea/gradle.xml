@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/data/cart" />
             <option value="$PROJECT_DIR$/data/categories" />
             <option value="$PROJECT_DIR$/data/common" />
+            <option value="$PROJECT_DIR$/data/delivery" />
             <option value="$PROJECT_DIR$/data/offers" />
             <option value="$PROJECT_DIR$/data/order" />
             <option value="$PROJECT_DIR$/data/payment" />
@@ -48,6 +49,7 @@
             <option value="$PROJECT_DIR$/feature/onboarding" />
             <option value="$PROJECT_DIR$/feature/orders" />
             <option value="$PROJECT_DIR$/feature/payments" />
+            <option value="$PROJECT_DIR$/feature/product-details" />
             <option value="$PROJECT_DIR$/feature/products" />
             <option value="$PROJECT_DIR$/feature/profile" />
             <option value="$PROJECT_DIR$/feature/tracking" />

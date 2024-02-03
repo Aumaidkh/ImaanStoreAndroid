@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -47,10 +48,11 @@ fun ProductCard(
     product: ProductModel = dummyProduct,
     onClick: (ProductModel) -> Unit = {},
     onAddToCart: (ProductModel) -> Unit = {},
-    size: ProductCardSize = ProductCardSize.Small
+    size: ProductCardSize = ProductCardSize.Small,
+    elevation: CardElevation = CardDefaults.elevatedCardElevation()
 ){
     val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(product.imageUrl.toString())
+        .data(product.primaryImage?.thumbnail.toString())
         .build()
     when(size){
         ProductCardSize.Small -> ProductCardSmall(
@@ -58,7 +60,8 @@ fun ProductCard(
             product = product,
             imageRequest = imageRequest,
             onClick = onClick,
-            onAddToCart = onAddToCart
+            onAddToCart = onAddToCart,
+            elevation = elevation
         )
         ProductCardSize.Large -> ProductCardSmall(
             modifier = modifier,
@@ -78,7 +81,9 @@ private fun ProductCardSmall(
     product: ProductModel = dummyProduct,
     imageRequest: ImageRequest = ImageRequest.Builder(LocalContext.current).data("").build(),
     onClick: (ProductModel) -> Unit = {},
-    onAddToCart: (ProductModel) -> Unit = {}
+    onAddToCart: (ProductModel) -> Unit = {},
+    elevation: CardElevation = CardDefaults.elevatedCardElevation(),
+    liked: Boolean = false
 ) {
     Card(
         modifier = modifier,
@@ -86,9 +91,7 @@ private fun ProductCardSmall(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 0.1.dp
-        )
+        elevation = elevation
     ) {
         Box(modifier = Modifier
             .fillMaxWidth(),
@@ -102,7 +105,7 @@ private fun ProductCardSmall(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
-                    imageUrl = product.imageUrl,
+                    imageUrl = product.primaryImage?.thumbnail,
                     color = generateRandomLightColor(Random.nextInt(10))
                 )
                 Text(

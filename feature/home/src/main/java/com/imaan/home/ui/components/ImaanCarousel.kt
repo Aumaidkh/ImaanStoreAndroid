@@ -56,9 +56,9 @@ fun ImaanCarousel(
         pageSize = PageSize.Fixed(320.dp),
         flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
         key = null,
-        pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
-            Orientation.Horizontal
-        ),
+//        pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+//            Orientation.Horizontal
+//        ),
         pageContent = {
             OfferCard(
                 offer = offers[it]

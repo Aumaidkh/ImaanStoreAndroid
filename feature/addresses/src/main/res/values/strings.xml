@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dummy_html"><![CDATA[<p>This is a <a href=\'https://www.example.com\'>link</a> and an <img src=\'https://www.example.com/image.png\' alt=\'image\'>.</p>]]></string>
+</resources>
