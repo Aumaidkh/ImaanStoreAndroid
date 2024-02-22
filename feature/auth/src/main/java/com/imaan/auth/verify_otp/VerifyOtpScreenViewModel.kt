@@ -3,6 +3,7 @@ package com.imaan.auth.verify_otp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.imaan.auth.IAuthService
 import com.imaan.common.model.OTP
 import com.imaan.common.model.PhoneNumber
 import com.imaan.common.repository.IOtpRepository
@@ -26,7 +27,8 @@ class VerifyOtpScreenViewModel @Inject constructor(
     private val repository: IOtpRepository,
     private val userRepository: IUserRepository,
     private val dispatchers: IDispatcherProvider,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val authService: IAuthService
 ) : ViewModel() {
     private val MAX_RESEND_TIME_IN_SECONDS = 59
 
@@ -35,8 +37,19 @@ class VerifyOtpScreenViewModel @Inject constructor(
 
     private var registerNewUser: Boolean = false
 
+
     init {
         viewModelScope.launch(dispatchers.main) {
+            authService.authResult.collect { result ->
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        // authenticated = result.data == IOtpRepository.VerificationStatus.SUCCESS
+                        authenticated = result is com.imaan.util.Result.Success
+                    )
+                }
+            }
+
             registerNewUser = savedStateHandle.get<Boolean>("RegisterNewUser") == true
             startCounter()
         }
@@ -98,12 +111,7 @@ class VerifyOtpScreenViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        _state.update {
-                            it.copy(
-                                loading = false,
-                                authenticated = result.data == IOtpRepository.VerificationStatus.SUCCESS
-                            )
-                        }
+                        authService.authenticate()
                     }
                 }
             }

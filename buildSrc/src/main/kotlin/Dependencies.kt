@@ -65,7 +65,7 @@ fun DependencyHandler.coreKtx(){
 
 fun DependencyHandler.mongodb(){
     implementation(Dependencies.MongoDB.baseLibrary)
-    //implementation(Dependencies.MongoDB.deviceSync)
+    implementation(Dependencies.MongoDB.deviceSync)
 }
 
 fun DependencyHandler.coroutines(){

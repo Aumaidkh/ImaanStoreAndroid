@@ -2,10 +2,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.dokka")
-    id("kotlin-kapt")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.google.dagger.hilt.android")
-
+    id("imaan.hilt.plugin")
+    id("imaan.realm.plugin")
 }
 
 android {
@@ -60,6 +59,7 @@ tasks.dokkaHtml.configure {
 dependencies {
     implementation(project(":design-system"))
     implementation(project(":core:util"))
+    implementation(project(":data:auth"))
     implementation(project(":data:common"))
     implementation(project(":data:user"))
     implementation(project(":data:address"))

@@ -116,7 +116,7 @@ fun VerifyOtpScreen(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
             text = "Verify",
-            loading = state.loading,
+            loading = false,
             onClick = onVerify,
             enabled = state.otp.value.length == 4
         )

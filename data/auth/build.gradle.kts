@@ -1,7 +1,8 @@
 plugins {
-    id("imaan.compose.plugin")
-    id("imaan.hilt.plugin")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
     id("imaan.realm.plugin")
+    id("imaan.hilt.plugin")
 }
 
 android {
@@ -18,7 +19,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -28,21 +32,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
-    }
 }
 
 dependencies {
-    implementation(project(":design-system"))
-    implementation(project(":domain:common"))
-    implementation(project(":data:auth"))
-    implementation(project(":data:common"))
-    implementation(project(":data:user"))
     implementation(project(":core:util"))
-    navigation()
-    coil()
 }

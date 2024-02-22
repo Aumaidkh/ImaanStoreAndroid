@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins{
     `kotlin-dsl`
-    id("io.realm.kotlin") version "1.11.0" apply false
 }
 
 repositories{

@@ -1,3 +1,6 @@
+plugins {
+    id("io.realm.kotlin") version "1.11.0" apply false
+}
 buildscript {
     repositories {
         google()
