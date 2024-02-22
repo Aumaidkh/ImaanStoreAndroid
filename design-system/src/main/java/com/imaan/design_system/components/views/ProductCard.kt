@@ -105,7 +105,7 @@ private fun ProductCardSmall(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
-                    imageUrl = product.primaryImage?.thumbnail,
+                    imageUrl = product.imageUrl,
                     color = generateRandomLightColor(Random.nextInt(10))
                 )
                 Text(

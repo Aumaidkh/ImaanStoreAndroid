@@ -11,6 +11,7 @@ import com.imaan.common.model.Title
 import com.imaan.remote.IRemoteDatasource
 import kotlinx.coroutines.flow.Flow
 import com.imaan.util.Result
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.net.URL
 import java.util.UUID
@@ -29,17 +30,25 @@ class ProductRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAllProductsAsFlow(offset: Int?): Flow<Result<List<ProductModel>>> {
-        return datasource.fetchProducts().map { result ->
-            if (result is Result.Success){
-                val products = result.data.map {
+        val productsFlow = datasource.fetchProducts()
+        val inventoriesFlow = datasource.fetchInventories()
+
+        return combine(productsFlow,inventoriesFlow){ productsResult, inventoriesResult ->
+            if (productsResult is Result.Error || inventoriesResult is Result.Error){
+                Result.Error(Exception("Something went wrong"))
+            } else {
+                val inventories = (inventoriesResult as Result.Success).data.associateBy { it.productId }
+                val products = (productsResult as Result.Success).data
+
+                val productModels = products.map {
                     ProductModel(
                         id = ID(it._id.toHexString()),
                         imageUrl = URL(it.thumbnailUrl),
                         title = Title(it.name),
                         description = Description(it.description),
-                        price = Amount(100.0),
-                        stocks = Stocks(120),
-                        discount = Discount(0.3f),
+                        price = Amount(inventories[it._id]?.price ?: 0.0),
+                        stocks = Stocks(inventories[it._id]?.stocks ?: 0),
+                        discount = Discount(inventories[it._id]?.discount?.toFloat() ?: 0.0f),
                         images = listOf(
                             Image(
                                 thumbnail = dummyUrl,
@@ -67,19 +76,12 @@ class ProductRepositoryImpl @Inject constructor(
                         customVariants = getDummyVariants()
                     )
                 }
-                Log.d(
-                    TAG,
-                    "fetchAllProductsAsFlow: Products: ${products.size}"
-                )
-                Result.Success(products)
-            } else {
-                Log.d(
-                    TAG,
-                    "fetchAllProductsAsFlow: No Products"
-                )
-                Result.error("No Products found")
+
+                Result.Success(productModels)
             }
+
         }
+
     }
 
     override suspend fun fetchProductWithId(id: ID): Result<ProductModel> {

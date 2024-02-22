@@ -64,7 +64,7 @@ fun ProductOnCircleView(
             .padding(start = 15.dp, top = 20.dp),
         model = imageRequest,
         contentDescription = "",
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Fit
     )
 
 }
