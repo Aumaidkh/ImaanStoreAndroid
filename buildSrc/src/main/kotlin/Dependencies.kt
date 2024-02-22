@@ -28,6 +28,12 @@ object Dependencies {
     const val kotlinXSerialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
 
     const val lottieCompose = "com.airbnb.android:lottie-compose:${Versions.lottie}"
+
+    object MongoDB {
+        const val deviceSync = "io.realm.kotlin:library-sync:1.11.0"
+        const val baseLibrary = "io.realm.kotlin:library-base:1.11.0"
+        const val realmGradlePlugin = "io.realm.kotlin:1.11.0"
+    }
     object Navigation {
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.navigationVersion}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigation}"
@@ -55,6 +61,11 @@ fun DependencyHandler.lottie(){
 }
 fun DependencyHandler.coreKtx(){
     implementation(Dependencies.coreKtx)
+}
+
+fun DependencyHandler.mongodb(){
+    implementation(Dependencies.MongoDB.baseLibrary)
+    //implementation(Dependencies.MongoDB.deviceSync)
 }
 
 fun DependencyHandler.coroutines(){

@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins{
     `kotlin-dsl`
+    id("io.realm.kotlin") version "1.11.0" apply false
 }
 
 repositories{
@@ -35,6 +36,11 @@ gradlePlugin {
         register("hilt-plugin") {
             id = "imaan.hilt.plugin"
             implementationClass = "HiltPlugin"
+        }
+
+        register("realm-plugin") {
+            id = "imaan.realm.plugin"
+            implementationClass = "RealmPlugin"
         }
     }
 }
