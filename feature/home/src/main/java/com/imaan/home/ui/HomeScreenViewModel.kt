@@ -1,5 +1,6 @@
 package com.imaan.home.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.cart.ICartRepository
@@ -9,6 +10,7 @@ import com.imaan.offers.IOffersRepository
 import com.imaan.products.IProductRepository
 import com.imaan.products.ProductModel
 import com.imaan.user.IUserRepository
+import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -30,7 +33,7 @@ class HomeScreenViewModel @Inject constructor(
     private val categories: ICategoryRepository,
     private val offers: IOffersRepository,
     private val products: IProductRepository,
-    private val user: IUserRepository
+    private val user: IUserRepository,
 ): ViewModel(){
     private val _state = MutableStateFlow(HomeScreenUiState())
     val state = _state.asStateFlow()
@@ -40,9 +43,13 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         loadData()
+        viewModelScope.launch {
+            loadProducts()
+        }
     }
 
     fun onSelectCategory(categoryModel: CategoryModel){
+        add()
         _state.update {
             it.copy(
                 selectedCategory = categoryModel
@@ -80,7 +87,6 @@ class HomeScreenViewModel @Inject constructor(
                 async { loadCart() },
                 async { loadOffers() },
                 async { loadCategories() },
-                async { loadProducts() }
             ).awaitAll()
 
             _state.update {
@@ -106,6 +112,12 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun add(){
+        viewModelScope.launch {
+            products.insertProduct()
+        }
+    }
+
     private suspend fun loadOffers(){
         _state.update {
             it.copy(
@@ -123,12 +135,34 @@ class HomeScreenViewModel @Inject constructor(
             )
         }
     }
-
+    private val TAG = "HomeScreenViewModel"
     private suspend fun loadProducts(){
-        _state.update {
-            it.copy(
-                products = products.fetchAllProducts()
-            )
+        Log.d(
+            TAG,
+            "loadProducts: Loading products"
+        )
+        products.fetchAllProductsAsFlow().collect { productResult ->
+            when(productResult){
+                is Result.Error -> {
+                    Log.d(
+                        TAG,
+                        "loadProducts: Error: ${productResult.throwable.message}"
+                    )
+                }
+                is Result.Success -> {
+                    Log.d(
+                        TAG,
+                        "loadProducts: Success"
+                    )
+                    val products = productResult.data
+                    _state.update {
+                        it.copy(
+                            products = products
+                        )
+                    }
+                }
+            }
         }
+
     }
 }

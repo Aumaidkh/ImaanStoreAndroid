@@ -1,5 +1,6 @@
 package com.imaan.auth
 
+import android.util.Log
 import com.imaan.util.Result
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+private const val TAG = "MongoAuthService"
 internal class MongoAuthService @Inject constructor(
     private val app: App
 ): IAuthService {
@@ -19,9 +21,27 @@ internal class MongoAuthService @Inject constructor(
     override val authResult: Flow<Result<User>>
         get() = app.authenticationChangeAsFlow().map { result ->
             when(result){
-                is LoggedIn -> Result.Success(data = result.user)
-                is LoggedOut -> Result.Error(Exception("User Not Authenticated"))
-                is Removed -> Result.Error(Exception("User removed"))
+                is LoggedIn -> {
+                    Log.d(
+                        TAG,
+                        "Success: Auth"
+                    )
+                    Result.Success(data = result.user)
+                }
+                is LoggedOut -> {
+                    Log.d(
+                        TAG,
+                        "Logged Out: "
+                    )
+                    Result.Error(Exception("User Not Authenticated"))
+                }
+                is Removed -> {
+                    Log.d(
+                        TAG,
+                        "Removed: "
+                    )
+                    Result.Error(Exception("User removed"))
+                }
             }
         }
 

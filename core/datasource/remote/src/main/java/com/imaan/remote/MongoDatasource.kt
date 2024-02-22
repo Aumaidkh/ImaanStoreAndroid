@@ -7,9 +7,12 @@ import com.imaan.util.Result
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,39 +25,55 @@ class MongoDatasource @Inject constructor(
     private val authService: IAuthService
 ): IRemoteDatasource {
 
-    private val user = authService.currentUser
     private lateinit var realm: Realm
 
     init {
         configure()
     }
-    override suspend fun fetchProducts(): Flow<Result<List<Product>>> {
-        return flow {
-            user?.let {
-                realm.query<Product>()
-                    .asFlow()
-                    .map { result ->
-                        Log.d(
-                            TAG,
-                            "getProducts: Result: ${result.list.toList()}"
-                        )
-                        result.list.toList().also {
-                            if (it.isEmpty()){
-                                Result.error<List<Product>>("No Products Found!!")
-                            } else {
-                                Result.Success(it)
-                            }
-                        }
-                    }
-            }?: Result.error<List<Product>>("User not authenticated")
+
+    override suspend fun insertProduct() {
+        realm.write {
+            copyToRealm(Product())
         }
     }
 
+    override suspend fun fetchProducts(): Flow<Result<List<Product>>> {
+        Log.d(
+            TAG,
+            "fetchProducts:  "
+        )
+        return realm.query<Product>()
+            .asFlow()
+            .map { result ->
+                if (result.list.isEmpty()) {
+                    Log.d(
+                        TAG,
+                        "fetchProducts: No Products"
+                    )
+                    Result.Error(Throwable("No Products Found"))
+                } else {
+                    Log.d(
+                        TAG,
+                        "fetchProducts: ${result.list.size}"
+                    )
+                    Result.Success(result.list.toList())
+                }
+            }
+        }
+
+
     private fun configure(){
-        user?.let {
-            val configuration =
-                RealmConfiguration.create(setOf(Product::class))
-                realm = Realm.open(configuration)
+        authService.currentUser?.let {
+            val config = SyncConfiguration.Builder(
+                it,
+                setOf(Product::class)
+            )
+                .initialSubscriptions { sub ->
+                    add(query = sub.query<Product>())
+                }
+                .log(LogLevel.ALL)
+                .build()
+            realm = Realm.open(config)
         }
     }
 }

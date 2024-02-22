@@ -130,7 +130,7 @@ fun HomeFeed(
         }
 
         if (state.loading){
-            CircularProgressIndicator()
+            //CircularProgressIndicator()
         }
     }
 

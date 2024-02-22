@@ -66,29 +66,29 @@ class ProductDetailsScreenViewModel @Inject constructor(
                     }
             }
             val productResult = async {
-                productsRepository.fetchProductWithId(id).also { result ->
-                    when(result){
-                        is Result.Error -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    errorMessage = result.throwable.message
-                                )
-                            }
-                        }
-                        is Result.Success -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    product = result.data,
-                                    selectedSize = result.data.sizes.firstOrNull(),
-                                    selectedColor = result.data.colors.firstOrNull(),
-                                    selectedVariant = result.data.customVariants.firstOrNull()
-                                )
-                            }
-                        }
-                    }
-                }
+//                productsRepository.fetchProductWithId(id).also { result ->
+//                    when(result){
+//                        is Result.Error -> {
+//                            _state.update {
+//                                it.copy(
+//                                    isLoading = false,
+//                                    errorMessage = result.throwable.message
+//                                )
+//                            }
+//                        }
+//                        is Result.Success -> {
+//                            _state.update {
+//                                it.copy(
+//                                    isLoading = false,
+//                                    product = result.data,
+//                                    selectedSize = result.data.sizes.firstOrNull(),
+//                                    selectedColor = result.data.colors.firstOrNull(),
+//                                    selectedVariant = result.data.customVariants.firstOrNull()
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
             }
 
             recommendedProductsResult.await()
