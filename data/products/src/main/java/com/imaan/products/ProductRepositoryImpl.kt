@@ -9,12 +9,10 @@ import com.imaan.common.model.Image
 import com.imaan.common.model.Stocks
 import com.imaan.common.model.Title
 import com.imaan.remote.IRemoteDatasource
-import kotlinx.coroutines.flow.Flow
 import com.imaan.util.Result
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import java.net.URL
-import java.util.UUID
 import javax.inject.Inject
 
 private const val TAG = "ProductRepositoryImpl"
@@ -39,8 +37,12 @@ class ProductRepositoryImpl @Inject constructor(
             } else {
                 val inventories = (inventoriesResult as Result.Success).data.associateBy { it.productId }
                 val products = (productsResult as Result.Success).data
-
+                
                 val productModels = products.map {
+                    Log.d(
+                        TAG,
+                        "fetchAllProductsAsFlow: Price: ${inventories[it._id]?.price}"
+                    )
                     ProductModel(
                         id = ID(it._id.toHexString()),
                         imageUrl = URL(it.thumbnailUrl),
@@ -84,9 +86,34 @@ class ProductRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun fetchProductWithId(id: ID): Result<ProductModel> {
-        return Result.Success(
-            data = dummyProduct
-        )
+    override suspend fun fetchProductWithId(id: ID): Flow<Result<ProductModel>> {
+        // Product
+        val productFlow = datasource.fetchProductWithId(id.value)
+        // Inventory
+        val inventoriesFlow = datasource.fetchInventoriesForProduct(id.value)
+        // Variants
+        val variantsFlow = datasource.fetchVariantsForProduct(id.value)
+
+        return combine(
+            productFlow,
+            inventoriesFlow,
+            variantsFlow
+        ) { productResult, inventoriesResult, variantsResult ->
+            if (productResult is Result.Error || inventoriesResult is Result.Error || variantsResult is Result.Error){
+                Log.d(
+                    TAG,
+                    "fetchProductWithId: Error"
+                )
+                Result.Error(Exception("Something went wrong"))
+            } else {
+                Result.Success(
+                    data = ProductModel(
+                        product = (productResult as Result.Success).data.first(),
+                        inventories = (inventoriesResult as Result.Success).data,
+                        variants = (variantsResult as Result.Success).data
+                    )
+                )
+            }
+        }
     }
 }

@@ -10,5 +10,5 @@ interface IProductRepository {
     suspend fun fetchAllProducts(offset: Int? = null): List<ProductModel>
     suspend fun fetchAllProductsAsFlow(offset: Int? = null): Flow<Result<List<ProductModel>>>
 
-    suspend fun fetchProductWithId(id: ID): Result<ProductModel>
+    suspend fun fetchProductWithId(id: ID): Flow<Result<ProductModel>>
 }

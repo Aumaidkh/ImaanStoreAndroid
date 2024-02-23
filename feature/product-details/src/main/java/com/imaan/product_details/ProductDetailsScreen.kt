@@ -87,7 +87,7 @@ fun ProductDetailsScreen(
         sheetShadowElevation = 0.9.dp,
         sheetContent = {
             ProductDetailsBottomSheetComponent(
-                sizes = uiState.product?.sizes ?: emptyList(),
+                sizes = uiState.product?.sizes,
                 colors = uiState.product?.colors ?: emptyList(),
                 variants = uiState.product?.customVariants ?: emptyList(),
                 selectedSize = uiState.selectedSize,
@@ -171,7 +171,7 @@ fun ProductDetailsScreen(
                 item {
                     ProductImageGalleryView(
                         modifier = Modifier
-                            .padding(horizontal = 32.dp)
+                            .padding(horizontal = 8.dp)
                             .fillMaxWidth(),
                         images = uiState.product?.images ?: emptyList(),
                         pagerState = pagerState
@@ -366,7 +366,7 @@ fun VariantInfo(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        if (selectedSize != null) {
+        if (selectedSize?.size != null) {
             Variant(
                 label = "Size",
                 modifier = Modifier

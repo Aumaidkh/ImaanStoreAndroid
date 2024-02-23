@@ -10,7 +10,7 @@ import com.imaan.common.model.Title
 import java.net.URL
 import java.util.UUID
 
-val dummyUrl = URL("https://png2.cleanpng.com/sh/9d873a0a31c34099f09fefaa11493458/L0KzQYm3V8A4N5lBkJH0aYP2gLBuTgNwdqoyTqI5MD3wecP5jCJtbaR4Rdt3dHX1c7nojvdmaZNxfZ91ZX72PbTojfVzaV54h9DELXG5QIG3TcVjPGI6e9RtZXPkQYKATsE0P2I6Tqc6MUW2QYG4UMI0P2o7UaQ3cH7q/kisspng-sony-6000-mirrorless-interchangeable-lens-camera-sony-a6000-5b415cbdeca117.1371565115310102379692.png")
+val dummyUrl = URL("https://firebasestorage.googleapis.com/v0/b/wallpapers-ff4ce.appspot.com/o/%E2%80%94Pngtree%E2%80%94dslr%20digital%20camera_8231559%20(1).png?alt=media&token=6de35308-1623-4f5d-bfa7-b6eb2c9323f4")
 
 val dummyProduct = ProductModel(
     id = ID(UUID.randomUUID().toString()),

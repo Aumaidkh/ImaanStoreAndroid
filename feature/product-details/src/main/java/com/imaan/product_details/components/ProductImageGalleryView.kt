@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ fun ProductImageGalleryView(
     images: List<Image>,
     pagerState: PagerState
 ) {
+    images.ifEmpty { return }
     val imageRequest = ImageRequest.Builder(LocalContext.current)
         .data(images[pagerState.currentPage].original.toString())
         .build()
@@ -44,11 +46,12 @@ fun ProductImageGalleryView(
                             alpha = 0.04f
                         )
                     )
+                    .padding(vertical = 12.dp)
                     .fillMaxWidth()
                     .height(300.dp),
                 model = imageRequest,
                 contentDescription = "",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit
             )
         }
         Spacer(modifier = Modifier.height(24.dp))

@@ -7,7 +7,11 @@ import com.imaan.common.model.ID
 import com.imaan.common.model.Image
 import com.imaan.common.model.Stocks
 import com.imaan.common.model.Title
+import com.imaan.remote.dto.Inventory
+import com.imaan.remote.dto.Product
+import com.imaan.remote.dto.ProductVariant
 import java.net.URL
+import java.util.UUID
 
 
 data class ProductModel(
@@ -24,6 +28,37 @@ data class ProductModel(
     val customVariants: List<CustomVariant> = emptyList()
 ) {
     val primaryImage get() = images.firstOrNull()
+    constructor(
+        product: Product,
+        inventories: List<Inventory>,
+        variants: List<ProductVariant>
+    ) : this(
+        id = ID(product._id.toHexString()),
+        imageUrl = URL(product.thumbnailUrl),
+        title = Title(product.name),
+        description = Description(product.description),
+        price = Amount(inventories.firstOrNull()?.price ?: 0.0),
+        stocks = Stocks(inventories.firstOrNull()?.stocks ?: 0),
+        discount = Discount(inventories.firstOrNull()?.discount?.toFloat() ?: 0.0f),
+        images = variants.firstOrNull()?.images?.map { Image(URL(it),URL(it)) } ?: emptyList(),
+        colors = variants.filter { it.hexColor != null }.map {
+            object : ColorVariant {
+                override val available: Boolean
+                    get() = it.hexColor != null
+                override val hexValue: String
+                    get() = it.hexColor.toString()
+            }
+        },
+        sizes = variants.filter { it.size != null }.map { productVariant ->
+            object : SizeVariant {
+                override val available: Boolean
+                    get() = productVariant.size != null
+                override val size: String
+                    get() = productVariant.size.toString()
+            }
+        },
+        customVariants = emptyList()
+    )
 }
 
 

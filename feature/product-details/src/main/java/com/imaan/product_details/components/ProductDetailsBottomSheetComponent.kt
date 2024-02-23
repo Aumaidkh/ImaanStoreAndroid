@@ -26,7 +26,7 @@ import com.imaan.util.toHex
 
 @Composable
 fun ProductDetailsBottomSheetComponent(
-    sizes: List<SizeVariant> = emptyList(),
+    sizes: List<SizeVariant>? = null,
     colors: List<ColorVariant> = emptyList(),
     variants: List<CustomVariant> = emptyList(),
 
@@ -45,7 +45,7 @@ fun ProductDetailsBottomSheetComponent(
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
     ) {
-        if (sizes.isNotEmpty()){
+        if (sizes?.isNotEmpty() == true){
             SizesSection(
                 modifier = Modifier
                     .fillMaxWidth()

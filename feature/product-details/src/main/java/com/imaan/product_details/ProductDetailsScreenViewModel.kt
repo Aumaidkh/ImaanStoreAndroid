@@ -1,5 +1,6 @@
 package com.imaan.product_details
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,11 +22,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
 import javax.inject.Inject
 
+private const val TAG = "ProductDetailsScreenVie"
 @HiltViewModel
 class ProductDetailsScreenViewModel @Inject constructor(
     private val productsRepository: IProductRepository,
@@ -55,6 +59,26 @@ class ProductDetailsScreenViewModel @Inject constructor(
                     isLoading = true
                 )
             }
+            productsRepository.fetchProductWithId(id).onEach { emission ->
+                when(emission){
+                    is com.imaan.util.Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "loadProductWithId: Error fetching product ${emission.throwable.message}"
+                        )
+                    }
+                    is com.imaan.util.Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                product = emission.data,
+                                selectedSize = emission.data.sizes.firstOrNull(),
+                                selectedColor = emission.data.colors.firstOrNull(),
+                                selectedVariant = emission.data.customVariants.firstOrNull(),
+                            )
+                        }
+                    }
+                }
+            }.launchIn(this)
             val recommendedProductsResult = async {
                 productsRepository.fetchAllProducts()
                     .also { products ->
