@@ -8,7 +8,6 @@ import com.imaan.cart.CartItemModel
 import com.imaan.cart.ICartRepository
 import com.imaan.common.model.Amount
 import com.imaan.common.model.ID
-import com.imaan.common.wrappers.Result
 import com.imaan.delivery.repository.IDeliveryService
 import com.imaan.navigation.productIdKey
 import com.imaan.order.IOrderRepository
@@ -18,6 +17,10 @@ import com.imaan.products.CustomVariant
 import com.imaan.products.IProductRepository
 import com.imaan.products.ProductModel
 import com.imaan.products.SizeVariant
+import com.imaan.products.model.DetailedProductModel
+import com.imaan.products.model.IProductModel
+import com.imaan.products.model.IProductVariant
+import com.imaan.products.model.ProductColorVariant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,7 +62,7 @@ class ProductDetailsScreenViewModel @Inject constructor(
                     isLoading = true
                 )
             }
-            productsRepository.fetchProductWithId(id).onEach { emission ->
+            productsRepository.fetchDetailedProductWithId(id).onEach { emission ->
                 when(emission){
                     is com.imaan.util.Result.Error -> {
                         Log.d(
@@ -68,12 +71,11 @@ class ProductDetailsScreenViewModel @Inject constructor(
                         )
                     }
                     is com.imaan.util.Result.Success -> {
+                        val detailedProduct = emission.data as? DetailedProductModel
                         _state.update {
                             it.copy(
-                                product = emission.data,
-                                selectedSize = emission.data.sizes.firstOrNull(),
-                                selectedColor = emission.data.colors.firstOrNull(),
-                                selectedVariant = emission.data.customVariants.firstOrNull(),
+                                product = detailedProduct,
+                                selectedProductVariant = detailedProduct?.variants?.firstOrNull()
                             )
                         }
                     }
@@ -153,31 +155,54 @@ class ProductDetailsScreenViewModel @Inject constructor(
         }
     }
 
-    fun selectSize(size: SizeVariant){
+    fun selectSize(size: IProductVariant){
         _state.update {
             it.copy(
-                selectedSize = size
+               selectedSizeVariant = size,
             )
         }
     }
 
-    fun selectColor(color: ColorVariant?){
+    fun selectColor(color: IProductVariant){
         _state.update {
             it.copy(
-                selectedColor = color
+                selectedColorVariant = color
             )
         }
     }
 
-    fun selectVariant(variant: CustomVariant?){
+    fun selectCustom(label: IProductVariant){
         _state.update {
             it.copy(
-                selectedVariant = variant
+                selectedCustomVariant = label
             )
         }
     }
 
-    fun buyNow(product: ProductModel){
+    // 65d9825ec804ebbf5f016aad
+    // 65d9825ec804ebbf5f016aad -> Size
+    // 65d986cdc804ebbf5f016aaf -> Color
+    //
+    fun selectVariant(){
+        _state.update { currentState ->
+            val selectedVariant = currentState.product?.variants?.find { variant ->
+                Log.d(
+                    TAG,
+                    "selectVariant: Size: ${currentState.selectedSizeVariant?.id?.value} -> ${variant.id.value}" +
+                            "\n Color: ${currentState.selectedColorVariant?.id?.value} -> ${variant.id.value}" +
+                            "\n Custom: ${currentState.selectedCustomVariant?.id?.value} -> ${variant.id.value}"
+                )
+                variant == currentState.selectedSizeVariant &&
+                        (variant as? ProductColorVariant) == currentState.selectedColorVariant &&
+                        variant.label == currentState.selectedCustomVariant?.label
+            }
+            currentState.copy(
+                selectedProductVariant = selectedVariant
+            )
+        }
+    }
+
+    fun buyNow(product: IProductModel){
         viewModelScope.launch {
             val cartItem = CartItemModel(product,1)
             orderRepository.updateOrder(

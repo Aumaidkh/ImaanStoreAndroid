@@ -34,6 +34,7 @@ import coil.request.ImageRequest
 import com.imaan.design_system.components.buttons.CircularIcon
 import com.imaan.products.ProductModel
 import com.imaan.products.dummyProduct
+import com.imaan.products.model.IProductModel
 import kotlin.random.Random
 
 
@@ -42,6 +43,89 @@ enum class ProductCardSize {
     Large
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GenericProductCard(
+    modifier: Modifier = Modifier,
+    product: IProductModel,
+    onClick: (IProductModel) -> Unit = {},
+    onAddToCart: (IProductModel) -> Unit = {},
+    size: ProductCardSize = ProductCardSize.Small,
+    elevation: CardElevation = CardDefaults.elevatedCardElevation()
+){
+    Card(
+        modifier = modifier,
+        onClick = { onClick(product) },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = elevation
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth(),
+            contentAlignment = Alignment.TopEnd){
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
+            ) {
+                ProductOnCircleView(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .fillMaxWidth(),
+                    imageUrl = product.image.thumbnail,
+                    color = generateRandomLightColor(Random.nextInt(10))
+                )
+                Text(
+                    text = product.title.value,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    lineHeight = 18.sp
+
+                )
+                Text(
+                    text = product.description.value,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 2
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = product.price.inRupees,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    CircularIcon(
+                        iconResId = com.imaan.resources.R.drawable.ic_cart,
+                        onClick = {
+                            // addToCart(product)
+                            onAddToCart(product)
+                        }
+                    )
+
+                }
+            }
+
+            CircularIcon(
+                modifier = Modifier
+                    .padding(12.dp),
+                iconResId = com.imaan.resources.R.drawable.ic_favorite,
+                containerColor = Color.White,
+                onClick = {
+
+                },
+                tint = Color.Red
+            )
+        }
+
+    }
+}
+
+@Deprecated("Use Generic Product Card Instead")
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,

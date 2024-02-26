@@ -11,6 +11,7 @@ import com.imaan.common.model.PhoneNumber
 import com.imaan.common.model.PinCode
 import com.imaan.common.model.State
 import com.imaan.common.model.Title
+import org.mongodb.kbson.BsonObjectId
 
 
 /**
@@ -30,7 +31,23 @@ data class Address(
     val phoneNumber: PhoneNumber,
     val isDefault: Boolean,
     val fullAddress: FullAddress,
+    val alternatePhone: PhoneNumber? = null
 ){
+    constructor(address: com.imaan.remote.dto.Address): this(
+        id = ID(address._id.toHexString()),
+        userId = ID(address._id.toHexString()),
+        fullName = FullName(address.fullName,null),
+        landMark = address.landmark?.let { Landmark(it) },
+        city = City("No City"),
+        district = District(address.district),
+        state = State(address.state),
+        country = Country(address.country),
+        pinCode = PinCode(address.zipCode),
+        phoneNumber = PhoneNumber(address.phoneNumber),
+        isDefault = false,
+        fullAddress = FullAddress(address.fullAddress),
+        alternatePhone = PhoneNumber(address.alternatePhone.toString(),"")
+    )
     val readableAddress
         get() = buildAddress()
 
@@ -54,6 +71,24 @@ data class Address(
             return
         }
         append("$value$separator ")
+    }
+
+    fun toAddressDto(): com.imaan.remote.dto.Address {
+        return com.imaan.remote.dto.Address().apply {
+            this@Address.id?.let { addressId ->
+                this._id = org.mongodb.kbson.ObjectId(addressId.value)
+            }
+            this.fullName = this@Address.fullName.value
+            this.label = this@Address.fullName.value
+            this.country = this@Address.country.value
+            this.state = this@Address.state.value
+            this.district = this@Address.district.value
+            this.zipCode = this@Address.pinCode.value
+            this.phoneNumber = this@Address.phoneNumber.value
+            this.fullAddress = this@Address.fullAddress.value
+            this.landmark = this@Address.landMark?.value
+            this.alternatePhone = null
+        }
     }
     companion object {
 

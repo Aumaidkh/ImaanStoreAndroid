@@ -29,7 +29,7 @@ internal fun OrderItem(
     ) {
         ProductOnCircleView(
             modifier = Modifier.size(imageSize),
-            imageUrl = cartItem.productModel.primaryImage?.thumbnail,
+            imageUrl = cartItem.productModel.image.thumbnail,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {

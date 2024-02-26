@@ -9,6 +9,7 @@ import com.imaan.categories.ICategoryRepository
 import com.imaan.offers.IOffersRepository
 import com.imaan.products.IProductRepository
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 import com.imaan.user.IUserRepository
 import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,7 +58,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun onAddToCart(productModel: ProductModel){
+    fun onAddToCart(productModel: IProductModel){
         viewModelScope.launch {
             cart.addProductToCart(productModel).also { added ->
                 if (added){

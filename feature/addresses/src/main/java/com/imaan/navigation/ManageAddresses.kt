@@ -19,8 +19,8 @@ sealed interface ManageAddresses : NavigationRoute {
         override val route: String
             get() = "$baseRoute/{$AddressId}"
 
-        fun passAddressId(id: ID?): String {
-            return "$baseRoute/${id?.value}"
+        fun passAddressId(id: ID): String {
+            return route.replace("{$AddressId}",id.value)
         }
     }
 }

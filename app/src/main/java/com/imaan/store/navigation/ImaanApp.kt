@@ -241,8 +241,11 @@ fun ImaanApp(
                 snackbarHostState = snackbarHostState,
                 paddingValues = it,
                 onNavigateToAddAddress = {
+                    val route = it?.id?.let { addressId ->
+                        ManageAddresses.UpsertAddress.passAddressId(addressId)
+                    } ?: ManageAddresses.UpsertAddress.route
                     navController.navigate(
-                        route = ManageAddresses.UpsertAddress.passAddressId(it?.id)
+                        route = route
                     )
                 },
                 onNavigateToPayments = {

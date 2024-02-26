@@ -18,6 +18,7 @@ import com.imaan.home.ui.HomeEvent
 import com.imaan.home.ui.HomeScreenViewModel
 import com.imaan.home.ui.components.HomeScreenDrawer
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 
 
 fun NavGraphBuilder.homeNavigationProvider(
@@ -30,7 +31,7 @@ fun NavGraphBuilder.homeNavigationProvider(
     onCategoryClicked: (CategoryModel?) -> Unit,
     onTrackOrder: () -> Unit,
     onWishlistClicked: () -> Unit,
-    onProductClicked: (ProductModel) -> Unit
+    onProductClicked: (IProductModel) -> Unit
 ) {
 
     composable(

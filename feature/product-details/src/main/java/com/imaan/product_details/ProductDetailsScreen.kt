@@ -1,19 +1,15 @@
 package com.imaan.product_details
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,13 +31,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.imaan.design_system.components.section.LazyColumnSurfaceSection
 import com.imaan.design_system.components.top_bars.ImaanAppTopBar
 import com.imaan.design_system.components.top_bars.Type
@@ -53,8 +45,11 @@ import com.imaan.product_details.components.ProductDetailsBottomSheetComponent
 import com.imaan.product_details.components.ProductImageGalleryView
 import com.imaan.products.ColorVariant
 import com.imaan.products.CustomVariant
-import com.imaan.products.ProductModel
 import com.imaan.products.SizeVariant
+import com.imaan.products.model.DetailedProductModel
+import com.imaan.products.model.IProductVariant
+import com.imaan.products.model.ProductColorVariant
+import com.imaan.products.model.ProductCustomVariant
 import com.imaan.util.toColor
 import kotlinx.coroutines.launch
 
@@ -66,19 +61,20 @@ import kotlinx.coroutines.launch
 fun ProductDetailsScreen(
     paddingValues: PaddingValues = PaddingValues(),
     uiState: ProductDetailsScreenUiState = ProductDetailsScreenUiState(),
-    onSizeSelected: (SizeVariant) -> Unit = {},
-    onVariantSelected: (CustomVariant) -> Unit = {},
-    onColorSelected: (ColorVariant?) -> Unit = {},
-    onBuyNow: (ProductModel) -> Unit = {},
-    onAddToCart: (ProductModel) -> Unit = {},
-    onAddToFavorites: (ProductModel,Boolean) -> Unit = {_, _ -> },
-    onRecommendedItemClick: (ProductModel) -> Unit = {}
+    onSizeSelected: (IProductVariant) -> Unit = {},
+    onVariantSelected: (IProductVariant) -> Unit = {},
+    onColorSelected: (IProductVariant) -> Unit = {},
+    onBuyNow: (DetailedProductModel) -> Unit = {},
+    onAddToCart: (DetailedProductModel) -> Unit = {},
+    onAddToFavorites: (DetailedProductModel,Boolean) -> Unit = {_, _ -> },
+    onRecommendedItemClick: (DetailedProductModel) -> Unit = {},
+    onSelectVariant: () -> Unit = {}
 ) {
 
     val sheetState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState {
-        uiState.product?.images?.size ?: 0
+        uiState.product?.variantImages?.size ?: 0
     }
     BottomSheetScaffold(
         scaffoldState = sheetState,
@@ -87,20 +83,25 @@ fun ProductDetailsScreen(
         sheetShadowElevation = 0.9.dp,
         sheetContent = {
             ProductDetailsBottomSheetComponent(
-                sizes = uiState.product?.sizes,
-                colors = uiState.product?.colors ?: emptyList(),
-                variants = uiState.product?.customVariants ?: emptyList(),
-                selectedSize = uiState.selectedSize,
-                selectedColor = uiState.selectedColor,
-                selectedVariant = uiState.selectedVariant,
-                onSizeSelected = onSizeSelected,
-                onColorSelected = onColorSelected,
-                onVariantSelected = onVariantSelected,
+                modifier = Modifier
+                    .padding(
+                        bottom = paddingValues.calculateBottomPadding()
+                    ),
                 onSelectButtonClick = {
                     scope.launch {
+                        onSelectVariant()
                         sheetState.bottomSheetState.partialExpand()
                     }
-                }
+                },
+                availableColors = uiState.product?.colors,
+                availableSizes = uiState.product?.sizes,
+                availableCustomVariants = uiState.product?.customVariants,
+                onVariantSelected = onVariantSelected,
+                onSizeSelected = onSizeSelected,
+                onColorSelected = onColorSelected,
+                selectedColor = uiState.selectedColorVariant,
+                selectedVariant = uiState.selectedCustomVariant,
+                selectedSize = uiState.selectedSizeVariant
             )
         },
         modifier = Modifier
@@ -144,7 +145,7 @@ fun ProductDetailsScreen(
                             )
                         )
                         Text(
-                            text = uiState.product?.price?.inRupees ?: "",
+                            text = uiState.selectedProductVariant?.price?.inRupees ?: "",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -173,7 +174,7 @@ fun ProductDetailsScreen(
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                             .fillMaxWidth(),
-                        images = uiState.product?.images ?: emptyList(),
+                        images = uiState.product?.variantImages ?: emptyList(),
                         pagerState = pagerState
                     )
                 }
@@ -211,29 +212,32 @@ fun ProductDetailsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 12.dp),
-                                selectedSize = uiState.selectedSize,
-                                selectedVariant = uiState.selectedVariant,
-                                selectedColor = uiState.selectedColor,
+                                selectedVariant = uiState.selectedCustomVariant as? ProductCustomVariant,
+                                selectedColor = uiState.selectedColorVariant as? ProductColorVariant,
                                 onClick = {
                                     scope.launch {
                                         sheetState.bottomSheetState.expand()
                                     }
                                 }
                             )
-                            if (uiState.selectedColor != null && uiState.product?.colors != null) {
+
+                            if (uiState.showColorPickerComponent) {
                                 ColorSelectorComponent(
                                     modifier = Modifier,
-                                    colors = if (uiState.product.colors.size > 3) uiState.product.colors.subList(
+                                    colors = if (uiState.product?.colors.orEmpty().size > 3) uiState.product?.colors.orEmpty().subList(
                                         0,
                                         3
-                                    ).map { it.hexValue.toColor() } else uiState.product?.colors?.map { it.hexValue.toColor() } ?: emptyList(),
-                                    selectedColor = uiState.selectedColor.hexValue.toColor(),
+                                    ).map {colorVariant ->
+                                        colorVariant.hexColor.toColor()
+                                    } else uiState.availableColors.map { colorVariant ->
+                                        colorVariant.hexColor.toColor() },
+                                    selectedColor = (uiState.selectedColorVariant as? ProductColorVariant)?.hexColor?.toColor(),
                                     onColorClicked = {
                                         scope.launch {
                                             sheetState.bottomSheetState.expand()
                                         }
                                     },
-                                    seeMoreCount = if ((uiState.product.colors.size - 3) > 0) uiState.product.colors.size - 4 else null,
+                                    seeMoreCount = if ((uiState.product?.colors.orEmpty().size - 3) > 0) uiState.product?.colors.orEmpty().size - 4 else null,
                                     onSeeMore = {
                                         scope.launch {
                                             sheetState.bottomSheetState.expand()
@@ -290,7 +294,9 @@ fun ProductDetailsScreen(
                                         .height(300.dp),
                                     size = ProductCardSize.Small,
                                     product = it,
-                                    onClick = onRecommendedItemClick
+                                    onClick = {
+                                        // TODO(Yet to be Implemented)
+                                    }
                                 )
                             }
                         }
@@ -302,71 +308,22 @@ fun ProductDetailsScreen(
     }
 }
 
-@Composable
-private fun NewGalleryLayout(uiState: ProductDetailsScreenUiState) {
-    Row(
-        modifier = Modifier
-            .padding(12.dp)
-    ) {
-        val primaryImageRequest = ImageRequest.Builder(
-            LocalContext.current
-        ).data(uiState.product?.primaryImage?.original.toString())
-            .build()
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(0.15f),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            uiState.product?.images?.forEach { product ->
-                Box(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondaryContainer.copy(0.4f))
-                        .size(50.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val imageRequest = ImageRequest.Builder(
-                        LocalContext.current
-                    ).data(product.thumbnail.toString())
-                        .build()
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(40.dp),
-                        model = imageRequest,
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-        }
-
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(
-                    1f,
-                    true
-                ),
-            model = primaryImageRequest,
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VariantInfo(
     modifier: Modifier,
-    selectedSize: SizeVariant?,
-    selectedVariant: CustomVariant?,
-    selectedColor: ColorVariant?,
+    selectedVariant: ProductCustomVariant?,
+ //   selectedColor: ColorVariant?,
+    selectedColor: ProductColorVariant?,
+
     onClick: () -> Unit
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        if (selectedSize?.size != null) {
+        if (selectedColor?.size != null) {
             Variant(
                 label = "Size",
                 modifier = Modifier
@@ -379,7 +336,7 @@ fun VariantInfo(
                         .clickable {
                             onClick()
                         },
-                    value = selectedSize.size,
+                    value = selectedColor.size.toString(),
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {

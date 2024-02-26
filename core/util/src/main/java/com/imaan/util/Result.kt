@@ -9,4 +9,10 @@ sealed class Result<T>{
             return Error(Exception(message))
         }
     }
+
+    fun isSuccess() =
+        this is Success
+
+    fun isFailure() =
+        this is Error
 }

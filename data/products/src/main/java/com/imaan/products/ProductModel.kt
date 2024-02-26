@@ -7,26 +7,28 @@ import com.imaan.common.model.ID
 import com.imaan.common.model.Image
 import com.imaan.common.model.Stocks
 import com.imaan.common.model.Title
+import com.imaan.products.model.IProductModel
 import com.imaan.remote.dto.Inventory
 import com.imaan.remote.dto.Product
 import com.imaan.remote.dto.ProductVariant
 import java.net.URL
 import java.util.UUID
 
-
 data class ProductModel(
-    val id: ID,
+    override val id: ID,
     val imageUrl: URL,
-    val title: Title,
-    val description: Description,
-    val price: Amount,
+    override val title: Title,
+    override val description: Description,
+    override val price: Amount,
     val stocks: Stocks,
     val discount: Discount?,
     val images: List<Image>,
     val sizes: List<SizeVariant> = getDummySizes(),
     val colors: List<ColorVariant> = getDummyColors(),
-    val customVariants: List<CustomVariant> = emptyList()
-) {
+    val customVariants: List<CustomVariant> = emptyList(),
+    override val image: Image,
+    override val category: String
+): IProductModel {
     val primaryImage get() = images.firstOrNull()
     constructor(
         product: Product,
@@ -43,21 +45,19 @@ data class ProductModel(
         images = variants.firstOrNull()?.images?.map { Image(URL(it),URL(it)) } ?: emptyList(),
         colors = variants.filter { it.hexColor != null }.map {
             object : ColorVariant {
-                override val available: Boolean
-                    get() = it.hexColor != null
                 override val hexValue: String
                     get() = it.hexColor.toString()
             }
         },
         sizes = variants.filter { it.size != null }.map { productVariant ->
             object : SizeVariant {
-                override val available: Boolean
-                    get() = productVariant.size != null
                 override val size: String
                     get() = productVariant.size.toString()
             }
         },
-        customVariants = emptyList()
+        customVariants = emptyList(),
+        category = "",
+        image = Image(URL(product.thumbnailUrl),URL(product.thumbnailUrl))
     )
 }
 
@@ -67,17 +67,13 @@ data class ProductModel(
  * 1. Color -> Contains the hex color as value
  * 2. Size -> Contains the size as value
  * 3. Custom -> Contains some value as value*/
-interface ImaanAppProductVariant {
-    val available: Boolean
-}
 
-interface ColorVariant: ImaanAppProductVariant {
+
+interface ColorVariant {
     val hexValue: String
     companion object {
         fun fromHex(value: String): ColorVariant {
             return object : ColorVariant {
-                override val available: Boolean
-                    get() = true
                 override val hexValue: String
                     get() = value
             }
@@ -85,11 +81,11 @@ interface ColorVariant: ImaanAppProductVariant {
     }
 }
 
-interface SizeVariant: ImaanAppProductVariant {
+interface SizeVariant {
     val size: String
 }
 
-interface CustomVariant: ImaanAppProductVariant {
+interface CustomVariant {
     val label: String
 }
 
@@ -113,8 +109,6 @@ fun getDummyColors(
     hexColors.forEach {
         colors.add(
             object : ColorVariant {
-                override val available: Boolean
-                    get() = true
                 override val hexValue: String
                     get() = "#$it"
             }
@@ -130,8 +124,6 @@ fun getDummySizes(
     availableSizes.forEach {
         sizes.add(
             object : SizeVariant {
-                override val available: Boolean
-                    get() = true
                 override val size: String
                     get() = it
             }
@@ -148,8 +140,6 @@ fun getDummyVariants(
     availableVariants.forEach {
         variants.add(
             object : CustomVariant {
-                override val available: Boolean
-                    get() = true
                 override val label: String
                     get() = it
 

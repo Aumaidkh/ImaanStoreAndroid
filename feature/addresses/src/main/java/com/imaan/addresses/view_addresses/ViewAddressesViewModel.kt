@@ -1,13 +1,18 @@
 package com.imaan.addresses.view_addresses
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.addresses.Address
+import com.imaan.addresses.IAddressRepository
 import com.imaan.order.IOrderRepository
+import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,11 +20,34 @@ import javax.inject.Inject
 private const val TAG = "ViewAddressesViewModel"
 @HiltViewModel
 class ViewAddressesViewModel @Inject constructor(
-    private val orderRepository: IOrderRepository
+    private val orderRepository: IOrderRepository,
+    private val addressRepo: IAddressRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(ViewAddressesUiState())
     val state = _state.asStateFlow()
 
+
+    init {
+        viewModelScope.launch {
+            addressRepo.getAllSavedAddressesAsFlow().onEach { result ->
+                when(result){
+                    is Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "Error Fetching Addresses: ${result.throwable.message}"
+                        )
+                    }
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                addresses = result.data
+                            )
+                        }
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
 
     fun onAddressSelected(address: Address) {
         // TODO: Make the Address as default address

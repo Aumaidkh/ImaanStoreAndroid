@@ -48,6 +48,7 @@ import com.imaan.home.ui.model.DrawerItem.TrackOrder
 import com.imaan.home.ui.model.DrawerItem.Wishlist
 import com.imaan.home.ui.model.DrawerState
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 import kotlinx.coroutines.launch
 
 
@@ -59,10 +60,10 @@ fun HomeScreenDrawer(
     onCartClick: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(),
     onSeeAllCategoriesClick: () -> Unit = {},
-    onAddToCart: (ProductModel) -> Unit = {},
+    onAddToCart: (IProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
     onNavigateToProfileScreen: () -> Unit,
-    onProductClicked: (ProductModel) -> Unit = {},
+    onProductClicked: (IProductModel) -> Unit = {},
     onAboutUs: () -> Unit = {},
     onPrivacyPolicy: () -> Unit = {},
     onHelpAndSupport: () -> Unit = {},

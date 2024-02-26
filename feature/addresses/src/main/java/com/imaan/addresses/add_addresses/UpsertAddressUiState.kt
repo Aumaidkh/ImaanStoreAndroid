@@ -27,11 +27,12 @@ data class UpsertAddressScreenUiState(
     val pin: PinCode = PinCode.Empty,
     val phone: PhoneNumber = PhoneNumber.Empty,
     val fullAddress: FullAddress = FullAddress.Empty,
-    val addressProcessed: Boolean = false
+    val addressProcessed: Boolean = false,
+    val addressId: ID? = null
 ){
 
     val address get() = Address(
-        id = null,
+        id = addressId,
         userId = ID(""),
         fullName = fullName,
         landMark = landmark,

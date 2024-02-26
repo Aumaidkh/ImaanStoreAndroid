@@ -1,6 +1,7 @@
 package com.imaan.addresses.add_addresses
 
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,9 +18,12 @@ import com.imaan.common.model.PhoneNumber
 import com.imaan.common.model.PinCode
 import com.imaan.common.model.State
 import com.imaan.navigation.AddressId
+import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,43 +43,64 @@ class UpsertAddressViewModel @Inject constructor(
             if (it == "{$AddressId}"){
                 return@let
             }
-            viewModelScope.launch {
-                val address = repository.getAddressById(ID(it))
-                address?.let {
-                    prePopulateStateWithAddress(it)
-                }
-
-            }
-
-        }
-    }
-
-    private fun prePopulateStateWithAddress(address: Address){
-        with(address){
-            _state.update {
-                it.copy(
-                    fullName = fullName,
-                    landmark = landMark,
-                    city = city,
-                    district = district,
-                    state = state,
-                    country = country,
-                    pin = pinCode,
-                    phone = phoneNumber,
-                    fullAddress = fullAddress
+            _state.update { state ->
+                state.copy(
+                    addressId = ID(it)
                 )
             }
+            viewModelScope.launch {
+                repository.getAddressByIdAsFlow(ID(it)).onEach { result ->
+                    when(result){
+                        is Result.Error -> {
+                            Log.d(
+                                TAG,
+                                "Error : ${result.throwable.message}"
+                            )
+                        }
+                        is Result.Success -> {
+                            with(result.data){
+                                _state.update {
+                                    it.copy(
+                                        fullName = fullName,
+                                        landmark = landMark,
+                                        city = city,
+                                        district = district,
+                                        state = state,
+                                        country = country,
+                                        pin = pinCode,
+                                        phone = phoneNumber,
+                                        fullAddress = fullAddress
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }.launchIn(this)
+            }
+
         }
     }
 
     fun saveAddress(){
         viewModelScope.launch {
-            repository.upsertAddress(_state.value.address)
-            _state.update {
-                it.copy(
-                    addressProcessed = true
-                )
-            }
+            repository.upsertAddressWithResultFlow(_state.value.address).onEach { result ->
+                when(result){
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                addressProcessed = true
+                            )
+                        }
+                    }
+                    is Result.Error -> {
+                        // TODO: Log Needed
+                        Log.d(
+                            TAG,
+                            "saveAddress: Error: ${result.throwable.message}"
+                        )
+                    }
+                }
+            }.launchIn(this)
         }
     }
 

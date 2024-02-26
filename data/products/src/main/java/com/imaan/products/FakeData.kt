@@ -44,7 +44,12 @@ val dummyProduct = ProductModel(
     ),
     colors = getDummyColors(),
     sizes = getDummySizes(),
-    customVariants = getDummyVariants()
+    customVariants = getDummyVariants(),
+    category = "Electronics",
+    image = Image(
+        thumbnail = dummyUrl,
+        original = dummyUrl
+    )
 )
 
 fun getDummyProducts(count: Int = 1): List<ProductModel>{

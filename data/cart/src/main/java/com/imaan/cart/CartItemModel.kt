@@ -3,9 +3,10 @@ package com.imaan.cart
 import com.imaan.common.model.Amount
 import com.imaan.products.ProductModel
 import com.imaan.products.getDummyProducts
+import com.imaan.products.model.IProductModel
 
 data class CartItemModel(
-    val productModel: ProductModel = getDummyProducts(1).first(),
+    val productModel: IProductModel = getDummyProducts(1).first(),
     var quantity: Int = 1,
 ) {
 

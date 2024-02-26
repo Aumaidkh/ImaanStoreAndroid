@@ -11,9 +11,9 @@ import org.mongodb.kbson.ObjectId
 
 class ProductVariant: RealmObject {
     @PrimaryKey
-    var _id: ObjectId = BsonObjectId()
+    var _id: ObjectId = ObjectId()
     @Index
-    var productId: ObjectId = BsonObjectId()
+    var productId: ObjectId = ObjectId()
     var name: String = ""
     var label: String = ""
     var hexColor: String? = null

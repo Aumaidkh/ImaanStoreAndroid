@@ -1,5 +1,6 @@
 package com.imaan.remote
 
+import com.imaan.remote.dto.Address
 import com.imaan.remote.dto.Inventory
 import com.imaan.remote.dto.Product
 import com.imaan.remote.dto.ProductVariant
@@ -14,4 +15,13 @@ interface IRemoteDatasource {
     suspend fun fetchInventoriesForProduct(id: String): Flow<Result<List<Inventory>>>
     suspend fun fetchVariantsForProduct(id: String): Flow<Result<List<ProductVariant>>>
     suspend fun insertProduct()
+
+    /*###################################################################################
+    * #                             Addresses                                           #
+    * ##################################################################################*/
+    suspend fun fetchAddressById(addressId: String): Flow<Result<Address>>
+    suspend fun fetchAllAddressesForUser(userId: String): Flow<Result<List<Address>>>
+
+    suspend fun insertAddress(userId: String,address: Address): Flow<Result<Address>>
+    suspend fun updateAddress(userId: String,address: Address): Flow<Result<Address>>
 }

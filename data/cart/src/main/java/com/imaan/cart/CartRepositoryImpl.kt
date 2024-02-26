@@ -2,6 +2,7 @@ package com.imaan.cart
 
 import com.imaan.cart.CartDatasource.cartItems
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ internal class CartRepositoryImpl @Inject constructor(): ICartRepository {
        return cartItems
     }
 
-    override suspend fun addProductToCart(productModel: ProductModel): Boolean {
+    override suspend fun addProductToCart(productModel: IProductModel): Boolean {
         val cartItemIndex = cartItems.indexOfFirst { it.productModel == productModel }
         if (cartItemIndex == -1){
             cartItems.add(
@@ -34,7 +35,7 @@ internal class CartRepositoryImpl @Inject constructor(): ICartRepository {
         return false
     }
 
-    override suspend fun removeProductFromCart(productModel: ProductModel) {
+    override suspend fun removeProductFromCart(productModel: IProductModel) {
         val cartItemIndex = cartItems.indexOfFirst { it.productModel == productModel }
         if (cartItemIndex != -1){
             cartItems.remove(cartItems[cartItemIndex])

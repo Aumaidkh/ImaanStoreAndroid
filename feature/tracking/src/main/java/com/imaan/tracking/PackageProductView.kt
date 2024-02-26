@@ -24,6 +24,7 @@ import com.imaan.design_system.components.views.ProductOnCircleView
 import com.imaan.order.OrderModel
 import com.imaan.order.getDummyOrders
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 
 
 @Composable
@@ -65,7 +66,7 @@ fun OrderProductsView(
 @Composable
 fun PackageProductComponent(
     modifier: Modifier,
-    product: ProductModel
+    product: IProductModel
 ) {
     Row(
         modifier = modifier
@@ -74,7 +75,7 @@ fun PackageProductComponent(
         ProductOnCircleView(
             modifier = Modifier
                 .size(60.dp),
-            imageUrl = product.primaryImage?.thumbnail,
+            imageUrl = product.image.thumbnail,
         )
         Column(
             modifier = Modifier

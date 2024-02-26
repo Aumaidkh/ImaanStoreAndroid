@@ -36,7 +36,8 @@ fun NavGraphBuilder.productDetailsNavigationProvider(
             uiState = uiState,
             onSizeSelected = viewModel::selectSize,
             onColorSelected = viewModel::selectColor,
-            onVariantSelected = viewModel::selectVariant,
+            onVariantSelected = viewModel::selectCustom,
+            onSelectVariant = viewModel::selectVariant,
             onAddToCart = {
                 onCartClick()
             },
@@ -44,7 +45,9 @@ fun NavGraphBuilder.productDetailsNavigationProvider(
             onAddToFavorites = { product, isFavorite ->
                 // TODO: Add to favorites
             },
-            onRecommendedItemClick = onRecommendedItemClick
+            onRecommendedItemClick = {
+                // TODO:
+            }
         )
     }
 }

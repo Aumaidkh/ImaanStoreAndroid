@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,61 +18,71 @@ import com.imaan.design_system.components.buttons.ImaanAppButton
 import com.imaan.design_system.components.views.ColorSelectorComponent
 import com.imaan.products.ColorVariant
 import com.imaan.products.CustomVariant
-import com.imaan.products.SizeVariant
+import com.imaan.products.model.IProductVariant
+import com.imaan.products.model.ProductColorVariant
+import com.imaan.products.model.ProductCustomVariant
+import com.imaan.util.IfNotEmpty
 import com.imaan.util.toColor
 import com.imaan.util.toHex
 
 @Composable
 fun ProductDetailsBottomSheetComponent(
-    sizes: List<SizeVariant>? = null,
-    colors: List<ColorVariant> = emptyList(),
-    variants: List<CustomVariant> = emptyList(),
+    modifier: Modifier = Modifier,
+    onSelectButtonClick: () -> Unit,
 
-    selectedSize: SizeVariant?,
-    selectedColor: ColorVariant?,
-    selectedVariant: CustomVariant?,
+    availableSizes: List<IProductVariant>?,
+    availableColors: List<ProductColorVariant>?,
+    availableCustomVariants: List<ProductCustomVariant>?,
 
-    onSizeSelected: (SizeVariant) -> Unit,
-    onColorSelected: (ColorVariant) -> Unit,
-    onVariantSelected: (CustomVariant) -> Unit,
+    selectedColor: IProductVariant?,
+    selectedSize: IProductVariant?,
+    selectedVariant: IProductVariant?,
 
-    onSelectButtonClick: () -> Unit
+    onSizeSelected: (IProductVariant) -> Unit,
+    onColorSelected: (IProductVariant) -> Unit,
+    onVariantSelected: (IProductVariant) -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
     ) {
-        if (sizes?.isNotEmpty() == true){
+        availableSizes?.IfNotEmpty {
             SizesSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                items = sizes,
+                items = availableSizes,
                 onSizeSelected = onSizeSelected,
                 selectedSize = selectedSize
             )
         }
-        if (colors.isNotEmpty()){
+
+        availableColors?.IfNotEmpty {
             ColorsSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                items = colors,
-                onColorSelected = onColorSelected,
-                selectedColor = selectedColor
+                items = it,
+                onColorSelected = { hex ->
+                    val color = it.find { color -> color.hexColor.equals(hex,true) }
+                    onColorSelected(color as IProductVariant)
+                },
+                selectedColor = selectedColor as? ProductColorVariant
             )
         }
-        if (variants.isNotEmpty()){
+
+        availableCustomVariants?.IfNotEmpty {
             CustomVariantsSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                items = variants,
+                items = it,
                 onVariantSelected = onVariantSelected,
                 selectedVariant = selectedVariant
             )
         }
+
         ImaanAppButton(
             modifier = Modifier
                 .padding(vertical = 24.dp)
@@ -87,13 +95,14 @@ fun ProductDetailsBottomSheetComponent(
     }
 }
 
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SizesSection(
     modifier: Modifier,
-    items: List<SizeVariant>,
-    onSizeSelected: (SizeVariant) -> Unit,
-    selectedSize: SizeVariant?
+    items: List<IProductVariant>,
+    onSizeSelected: (IProductVariant) -> Unit,
+    selectedSize: IProductVariant?
 ) {
     Column(
         modifier = modifier
@@ -115,7 +124,7 @@ fun SizesSection(
                     onClick = {
                         onSizeSelected(size)
                     },
-                    label = size.size,
+                    label = size.size?.label.toString(),
                     isSelected = selectedSize == size
                 )
             }
@@ -127,18 +136,19 @@ fun SizesSection(
 @Composable
 fun ColorsSection(
     modifier: Modifier,
-    items: List<ColorVariant>,
-    onColorSelected: (ColorVariant) -> Unit,
-    selectedColor: ColorVariant?
+    items: List<ProductColorVariant>,
+    onColorSelected: (String) -> Unit,
+    selectedColor: ProductColorVariant?
 ) {
     Column(
         modifier = modifier
     ) {
         ColorSelectorComponent(
-            colors = items.map { it.hexValue.toColor() },
-            selectedColor = selectedColor?.hexValue?.toColor(),
+            colors = items.map { it.hexColor.toColor() },
+            selectedColor = selectedColor?.hexColor?.toColor(),
             onColorClicked = {
-                onColorSelected(ColorVariant.fromHex(it.toHex()))
+                // TODO(To Be Implemented )
+                onColorSelected(it.toHex())
             },
             label = "Select Color",
             boxSize = 80.dp
@@ -151,9 +161,9 @@ fun ColorsSection(
 @Composable
 fun CustomVariantsSection(
     modifier: Modifier,
-    items: List<CustomVariant>,
-    onVariantSelected: (CustomVariant) -> Unit,
-    selectedVariant: CustomVariant?
+    items: List<ProductCustomVariant>,
+    onVariantSelected: (IProductVariant) -> Unit,
+    selectedVariant: IProductVariant?
 ) {
     Column(
         modifier = modifier

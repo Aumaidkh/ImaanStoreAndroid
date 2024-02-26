@@ -8,6 +8,9 @@ import com.imaan.common.model.ID
 import com.imaan.common.model.Image
 import com.imaan.common.model.Stocks
 import com.imaan.common.model.Title
+import com.imaan.products.model.DetailedProductModel
+import com.imaan.products.model.IProductModel
+import com.imaan.products.model.Size
 import com.imaan.remote.IRemoteDatasource
 import com.imaan.util.Result
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +30,7 @@ class ProductRepositoryImpl @Inject constructor(
         datasource.insertProduct()
     }
 
-    override suspend fun fetchAllProductsAsFlow(offset: Int?): Flow<Result<List<ProductModel>>> {
+    override suspend fun fetchAllProductsAsFlow(offset: Int?): Flow<Result<List<IProductModel>>> {
         val productsFlow = datasource.fetchProducts()
         val inventoriesFlow = datasource.fetchInventories()
 
@@ -75,7 +78,12 @@ class ProductRepositoryImpl @Inject constructor(
                         ),
                         colors = getDummyColors(),
                         sizes = getDummySizes(),
-                        customVariants = getDummyVariants()
+                        customVariants = getDummyVariants(),
+                        category = "Electronics",
+                        image = Image(
+                            thumbnail = dummyUrl,
+                            original = dummyUrl
+                        )
                     )
                 }
 
@@ -86,14 +94,13 @@ class ProductRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun fetchProductWithId(id: ID): Flow<Result<ProductModel>> {
+    override suspend fun fetchDetailedProductWithId(id: ID): Flow<Result<IProductModel>> {
         // Product
         val productFlow = datasource.fetchProductWithId(id.value)
         // Inventory
         val inventoriesFlow = datasource.fetchInventoriesForProduct(id.value)
         // Variants
         val variantsFlow = datasource.fetchVariantsForProduct(id.value)
-
         return combine(
             productFlow,
             inventoriesFlow,
@@ -107,9 +114,9 @@ class ProductRepositoryImpl @Inject constructor(
                 Result.Error(Exception("Something went wrong"))
             } else {
                 Result.Success(
-                    data = ProductModel(
+                    data = DetailedProductModel(
                         product = (productResult as Result.Success).data.first(),
-                        inventories = (inventoriesResult as Result.Success).data,
+                        inventory = (inventoriesResult as Result.Success).data.associateBy { it.variantId },
                         variants = (variantsResult as Result.Success).data
                     )
                 )

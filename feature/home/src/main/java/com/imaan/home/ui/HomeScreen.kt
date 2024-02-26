@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import com.imaan.categories.CategoryModel
 import com.imaan.design_system.components.top_bars.ImaanAppTopBar
 import com.imaan.design_system.components.top_bars.Type
+import com.imaan.design_system.components.views.GenericProductCard
 import com.imaan.design_system.components.views.ProductCard
 import com.imaan.design_system.components.views.ProductCardSize
 import com.imaan.home.ui.components.CategoriesSection
 import com.imaan.home.ui.components.ImaanCarousel
 import com.imaan.home.ui.components.ImaanSearchBar
 import com.imaan.products.ProductModel
+import com.imaan.products.model.IProductModel
 
 @Composable
 fun HomeScreen(
@@ -37,9 +39,9 @@ fun HomeScreen(
     onCartClick: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(),
     onSeeAllCategoriesClick: () -> Unit = {},
-    onAddToCart: (ProductModel) -> Unit = {},
+    onAddToCart: (IProductModel) -> Unit = {},
     onCategoryClicked: (CategoryModel) -> Unit = {},
-    onProductClicked: (ProductModel) -> Unit = {},
+    onProductClicked: (IProductModel) -> Unit = {},
 ) {
     Column(
         modifier
@@ -78,9 +80,9 @@ fun HomeFeed(
     modifier: Modifier = Modifier,
     state: HomeScreenUiState = HomeScreenUiState(),
     onSeeAllCategoriesClick: () -> Unit,
-    onAddToCart: (ProductModel) -> Unit,
+    onAddToCart: (IProductModel) -> Unit,
     onCategoryClick: (CategoryModel) -> Unit,
-    onProductClicked: (ProductModel) -> Unit = {},
+    onProductClicked: (IProductModel) -> Unit = {},
 ) {
     val pagerState = rememberPagerState {
         state.offers.size
@@ -118,7 +120,7 @@ fun HomeFeed(
             }
 
             items(items = state.products) {
-                ProductCard(
+                GenericProductCard(
                     modifier = Modifier
                         .padding(8.dp),
                     product = it,
