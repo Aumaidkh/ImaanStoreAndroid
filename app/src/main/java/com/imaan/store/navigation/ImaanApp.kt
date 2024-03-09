@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.imaan.categories.navigation.CategoriesRoute
+import com.imaan.categories.navigation.categoriesNavigation
 import com.imaan.design_system.components.top_bars.ImaanAppTopBar
 import com.imaan.design_system.components.top_bars.Type
 import com.imaan.home.navigation.HomeRoute
@@ -140,15 +142,14 @@ fun ImaanApp(
                 onCategoryClicked = {
                     navController.navigate(
                         route = ProductsRoute.passQueryParam(
-                            param = it?.label?.value ?: "All Products"
+                            param = it?.label?.value ?: "All Products",
+                            name = it?.label?.value ?: "All Products"
                         )
                     )
                 },
                 onNavigateToCategories = {
                     navController.navigate(
-                        route = ProductsRoute.passQueryParam(
-                            param = "All Products"
-                        )
+                        route = CategoriesRoute.route
                     )
                 },
                 onNavigateToProfile = {
@@ -178,6 +179,19 @@ fun ImaanApp(
                 onProductClicked = {
                     navController.navigate(
                         route = ProductDetailsRoute.passProductId(it.id)
+                    )
+                }
+            )
+
+            categoriesNavigation(
+                paddingValues = it,
+                snackbarHostState = snackbarHostState,
+                onCategoryClicked = {
+                    navController.navigate(
+                        route = ProductsRoute.passQueryParam(
+                            param = it.id.value,
+                            name = it.label.value
+                        )
                     )
                 }
             )
@@ -363,6 +377,18 @@ private fun TopBar(
                     .fillMaxWidth(),
                 type = Type.WithoutProfilePic,
                 title = "View Profile",
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        CategoriesRoute.route -> {
+            ImaanAppTopBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                type = Type.WithoutProfilePic,
+                title = "Categories",
                 onNavigationClick = {
                     navController.popBackStack()
                 }

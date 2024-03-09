@@ -6,7 +6,7 @@ object ProductsRoute : NavigationRoute {
     override val route: String
         get() = "products/{query}"
 
-    fun passQueryParam(param: String): String {
-        return route.replace("{query}",param)
+    fun passQueryParam(param: String,name: String=""): String {
+        return route.replace("{query}","$param-$name")
     }
 }

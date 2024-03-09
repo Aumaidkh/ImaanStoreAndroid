@@ -1,6 +1,9 @@
 package com.imaan.products
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.imaan.common.model.Amount
 import com.imaan.common.model.Description
 import com.imaan.common.model.Discount
@@ -30,17 +33,23 @@ class ProductRepositoryImpl @Inject constructor(
         datasource.insertProduct()
     }
 
-    override suspend fun fetchAllProductsAsFlow(offset: Int?): Flow<Result<List<IProductModel>>> {
-        val productsFlow = datasource.fetchProducts()
+    override suspend fun fetchAllProductsAsFlow(
+        offset: Int?,
+        category: String?
+    ): Flow<Result<List<IProductModel>>> {
+        val productsFlow = if (category != null) datasource.fetchProductsByCategory(category,"") else datasource.fetchProducts()
         val inventoriesFlow = datasource.fetchInventories()
 
-        return combine(productsFlow,inventoriesFlow){ productsResult, inventoriesResult ->
-            if (productsResult is Result.Error || inventoriesResult is Result.Error){
+        return combine(
+            productsFlow,
+            inventoriesFlow
+        ) { productsResult, inventoriesResult ->
+            if (productsResult is Result.Error || inventoriesResult is Result.Error) {
                 Result.Error(Exception("Something went wrong"))
             } else {
                 val inventories = (inventoriesResult as Result.Success).data.associateBy { it.productId }
                 val products = (productsResult as Result.Success).data
-                
+
                 val productModels = products.map {
                     Log.d(
                         TAG,
@@ -48,41 +57,15 @@ class ProductRepositoryImpl @Inject constructor(
                     )
                     ProductModel(
                         id = ID(it._id.toHexString()),
-                        imageUrl = URL(it.thumbnailUrl),
                         title = Title(it.name),
                         description = Description(it.description),
                         price = Amount(inventories[it._id]?.price ?: 0.0),
                         stocks = Stocks(inventories[it._id]?.stocks ?: 0),
                         discount = Discount(inventories[it._id]?.discount?.toFloat() ?: 0.0f),
-                        images = listOf(
-                            Image(
-                                thumbnail = dummyUrl,
-                                original = dummyUrl
-                            ),
-                            Image(
-                                thumbnail = dummyUrl,
-                                original = dummyUrl
-                            ),
-                            Image(
-                                thumbnail = dummyUrl,
-                                original = dummyUrl
-                            ),
-                            Image(
-                                thumbnail = dummyUrl,
-                                original = dummyUrl
-                            ),
-                            Image(
-                                thumbnail = dummyUrl,
-                                original = dummyUrl
-                            ),
-                        ),
-                        colors = getDummyColors(),
-                        sizes = getDummySizes(),
-                        customVariants = getDummyVariants(),
                         category = "Electronics",
                         image = Image(
-                            thumbnail = dummyUrl,
-                            original = dummyUrl
+                            thumbnail = URL(it.thumbnailUrl),
+                            original = URL(it.thumbnailUrl)
                         )
                     )
                 }
@@ -92,6 +75,18 @@ class ProductRepositoryImpl @Inject constructor(
 
         }
 
+    }
+
+    override suspend fun fetchProductsWithPagination(): Flow<PagingData<IProductModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 1,
+                prefetchDistance = 2
+            ),
+            pagingSourceFactory = {
+                ProductsPagingSource(datasource)
+            }
+        ).flow
     }
 
     override suspend fun fetchDetailedProductWithId(id: ID): Flow<Result<IProductModel>> {

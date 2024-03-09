@@ -38,4 +38,5 @@ dependencies {
     implementation(project(":data:auth"))
     implementation(project(":data:common"))
     implementation("androidx.core:core-ktx:1.10.1")
+    paging()
 }

@@ -45,7 +45,7 @@ dependencies {
     implementation(project(":data:common"))
     implementation(project(":data:products"))
     implementation(project(":data:cart"))
-
+    paging()
     implementation(project(":core:util"))
     coil()
     navigation()

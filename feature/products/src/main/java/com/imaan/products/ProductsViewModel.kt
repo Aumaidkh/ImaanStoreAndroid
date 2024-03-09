@@ -1,12 +1,18 @@
 package com.imaan.products
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.imaan.cart.ICartRepository
+import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,25 +28,51 @@ class ProductsScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow(ProductsScreenUiState())
     val state = _state.asStateFlow()
 
-    private val sortOrder = MutableStateFlow<SortOrder>(SortOrder.PRICE_LOW_TO_HIGH)
+    private val sortOrder = MutableStateFlow(SortOrder.PRICE_LOW_TO_HIGH)
 
     private var query: String? = null
 
     init {
-        query = savedStateHandle.get<String>(QUERY_KEY).toString().also { query ->
+        savedStateHandle.get<String>(QUERY_KEY).toString().also { query ->
+            this.query = query.split("-")[0]
+            val name = query.split("-")[1]
             _state.update {
                 it.copy(
-                    query = query
+                    query = name
                 )
             }
         }
         viewModelScope.launch {
-            productsRepository.fetchAllProducts(1).also { products ->
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        products = products
-                    )
+//            productsRepository
+//                .fetchProductsWithPagination()
+//                .distinctUntilChanged()
+//                .cachedIn(viewModelScope)
+//                .collect { pagingDate ->
+//                    _state.update {
+//                        it.copy(
+//                            pagingData = pagingDate.map { product -> product as ProductModel }
+//                        )
+//                    }
+//                }
+            productsRepository.fetchAllProductsAsFlow(category = query).collect { emission ->
+                when (emission) {
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                products = emission.data.map { product ->
+                                    product as ProductModel
+                                }
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        Log.d(
+                            " TAG",
+                            "Error: ${emission.throwable.message}"
+                        )
+                    }
                 }
             }
         }

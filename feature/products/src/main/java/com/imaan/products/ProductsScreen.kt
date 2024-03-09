@@ -25,6 +25,8 @@ import com.imaan.design_system.components.views.ImaanAppDropDownMenu
 import com.imaan.design_system.components.views.ProductCard
 import com.imaan.design_system.components.views.ProductCardSize
 
+
+
 @Composable
 fun ProductsScreen(
     uiState: ProductsScreenUiState = ProductsScreenUiState(),
@@ -87,7 +89,7 @@ fun ProductsScreen(
                     ) {
                         ProductCard(
                             modifier = Modifier
-                                .padding(8.dp),
+                                .padding(2.dp),
                             product = it,
                             onClick = onProductClick,
                             onAddToCart = onAddProductToCartClick,

@@ -8,6 +8,7 @@ object Versions {
     const val navigationVersion = "2.7.6"
     const val lottie = "6.0.1"
     const val coil = "2.5.0"
+    const val paging = "3.2.1"
 
     // Networking
     const val ktor = "1.6.3"

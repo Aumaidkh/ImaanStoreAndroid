@@ -3,29 +3,27 @@ package com.imaan.remote
 import android.util.Log
 import com.imaan.auth.IAuthService
 import com.imaan.remote.dto.Address
+import com.imaan.remote.dto.Cart
+import com.imaan.remote.dto.Category
+import com.imaan.remote.dto.EmbeddedCartProduct
+import com.imaan.remote.dto.EmbeddedInventory
+import com.imaan.remote.dto.EmbeddedProductVariant
 import com.imaan.remote.dto.Inventory
 import com.imaan.remote.dto.Product
 import com.imaan.remote.dto.ProductVariant
 import com.imaan.util.Result
 import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -120,6 +118,21 @@ class MongoDatasource @Inject constructor(
                 }
             }
         }
+
+    override fun fetchProductsByCategory(
+        category: String,
+        offset: String
+    ): Flow<Result<List<Product>>> {
+        return flow<Result<List<Product>>> {
+            val results = realm.query<Product>("categoryId == $0",ObjectId(category))
+                .find()
+                .toList()
+           emit(Result.Success(results))
+
+        }.catch {
+            emit(Result.Error(it))
+        }
+    }
 
     override suspend fun fetchProductWithId(id: String): Flow<Result<List<Product>>> {
         return realm.query<Product>("_id == $0",ObjectId(id))
@@ -271,23 +284,128 @@ class MongoDatasource @Inject constructor(
         }
     }
 
+    override suspend fun fetchCartForUser(userId: String): Flow<Result<List<Cart>>> {
+        return realm.query<Cart>()
+            .asFlow()
+            .map { result ->
+                //                if (result.list.isEmpty()) {
+                //                    Log.d(
+                //                        TAG,
+                //                        "fetchCartForUser: No items"
+                //                    )
+                //                    Result.Error(Throwable("No Cart Items Found"))
+                //                } else {
+                //                    result.list.forEach { item ->
+                //                        Log.d(
+                //                            TAG,
+                //                            "fetchCartForUser:\n" +
+                //                                    "Quantity: ${item.quantity}\n" +
+                //                                    "Item: Variant: ${item.product?.name} Inventory: ${item.product?.price}"
+                //                        )
+                //                    }
+                //                    Result.Success(result.list.toList())
+                //                }
+                Result.Success(result.list.toList())
+            }
+    }
+
+    override suspend fun insertCartItem(
+        cart: Cart
+    ): Flow<Result<Cart>> {
+        return flow {
+            realm.query<Cart>(
+                "variantId == $0",
+                cart.variantId
+            ).find().firstOrNull().also {
+                if (it != null) {
+                    return@flow emit(Result.Error(Exception("Item already in cart")))
+                }
+            }
+            realm.write {
+                copyToRealm(cart)
+            }
+            emit(Result.Success(cart))
+        }.catch {
+            emit(Result.Error(it))
+        }
+    }
+
+    override fun updateQuantity(item: Cart): Flow<Result<Cart>> {
+        return flow {
+            val cartItem = realm.query<Cart>().find().first()
+            realm.write {
+                findLatest(cartItem)?.let { liveItem ->
+                    liveItem.quantity = item.quantity
+                }
+            }
+            return@flow emit(Result.Success(item))
+        }
+    }
+
+    override fun removeCartItem(itemId: String): Flow<Result<Cart>> {
+        return flow {
+            val liveCartItem =
+                realm.query<Cart>(
+                    "_id == $0",
+                    ObjectId(itemId)
+                ).find().firstOrNull() ?: return@flow emit(Result.Error(Throwable("No item found to be deleted")))
+
+            realm.write {
+                findLatest(liveCartItem)?.also { cartItem ->
+                    delete(cartItem)
+                }
+            }
+            emit(Result.Success(liveCartItem))
+        }.catch {
+            emit(Result.Error(it))
+        }
+    }
+
+    /**
+     * Category*/
+    override fun fetchCategories(): Flow<Result<List<Category>>> {
+        Log.d(
+            TAG,
+            "fetchCategories: "
+        )
+        return realm.query<Category>()
+            .asFlow()
+            .map { categoryList->
+                Log.d(
+                    TAG,
+                    "fetchCategories: ${categoryList.list.size}"
+                )
+                Result.Success(categoryList.list.toList())
+            }
+    }
+
 
     private fun configure() {
         authService.currentUser?.let {
+            Log.d(
+                TAG,
+                "configure: UserId: ${it.id}"
+            )
             val config = SyncConfiguration.Builder(
                 it,
                 setOf(
                     Product::class,
                     Inventory::class,
                     ProductVariant::class,
-                    Address::class
-                )
+                    Address::class,
+                    Cart::class,
+                    EmbeddedCartProduct::class,
+                    Category::class
+                ),
             )
                 .initialSubscriptions { sub ->
                     add(query = sub.query<Product>())
                     add(query = sub.query<Inventory>())
                     add(query = sub.query<ProductVariant>())
                     add(query = sub.query<Address>())
+                    // TODO(Enforce User is only able to subscribe to his cart)
+                    add(query = sub.query<Cart>())
+                    add(query = sub.query<Category>())
                 }
                 .log(LogLevel.ALL)
                 .build()
@@ -297,4 +415,6 @@ class MongoDatasource @Inject constructor(
             realm = Realm.open(config)
         }
     }
+
+
 }

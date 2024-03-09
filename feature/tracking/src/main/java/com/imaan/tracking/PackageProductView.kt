@@ -52,11 +52,13 @@ fun OrderProductsView(
                     .padding(24.dp)
             ) {
                 order.cartItems.forEach {
-                    PackageProductComponent(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        product = it.productModel
-                    )
+                    it.productModel?.let { it1 ->
+                        PackageProductComponent(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            product = it1
+                        )
+                    }
                 }
             }
         }

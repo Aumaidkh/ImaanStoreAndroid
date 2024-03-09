@@ -8,6 +8,7 @@ import com.imaan.common.model.Image
 import com.imaan.common.model.Stocks
 import com.imaan.common.model.Title
 import com.imaan.products.model.IProductModel
+import com.imaan.remote.dto.EmbeddedCartProduct
 import com.imaan.remote.dto.Inventory
 import com.imaan.remote.dto.Product
 import com.imaan.remote.dto.ProductVariant
@@ -16,46 +17,51 @@ import java.util.UUID
 
 data class ProductModel(
     override val id: ID,
-    val imageUrl: URL,
     override val title: Title,
     override val description: Description,
     override val price: Amount,
     val stocks: Stocks,
     val discount: Discount?,
-    val images: List<Image>,
-    val sizes: List<SizeVariant> = getDummySizes(),
-    val colors: List<ColorVariant> = getDummyColors(),
-    val customVariants: List<CustomVariant> = emptyList(),
     override val image: Image,
     override val category: String
 ): IProductModel {
-    val primaryImage get() = images.firstOrNull()
+    constructor(
+        product: EmbeddedCartProduct
+    ): this(
+        id = ID(product.variantId.toHexString()),
+        title = Title(product.name),
+        description = Description(product.description),
+        price = Amount(product.price),
+        stocks = Stocks(product.stocks),
+        discount = Discount(product.discount.toFloat()),
+        category = "",
+        image = Image(URL(product.imageUrl),URL(product.imageUrl))
+    )
+    constructor(
+        variant: ProductVariant,
+        inventory: Inventory
+    ) : this(
+        id = ID(variant._id.toHexString()),
+        title = Title(variant.name),
+        description = Description(variant.specs),
+        price = Amount(inventory.price),
+        stocks = Stocks(inventory.stocks),
+        discount = Discount(inventory.discount.toFloat()),
+        category = "",
+        image = Image(URL(variant.images.firstOrNull()),URL(variant.images.firstOrNull()))
+    )
+
     constructor(
         product: Product,
         inventories: List<Inventory>,
         variants: List<ProductVariant>
     ) : this(
         id = ID(product._id.toHexString()),
-        imageUrl = URL(product.thumbnailUrl),
         title = Title(product.name),
         description = Description(product.description),
         price = Amount(inventories.firstOrNull()?.price ?: 0.0),
         stocks = Stocks(inventories.firstOrNull()?.stocks ?: 0),
         discount = Discount(inventories.firstOrNull()?.discount?.toFloat() ?: 0.0f),
-        images = variants.firstOrNull()?.images?.map { Image(URL(it),URL(it)) } ?: emptyList(),
-        colors = variants.filter { it.hexColor != null }.map {
-            object : ColorVariant {
-                override val hexValue: String
-                    get() = it.hexColor.toString()
-            }
-        },
-        sizes = variants.filter { it.size != null }.map { productVariant ->
-            object : SizeVariant {
-                override val size: String
-                    get() = productVariant.size.toString()
-            }
-        },
-        customVariants = emptyList(),
         category = "",
         image = Image(URL(product.thumbnailUrl),URL(product.thumbnailUrl))
     )

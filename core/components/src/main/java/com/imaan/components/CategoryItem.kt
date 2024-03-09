@@ -1,6 +1,7 @@
 package com.imaan.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -55,22 +57,21 @@ private fun CategoryItemLarge(
     val image = ImageRequest.Builder(context)
         .data(categoryModel.backgroundImageUrl.toString())
         .build()
-    val makeExpanded = Random.nextBoolean()
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.clickable { onClick(categoryModel) }, contentAlignment = Alignment.Center) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (makeExpanded) 190.dp else 150.dp),
+                .height(190.dp),
             model = image,
             contentDescription = "",
             contentScale = ContentScale.Crop,
-            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.tertiaryContainer, blendMode = BlendMode.DstIn)
+            colorFilter = ColorFilter.tint(color = Color.Black.copy(alpha = 0.01f), blendMode = BlendMode.Darken)
         )
 
         Text(
             text = categoryModel.label.value,
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onTertiaryContainer
+            color = MaterialTheme.colorScheme.background
         )
     }
 }

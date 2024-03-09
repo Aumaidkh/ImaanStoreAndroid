@@ -85,7 +85,7 @@ private fun CartContent(
     ) {
         items(
             items = items,
-            key = { item -> item.productModel.id.value }
+            key = { item -> item.productModel?.id?.value.toString() }
         ) {
             CartItemComponent(
                 modifier = Modifier

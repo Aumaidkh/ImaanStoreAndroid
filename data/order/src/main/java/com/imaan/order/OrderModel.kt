@@ -43,7 +43,7 @@ data class OrderModel(
     val orderSubtotal get() = run {
         var totalSum = Amount.ZERO
         cartItems.forEach {
-            totalSum = totalSum plus (it.totalAmount)
+            totalSum = totalSum plus (it.totalAmount ?: Amount.ZERO)
         }
         totalSum
     }

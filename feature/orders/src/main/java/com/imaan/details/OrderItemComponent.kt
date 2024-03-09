@@ -29,7 +29,7 @@ internal fun OrderItem(
     ) {
         ProductOnCircleView(
             modifier = Modifier.size(imageSize),
-            imageUrl = cartItem.productModel.image.thumbnail,
+            imageUrl = cartItem.productModel?.image?.thumbnail,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
@@ -38,11 +38,11 @@ internal fun OrderItem(
                 style = MaterialTheme.typography.titleSmall
             )
             Text(
-                text = cartItem.productModel.description.toShortDescription(),
+                text = cartItem.productModel?.description?.toShortDescription() ?: "",
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
-                text = cartItem.totalAmount.inRupees,
+                text = cartItem.totalAmount?.inRupees ?: "",
                 style = MaterialTheme.typography.bodyLarge
             )
         }

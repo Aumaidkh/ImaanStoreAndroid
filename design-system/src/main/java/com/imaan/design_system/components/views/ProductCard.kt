@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -136,10 +139,10 @@ fun ProductCard(
     elevation: CardElevation = CardDefaults.elevatedCardElevation()
 ){
     val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(product.primaryImage?.thumbnail.toString())
+        .data(product.image.thumbnail.toString())
         .build()
     when(size){
-        ProductCardSize.Small -> ProductCardSmall(
+        ProductCardSize.Small -> ProductCardMedium(
             modifier = modifier,
             product = product,
             imageRequest = imageRequest,
@@ -156,6 +159,8 @@ fun ProductCard(
         )
     }
 }
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -189,7 +194,7 @@ private fun ProductCardSmall(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
-                    imageUrl = product.imageUrl,
+                    imageUrl = product.image.thumbnail,
                     color = generateRandomLightColor(Random.nextInt(10))
                 )
                 Text(
@@ -237,5 +242,97 @@ private fun ProductCardSmall(
             )
         }
 
+    }
+}
+
+
+@Preview
+@Composable
+fun ProductCardMediumPreview() {
+    ProductCardMedium()
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProductCardMedium(
+    modifier: Modifier = Modifier,
+    product: ProductModel = dummyProduct,
+    imageRequest: ImageRequest = ImageRequest.Builder(LocalContext.current).data("").build(),
+    onClick: (ProductModel) -> Unit = {},
+    onAddToCart: (ProductModel) -> Unit = {},
+    elevation: CardElevation = CardDefaults.elevatedCardElevation(),
+    liked: Boolean = false
+) {
+    Box(modifier = modifier
+        .fillMaxWidth(),
+        contentAlignment = Alignment.TopEnd){
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            RoundedAsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                imageURL = product.image.thumbnail,
+                shape = RoundedCornerShape(10.dp)
+            )
+//            ProductOnCircleView(
+//                modifier = Modifier
+//                    .padding(vertical = 12.dp)
+//                    .fillMaxWidth(),
+//                imageUrl = product.image.thumbnail,
+//                color = generateRandomLightColor(Random.nextInt(10))
+//            )
+            Text(
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 4.dp),
+                text = product.title.value,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 19.sp
+                ),
+                maxLines = 2,
+                lineHeight = 18.sp
+
+            )
+            Text(
+                text = product.description.value,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontSize = 14.sp
+                ),
+                maxLines = 2
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = product.price.inRupees,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 19.sp
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                CircularIcon(
+                    iconResId = com.imaan.resources.R.drawable.ic_cart,
+                    onClick = {
+                        // addToCart(product)
+                        onAddToCart(product)
+                    }
+                )
+
+            }
+        }
+
+        CircularIcon(
+            modifier = Modifier
+                .padding(12.dp),
+            iconResId = com.imaan.resources.R.drawable.ic_favorite,
+            containerColor = Color.White,
+            onClick = {
+
+            },
+            tint = Color.Red
+        )
     }
 }

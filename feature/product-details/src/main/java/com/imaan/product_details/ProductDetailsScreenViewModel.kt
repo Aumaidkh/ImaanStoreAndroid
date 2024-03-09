@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
+import java.util.UUID
 import javax.inject.Inject
 
 private const val TAG = "ProductDetailsScreenVie"
@@ -204,7 +205,7 @@ class ProductDetailsScreenViewModel @Inject constructor(
 
     fun buyNow(product: IProductModel){
         viewModelScope.launch {
-            val cartItem = CartItemModel(product,1)
+            val cartItem = CartItemModel(ID(UUID.randomUUID().toString()),product,1)
             orderRepository.updateOrder(
                 orderModel = OrderModel(
                     cartItems = listOf(cartItem),

@@ -10,4 +10,5 @@ class Product : RealmObject{
     var name: String = ""
     var description: String = ""
     var thumbnailUrl: String = ""
+    var categoryId: ObjectId = ObjectId()
 }

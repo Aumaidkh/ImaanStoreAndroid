@@ -1,17 +1,22 @@
 package com.imaan.cart
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imaan.common.model.Amount
+import com.imaan.common.model.ID
 import com.imaan.common.model.sumOfAmounts
 import com.imaan.order.IOrderRepository
 import com.imaan.order.OrderModel
+import com.imaan.products.ProductModel
 import com.imaan.total.TotalModel
+import com.imaan.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,7 +28,7 @@ private const val TAG = "CartViewModel"
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val orderRepository: IOrderRepository,
-    cartRepository: ICartRepository
+    private val cartRepository: ICartRepository
 ): ViewModel(){
     private val _state = MutableStateFlow(CartScreenState())
     val state = _state.asStateFlow()
@@ -32,46 +37,94 @@ class CartViewModel @Inject constructor(
     val eventFlow get() = _event.receiveAsFlow()
 
     init {
-        cartRepository.cartItemsFlow.onEach { items ->
-            _state.update {
-                it.copy(
-                    items = items,
-                    totalModel = calculateTotalsFor(items)
-                )
-            }
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            cartRepository.fetchCartItemsFlow(ID("")).onEach {result ->
+                when(result){
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                items = result.data,
+                                totalModel = calculateTotalsFor(result.data)
+                            )
+                        }
+                    }
+                    is Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "loadCart: Error: ${result.throwable.message}"
+                        )
+                    }
+                }
+            }.launchIn(this)
+        }
     }
 
     private fun calculateTotalsFor(items: List<CartItemModel>): TotalModel {
         val subTotal = items.sumOfAmounts { it.totalPrice }
-        val grandTotal = _state.value.totalModel.deliveryCharges plus subTotal
+        val discount = items.sumOfAmounts { Amount((it.productModel as? ProductModel)?.discount?.value?.toDouble() ?: 0.0) }
+        val grandTotal = _state.value.totalModel.deliveryCharges plus subTotal minus discount
         return TotalModel(
             grandTotal = grandTotal,
             subtotal = subTotal,
-            deliveryCharges = Amount.ZERO,
-            discount = Amount.ZERO
+            deliveryCharges = Amount(40.0),
+            discount = discount
         )
     }
 
     fun increaseQuantity(item: CartItemModel){
-        val updatedItems = _state.value.items.toMutableList()
-        val index = updatedItems.indexOfFirst { it.productModel.id == item.productModel.id }
-        if (index != -1) {
-            updatedItems[index] = item.copy(quantity = item.quantity + 1)
-            updateTotals(updatedItems)
+        viewModelScope.launch {
+            cartRepository.updateCartItemQuantity(
+                quantity = ICartRepository.Quantity.Increase,
+                itemModel = item
+            ).collect{ result ->
+                when(result){
+                    is Result.Success -> {
+                        Log.d(
+                            TAG,
+                            "increaseQuantity: Increased Quantity Successfull"
+                        )
+                        _state.update {
+                            it.copy(
+                                totalModel = calculateTotalsFor(_state.value.items)
+                            )
+                        }
+                    }
+                    is Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "increaseQuantity: Error Increasing Quantity"
+                        )
+                    }
+                }
+            }
         }
     }
 
     fun decreaseQuantity(item: CartItemModel){
-        val updatedItems = _state.value.items.toMutableList()
-        val index = updatedItems.indexOfFirst { it.productModel.id == item.productModel.id }
-        if (index != -1) {
-            if (item.quantity > 1){
-                updatedItems[index] = item.copy(quantity = item.quantity - 1)
-                updateTotals(updatedItems)
-            } else {
-                updatedItems.removeAt(index)
-                updateTotals(updatedItems)
+        viewModelScope.launch {
+            cartRepository.updateCartItemQuantity(
+                quantity = ICartRepository.Quantity.Decrease,
+                itemModel = item
+            ).collect{ result ->
+                when(result){
+                    is Result.Success -> {
+                        Log.d(
+                            TAG,
+                            "decreaseQuantity: Decreased Quantity Successfull"
+                        )
+                        _state.update {
+                            it.copy(
+                                totalModel = calculateTotalsFor(_state.value.items)
+                            )
+                        }
+                    }
+                    is Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "decreaseQuantity: Error Decreasing Quantity"
+                        )
+                    }
+                }
             }
         }
     }
@@ -92,10 +145,17 @@ class CartViewModel @Inject constructor(
     }
 
     fun removeItemFromCart(item: CartItemModel){
-        _state.update {
-            it.copy(
-                items = _state.value.items - item
-            )
+        viewModelScope.launch {
+            cartRepository.removeItemFromCart(item).onEach { result ->
+                when(result){
+                    is Result.Success -> {
+                        _event.send(CartScreenEvent.Success("Item Removed from cart"))
+                    }
+                    is Result.Error -> {
+                        _event.send(CartScreenEvent.Error(result.throwable))
+                    }
+                }
+            }.launchIn(this)
         }
     }
 

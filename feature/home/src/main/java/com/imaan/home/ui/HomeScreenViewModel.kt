@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.imaan.cart.ICartRepository
 import com.imaan.categories.CategoryModel
 import com.imaan.categories.ICategoryRepository
+import com.imaan.common.model.ID
 import com.imaan.offers.IOffersRepository
 import com.imaan.products.IProductRepository
 import com.imaan.products.ProductModel
@@ -19,7 +20,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -42,11 +46,14 @@ class HomeScreenViewModel @Inject constructor(
     private val _event = Channel<HomeEvent<String>>()
     val event get() = _event.receiveAsFlow()
 
+
     init {
         loadData()
         viewModelScope.launch {
             loadProducts()
+            loadCart()
         }
+
     }
 
     fun onSelectCategory(categoryModel: CategoryModel){
@@ -60,18 +67,22 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onAddToCart(productModel: IProductModel){
         viewModelScope.launch {
-            cart.addProductToCart(productModel).also { added ->
-                if (added){
-                    _state.update {
-                        it.copy(
-                            cartItemCount = _state.value.cartItemCount + 1
+            cart.addItemToCart(productModel).onEach { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                cartItemCount = _state.value.cartItemCount + 1
+                            )
+                        }
+                        _event.send(
+                            element = HomeEvent.Success("Item added to cart")
                         )
                     }
-                    _event.send(
-                        element = HomeEvent.Success("Item added to cart")
-                    )
+
+                    is Result.Error -> HomeEvent.Error(throwable = result.throwable)
                 }
-            }
+            }.launchIn(this)
         }
     }
 
@@ -98,14 +109,28 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCart(){
-        _state.update {
-            it.copy(
-                cartItemCount = cart.fetchCartItems().size
-            )
+    private suspend fun loadCart() {
+        cart.fetchCartItemsFlow(ID("")).collect { emission ->
+            when (emission) {
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            cartItemCount = emission.data.size
+                        )
+                    }
+                }
+
+                is Result.Error -> {
+                    Log.d(
+                        TAG,
+                        "loadCart: Error Loading Cart"
+                    )
+                }
+            }
         }
     }
-    private suspend fun loadUser(){
+
+    private suspend fun loadUser() {
         _state.update {
             it.copy(
                 user = user.getCurrentUser()
@@ -127,13 +152,26 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCategories(){
-        val categories = categories.fetchCategories()
-        _state.update {
-            it.copy(
-                categories = categories,
-                selectedCategory = categories.firstOrNull()
-            )
+    private fun loadCategories(){
+        viewModelScope.launch {
+            categories.fetchCategoriesFlow().collect { result ->
+                when(result){
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                categories = result.data,
+                                selectedCategory = result.data.firstOrNull()
+                            )
+                        }
+                    }
+                    is Result.Error -> {
+                        Log.d(
+                            TAG,
+                            "loadCategories: Error Fetching Categories: ${result.throwable}"
+                        )
+                    }
+                }
+            }
         }
     }
     private val TAG = "HomeScreenViewModel"

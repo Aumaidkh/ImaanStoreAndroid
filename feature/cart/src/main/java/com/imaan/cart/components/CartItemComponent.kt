@@ -53,7 +53,7 @@ fun CartItemComponent(
             ProductOnCircleView(
                 modifier = Modifier
                     .size(110.dp),
-                imageUrl = cartItemModel.productModel.image.thumbnail,
+                imageUrl = cartItemModel.productModel?.image?.thumbnail,
                 color = generateRandomLightColor(2)
             )
             Column(
@@ -64,7 +64,7 @@ fun CartItemComponent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(0.9f),
-                    text = cartItemModel.productModel.title.value,
+                    text = cartItemModel.productModel?.title?.value.toString(),
                     style = MaterialTheme.typography.titleMedium.copy(
                         lineHeight = 19.sp,
                         fontSize = 16.sp

@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    id("imaan.hilt.plugin")
+    id("imaan.realm.plugin")
 }
 
 android {
@@ -33,9 +33,9 @@ android {
 
 dependencies {
 
+    implementation(project(":core:util"))
+    implementation(project(":core:datasource:remote"))
     implementation(project(":data:common"))
     implementation(project(":data:products"))
-    implementation("androidx.core:core-ktx:1.10.1")
-    hilt()
 
 }

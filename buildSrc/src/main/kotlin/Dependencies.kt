@@ -26,7 +26,7 @@ object Dependencies {
     const val ktorContentNegotiation = "io.ktor:ktor-client-content-negotiation:${Versions.ktor}"
     const val ktorSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
     const val kotlinXSerialization ="org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinXSerialization}"
-
+    const val paging3 = "androidx.paging:paging-compose:${Versions.paging}"
     const val lottieCompose = "com.airbnb.android:lottie-compose:${Versions.lottie}"
 
     object MongoDB {
@@ -61,6 +61,10 @@ fun DependencyHandler.lottie(){
 }
 fun DependencyHandler.coreKtx(){
     implementation(Dependencies.coreKtx)
+}
+
+fun DependencyHandler.paging(){
+    implementation(Dependencies.paging3)
 }
 
 fun DependencyHandler.mongodb(){

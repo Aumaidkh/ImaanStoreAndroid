@@ -93,11 +93,13 @@ fun TrackOrderScreen(
                             .padding(24.dp)
                     ) {
                         it.cartItems.forEach {
-                            PackageProductComponent(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                product = it.productModel
-                            )
+                            it.productModel?.let { it1 ->
+                                PackageProductComponent(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    product = it1
+                                )
+                            }
                         }
                     }
                 }
